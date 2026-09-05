@@ -64,5 +64,50 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-3vjia Technology is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+## 3vjia Technology (三维家 / AiHouse)
+
+3vjia Technology — Guangdong Sanweijia Information Technology Co., Ltd., international brand
+**AiHouse** — is a Guangzhou home-furnishing industrial-software company founded in 2013. It runs a
+cloud 3D design and manufacturing platform for the interior-decoration and custom-furniture industry:
+3D cloud design, AI Dream Home, AI Light Design, CAD and rendering engines, the DMS order-splitting
+system, the MOS/MCS manufacturing execution systems and the AIMES manufacturing platform, joining
+design, quotation, order placement, splitting and factory production into one chain.
+
+### What we found
+
+3vjia runs a public **Open Platform** at <https://dev.3vjia.com/> whose gateway
+`open-gateway.3vjia.com` exposes **429 documented operations**. It publishes **no OpenAPI, Swagger,
+GraphQL SDL, AsyncAPI, Protobuf, WSDL or Postman collection** — but it does publish a complete,
+anonymously readable, machine-readable documentation service at `devapi.3vjia.com`, which returns per
+operation the HTTP method, absolute URL, every parameter with type and required flag, every response
+field, and request/response examples.
+
+`openapi/3vjia-technology-open-platform-openapi.yml` is a **mechanical transform of those records**
+(`method: derived`), and the verbatim catalogs it was built from are kept in
+`openapi/_source-documentation/`. Nothing was invented: every path, method, parameter and example is
+the provider's own, and each operation carries an `x-source-documentation` link back to the page it
+was read from. A live probe on 2026-09-05 confirmed the paths are real — documented paths return
+`code 100100002` (missing credential), invented paths return `code 100001012` (resource does not exist).
+
+### Things an integrator should know
+
+- **Failures come back as HTTP 200.** Success, missing credential and unrouted path all return `200`;
+  the outcome is in the body's `success` field.
+- **There is no idempotency** on any of the 429 operations, and no dry-run mode.
+- **Only one `access_token` is valid per application** — a new one invalidates the previous one, so
+  the provider requires an enterprise-wide central token service.
+- **No published rate limits, no API changelog, no status page, no deprecation policy, no SLA.**
+- **No SDK** in any public registry; the two 3vjia GitHub organizations hold zero public repositories.
+- **No MCP server, no agent card, no `llms.txt`, no `/.well-known/` documents** on any of eight hosts.
+- Documentation is Chinese-only.
+
+### Links
+
+- Website — <https://www.3vjia.com/>
+- Open Platform — <https://dev.3vjia.com/>
+- API documentation — <https://dev.3vjia.com/v1/document>
+- Help center — <https://www.3vjia.com/helpcenter>
+- Pricing (design software; API access is contact-sales) — <https://mall.3vjia.com/>
+- International brand — <https://www.aihouse.com/>
+
+_Surfaced via the API Evangelist harvest backlog (source: secondary-market)._

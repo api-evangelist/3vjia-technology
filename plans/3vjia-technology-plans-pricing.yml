@@ -1,0 +1,72 @@
+generated: '2026-09-05'
+method: searched
+source: https://mall.3vjia.com/
+currency: CNY
+plan_count: 4
+api_pricing_published: false
+note: >-
+  The published pricing covers the 3vjia SEAT/SOFTWARE products (Cloud Design personal editions,
+  rendering credits, training). NO pricing is published for the Open Platform API itself: access to
+  open-gateway.3vjia.com requires an approved enterprise developer account and an approved
+  application, and the enterprise/manufacturing lines (DMS, MOS/MCS, AIMES) are quoted through sales.
+  So API access is effectively contact-sales while the end-user software is transparently priced.
+plans:
+- name: 免费版 (Free)
+  price: 0
+  currency: CNY
+  period: month
+  included:
+    creation_points: 5 (trial)
+    personal_library_capacity: 500
+    modules: 3D cloud design modules
+- name: 标准版 (Standard)
+  price: 58
+  currency: CNY
+  period: month
+  included:
+    creation_points: 6 per month
+    personal_library_capacity: unlimited
+    rendering: maximum clarity rendering
+- name: 增强版 (Enhanced)
+  price: 128
+  currency: CNY
+  period: month
+  included:
+    creation_points: 12 per month
+    rendering: 4K effect images, 6K panoramic rendering
+- name: 专业版 (Professional)
+  price: 2999
+  currency: CNY
+  period: year
+  included:
+    creation_points: 20 per month
+    rendering: 8K effect images, 16K panoramic rendering
+    ai_layout: unlimited
+add_ons:
+- name: 创作点 (creation points)
+  prices: [25, 50, 100]
+  currency: CNY
+  note: consumed by AI applications across the product family
+- name: 标准渲染 (standard rendering)
+  price: 15
+  currency: CNY
+  unit: per image (effect or panoramic)
+- name: 电影级渲染 (cinematic rendering)
+  price_range: [45, 60]
+  currency: CNY
+  note: professional-tier only; upper bound not fixed on the page
+- name: 视频动画渲染 (video animation rendering)
+  price_range: [2.5, 10]
+  currency: CNY
+  note: promotional pricing shown
+- name: 培训课程 (training courses)
+  price_range: [3000, 6000]
+  currency: CNY
+  levels: [basic, intermediate, advanced]
+enterprise:
+  model: contact sales
+  products: [DMS, MOS/MCS, AIMES, 全屋定制 whole-house customisation suites]
+  note: >-
+    https://mall.3vjia.com/ presents these as solutions rather than priced SKUs; the Open Platform
+    developer application at https://dev.3vjia.com/manage/my-app/developer requires an enterprise
+    administrator account and manual approval.

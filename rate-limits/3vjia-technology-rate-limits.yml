@@ -1,0 +1,41 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document — all 429 current and 99 legacy documentation records were read
+  via devapi.3vjia.com and searched for 限流 / 频率 / QPS / 并发 / rate limit; plus live response-header
+  inspection of https://open-gateway.3vjia.com on 2026-09-05
+limit_count: 0
+limits: []
+response_headers: []
+status_on_exhaustion: null
+note: >-
+  3vjia publishes NO rate limits. Not one of the 528 documentation records mentions a request rate,
+  quota, burst, concurrency cap or throttling behaviour, and no live response from
+  open-gateway.3vjia.com carries an X-RateLimit-*, RateLimit-* or Retry-After header. An honest zero.
+observed_headers:
+  probed: '2026-09-05'
+  url: https://open-gateway.3vjia.com/api/v1/user/listByPage
+  headers: [date, content-type, content-length, magiccube-req-id, serve-vendor, sip, host]
+  rate_limit_headers_present: false
+adjacent_constraints:
+  note: >-
+    These are not rate limits, but they are the only published constraints on call volume and an agent
+    should treat them as such.
+  constraints:
+  - constraint: single-token rule
+    detail: >-
+      Only one access_token is valid per application at a time — requesting a new one invalidates the
+      previous one. The docs therefore REQUIRE an enterprise to run a central token service
+      ("中控服务") rather than let each system fetch its own. Uncoordinated concurrent token requests
+      will knock each other out.
+    source: https://dev.3vjia.com/v1/document?apiId=d39aed16895f4f4bb88df99d38f93fb3
+  - constraint: token TTL
+    detail: access_token expires after 7200 seconds and must be refreshed on a schedule.
+  - constraint: SSO clock skew
+    detail: The MD5-signed SSO redirect accepts a ±5 minute timestamp deviation.
+  - constraint: quotation key expiry
+    detail: >-
+      A quotation result token expires (errorCode 609007) — a poll loop must not run indefinitely.
+      The duration is not published.
+  - constraint: authorization code TTL
+    detail: The authorize operation's temporary code is valid for ten minutes (十分钟内有效).

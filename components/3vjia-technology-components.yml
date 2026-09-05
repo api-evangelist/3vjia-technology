@@ -1,0 +1,50 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document (SSO联合单点登录, 插件相关文档, AI梦想家留资页对接文档) and
+  https://www.3vjia.com/helpcenter, read 2026-09-05
+summary: >-
+  3vjia ships no JavaScript component library, no web components and no npm loader. Its client-side
+  embedding story is REDIRECT-AND-IFRAME: a host application signs a redirect into a 3vjia application
+  and the whole 3vjia surface (the 3D designer, DMS, a scheme viewer) runs inside it. That is a real
+  embedded surface, so it is recorded here, but it is not a component SDK.
+families:
+- name: SSO embed (联合单点登录)
+  kind: signed redirect / iframe host
+  loader: none — a URL, not a library
+  entry: https://sso.3vjia.com/JointLogin/Index
+  parameters:
+  - name: userid
+    description: the host system's user id, bound to a 3vjia account
+  - name: appid
+    description: the approved application id
+  - name: time
+    description: 10-digit Unix timestamp, ±5 minutes tolerance
+  - name: sign
+    description: MD5(userId + appId + time + appKey)
+  - name: redirect_uri
+    description: URL-encoded target inside 3vjia, e.g. https://admin.3vjia.com/3DLoading?SchemeId=123456
+  targets:
+  - name: 3D 云设计 (3D Cloud Design)
+    url: https://admin.3vjia.com/3DLoading
+    deep_link_param: SchemeId
+  binding: >-
+    Accounts are bound either in advance through the account-binding operations
+    (apiV1AccountbindingBindAccount) or interactively, once, the first time a designer signs in.
+  sample_code_published: Java, C#, PHP (signature generation), inline in the documentation
+- name: 优秀方案嵌套页插件 (featured-scheme embedded-page plugin)
+  kind: embedded page
+  status: documented-but-empty
+  note: >-
+    A documentation entry exists under 插件相关文档 but its body is empty as published on 2026-09-05.
+    Recorded because the surface is advertised; nothing about its interface can be stated.
+- name: AI 梦想家 留资页 (AI Dream Home lead-capture page)
+  kind: hosted page integration
+  docs: https://www.3vjia.com/helpcenter
+  note: >-
+    The help center publishes a 对接文档 (integration document) for embedding the AI Dream Home
+    lead-capture page in a partner site. Discovered by title in the help-center index.
+absent:
+- No npm/CDN-distributed component or element library.
+- No web components, React/Vue component package, or embed script.
+- No hosted checkout, form, or dashboard widget with a documented JavaScript API.

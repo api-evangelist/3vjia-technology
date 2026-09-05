@@ -1,0 +1,88 @@
+# generated: '2026-09-05'
+# method: generated
+# source: openapi/3vjia-technology-open-platform-openapi.yml
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — 3vjia Open Platform API
+  version: 1.0.0
+extends: ./openapi/3vjia-technology-open-platform-openapi.yml
+x-generated-on: '2026-09-05'
+x-note: >-
+  Captures API Evangelist's runtime-semantics findings without mutating the derived contract. Every
+  assertion here was established by reading the provider's own documentation or by probing
+  open-gateway.3vjia.com on 2026-09-05; nothing is invented. Applying this overlay does not change
+  what the API does — it records what an agent has to know before calling it.
+actions:
+- target: $.info
+  description: Record the transport semantics an agent must branch on, and the runtime signals.
+  update:
+    x-error-transport:
+      http_status_on_business_error: 200
+      rule: >-
+        Branch on the response body's `success` field, NEVER on the HTTP status. Live probes on
+        2026-09-05 confirmed that an authentication failure (code 100100002), an unrouted path
+        (code 100001012) and a success all return HTTP 200 with content-type application/json.
+      evidence: errors/3vjia-technology-problem-types.yml
+    x-request-id-header: magiccube-req-id
+    x-idempotency:
+      coverage: none
+      note: >-
+        No idempotency key, dedupe parameter or replay guard exists on any of the 429 operations, and
+        because failures are HTTP 200 a client cannot distinguish a lost response from a rejection.
+        Retrying a timed-out write is unsafe.
+    x-reversibility:
+      grade: documented
+      note: >-
+        Reversal operations exist for accounts (delete/recover), account binding (bind/unbind), factory
+        orders (sign/return, invalidate) and completed orders (batch return to store), but NO document
+        states a time window for any of them. Factory-order return publishes a precondition query
+        instead of a window — call apiV1AimesFactoryOrderOpGetReturnSetting first.
+      detail: conventions/3vjia-technology-conventions.yml
+    x-async-pattern:
+      shape: submit-then-poll
+      note: >-
+        Quotation, AI generation, model parsing and batch generation return a taskId or key and are
+        polled by a matching result operation. Quotation polling continues while errorCode == 609006.
+    x-rate-limits:
+      published: false
+      note: >-
+        No published limits and no rate-limit response headers. The real constraint is the single-token
+        rule: a new access_token invalidates the previous one, so the provider requires a central token
+        service rather than per-system token fetches.
+    x-language:
+      documentation: zh-CN
+      note: All operation summaries and field descriptions are Chinese-only.
+- target: $.info
+  description: Record how this document was produced, so no reader mistakes it for a provider artifact.
+  update:
+    x-provenance:
+      published_by_provider: false
+      derived_from: https://devapi.3vjia.com/document/getNewApiDocument
+      verbatim_catalog: openapi/_source-documentation/
+      contract_truth_probe:
+        probed: '2026-09-05'
+        result: >-
+          Documented paths return code 100100002 (missing credential), confirming they exist and are
+          auth-gated; invented paths return code 100001012 (resource does not exist).
+- target: $.components.securitySchemes.oauth2ClientCredentials
+  description: Record the operational rules the provider documents around the token.
+  update:
+    x-token-ttl-seconds: 7200
+    x-single-token: >-
+      Only one access_token is valid per application. Requesting a new one invalidates the previous
+      one, so the provider requires an enterprise-wide central token service ("中控服务").
+    x-credential-issuance: >-
+      appId/appKey are issued only after an enterprise developer application and an application
+      registration are both approved at https://dev.3vjia.com/manage/my-app/developer.
+    x-legacy-transport: 'https://open.3vjia.com/<path>?sysCode=external&access_token=<token>'
+- target: $.servers
+  description: Note the cross-border reachability characteristic observed during profiling.
+  update:
+    x-reachability:
+      probed_from: United States
+      probed: '2026-09-05'
+      finding: >-
+        open-gateway.3vjia.com answered roughly two of three attempts within a second over HTTP/2 with
+        valid TLS; the remainder timed out at 15-25s. The origin is fronted by Alibaba Cloud
+        (serve-vendor: ali). Clients outside China should set generous timeouts and retry — but see
+        x-idempotency before retrying a write.

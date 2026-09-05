@@ -1,0 +1,45 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  npm registry search (registry.npmjs.org/-/v1/search), pypi.org/pypi/<name>/json,
+  the 3vjia Open Platform documentation (https://dev.3vjia.com/v1/document) and the
+  GitHub user/org search for 3vjia / aihouse / sanweijia
+package_count: 0
+official_count: 0
+packages: []
+registries_searched:
+- registry: npm
+  query: 3vjia
+  result: 'one unrelated third-party result (vnpm-cli, a 2019 private-registry CLI by an individual); no first-party 3vjia client library'
+- registry: npm
+  query: aihouse
+  result: no results
+- registry: npm
+  query: sanweijia
+  result: no results
+- registry: pypi
+  query: 3vjia
+  status: 404
+- registry: pypi
+  query: sanweijia
+  status: 404
+- registry: pypi
+  query: aihouse
+  status: 200
+  result: >-
+    NOT first-party. pypi.org/project/aihouse 0.1.1 (2026-07-25) is "AIHouse - AI Agent 统一监控与管理平台",
+    an unrelated AI-agent monitoring tool. No home-design content, no link to 3vjia.com or aihouse.com.
+    Rejected on the STEP 0c ownership check.
+- registry: github
+  query: 3vjia / aihouse orgs
+  result: >-
+    github.com/3vjia-UED and github.com/3vjia-te exist but hold 0 public repositories;
+    no SDK, no sample code, no public source. No GitHubOrganization pointer emitted.
+findings:
+- >-
+  3vjia publishes NO first-party client libraries in any public package registry. The
+  Open Platform documentation ships language examples inline (Java, C#, PHP for the SSO
+  signature) but no downloadable, versioned SDK.
+- >-
+  Integration is therefore hand-rolled HTTP: POST JSON to open-gateway.3vjia.com with an
+  OAuth 2.0 client_credentials access_token obtained from graph.3vjia.com.

@@ -1,0 +1,115 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document — the 3vjia Open Platform "接口规范" (interface specification)
+  documents, read via https://devapi.3vjia.com/document/getApiDocument?apiId=<key> on 2026-09-05
+summary: >-
+  3vjia publishes NO AsyncAPI document and no event-streaming surface. It does publish a real
+  webhook/callback surface, inverted: rather than 3vjia registering a subscriber URL through an API,
+  the OPEN PLATFORM DOCUMENTS THE CONTRACT AN INTEGRATOR MUST IMPLEMENT ON THEIR OWN HOST, and the
+  endpoint is registered out of band with a 3vjia project manager. Seven such push contracts are
+  published. Every one is POST + Content-Type application/json, must reply
+  {"code":10000,"message":"..."} on success, may reply code 10001 to decline the push permanently,
+  and any other code causes 3vjia to retry a bounded number of times.
+transport:
+  direction: 3vjia -> integrator (server push)
+  method: POST
+  content_type: application/json
+  subscriber_registration: out-of-band (configured by the 3vjia project manager; some quotation payloads are configured at bj.3vjia.com)
+  soap_supported: false
+  retry: >-
+    Any acknowledgement code other than 10000 or 10001 is treated as a delivery failure and the push
+    is retried a bounded ("一定次数") number of times. The exact retry count and backoff are NOT published.
+acknowledgement:
+  schema:
+    code:
+      type: integer
+      required: true
+      values:
+        10000: success — message accepted
+        10001: decline — do not send this push again
+        other: failure — 3vjia will retry
+    message:
+      type: string
+      required: false
+webhooks:
+- name: scheme.saved
+  title: 接收方案保存消息通知规范 (design scheme saved)
+  docs: https://dev.3vjia.com/v1/document?apiId=ca3b3a3613ff4c0f83767541bac8f60c
+  example_endpoint: https://www.xxxx.com/scheme/receiveMsg
+  operate_types:
+  - SAVE_SCHEME
+  payload_fields: [operateType, operateUser (SimpleUserBO), operateTime, subjectId (scheme id), urlParam]
+  note: May share one endpoint with the order-status webhook.
+- name: order.status.changed
+  title: 接收订单状态变更消息通知规范 (order status change)
+  docs: https://dev.3vjia.com/v1/document?apiId=<order-status-doc>
+  example_endpoint: https://www.xxxx.com/order/receiveMsg
+  payload_fields: [operateType, operateUser (SimpleUserBO), operateTime, subjectId (order id or batch no), extParam (ExtParamMap)]
+  operate_types:
+    CREATE_ORDER: 3D下单 — order placed from 3D
+    C2_SHOP_SUBMIT: 门店：提交订单 — store submits order
+    C2_SHOP_CANCEL: 门店：取消订单 — store cancels order
+    C2_PLATFORM_SIGN: 工厂：签收 — factory signs for order
+    C2_PLATFORM_PASS_P: 工厂：审核通过（平台）— factory approval (platform)
+    C2_PLATFORM_PASS_P_R: 工厂：审核通过（平台，补单）— factory approval (platform, supplementary order)
+    C2_PLATFORM_GETCONFIRM: 工厂：收款确认（平台）— payment receipt confirmed
+    C2_PLATFORM_PAY: 工厂：付款登记（门店）— payment registered by store
+    C2_PLATFORM_BREAK_SUBMIT: 工厂：拆单 — order splitting submitted
+    C2_PLATFORM_BREAK: 工厂：拆单确认 — order splitting confirmed
+    C2_PLATFORM_BATCH: 工厂：生成批次 — production batch generated
+    C2_PLATFORM_PRODUCING: 工厂：生产登记 — production registered
+    C2_PLATFORM_CUT: 工厂：开料登记 — cutting registered
+    C2_PLATFORM_STORAGE: 工厂：入库登记 — warehousing registered
+    C2_TRY_SAOMIAO: 工厂：试装扫描 — trial-assembly scan
+    C2_PLATFORM_EDGE: 工厂：封边登记 — edge-banding registered
+    C2_PLATFORM_HOLE: 工厂：开孔登记 — drilling registered
+    C2_PLATFORM_FIT: 工厂：试装登记 — trial assembly registered
+    C2_PLATFORM_COLOR: 工厂：修色登记 — colour correction registered
+    C2_PLATFORM_SEND: 工厂：发货登记 — shipment registered
+    C2_PLATFORM_CANCEL: 工厂：取消订单 — factory cancels order
+    C2_PLATFORM_BACK: 工厂：退回订单 — factory returns order
+    C2_PLATFORM_COMPLETE: 工厂：完成订单 — factory completes order
+    COMPOSE_ORDER_BATCH: 合成批次 — composed batch
+- name: backoffice.operation
+  title: 接收三维家后台系统操作的消息通知 (back-office operation notification)
+  example_endpoint: https://www.xxxx.com/opetation/receiveMsg
+  payload_fields: [operateType, operateUser (SimpleUserBO), operateTime, subjectId]
+  operate_types:
+    DESIGNISLAND_SCHEME_CHECK_PASS: 方案岛，方案上架审核通过 — Design Island scheme listing approved
+    DESIGNISLAND_SCHEME_OFF_SHELVES: 方案岛，方案下架 — Design Island scheme delisted
+    TEMPLATEROOM_SCHEME_CHECK_PASS: 样板间，方案上架审核通过 — Template Room scheme listing approved
+    TEMPLATEROOM_SCHEME_SHELVES: 样板间，方案上架 — Template Room scheme listed
+    TEMPLATEROOM_SCHEME_OFF_SHELVES: 样板间，方案下架 — Template Room scheme delisted
+    TEMPLATEROOM_SCHEME_DELETE: 样板间，方案删除 — Template Room scheme deleted
+    TEMPLATEROOM_SCHEME_EDIT: 样板间，方案编辑 — Template Room scheme edited
+- name: quotation.scheme.pushed
+  title: 推送方案报价信息接口规范 (scheme quotation push)
+  example_endpoint: https://www.xxxx.com/quotation/receiveMsg
+  trigger: a button added inside the 3D client
+  payload_fields: [schemeId, schemeName, organ (SimpleOrganBO), dept (SimpleDeptBO), author (SimpleUserBO), quoteInfo (QuoteInfoBO, configurable)]
+  note: The quoteInfo block is CONFIGURABLE per customer at bj.3vjia.com, so its shape is not fixed by the contract.
+- name: quotation.order.pushed
+  title: 推送订单报价信息接口规范 (order quotation push)
+  example_endpoint: https://www.xxxx.com/quotation/receiveMsg
+  trigger: a button added inside the 3D client
+  payload_fields: [orderRecordId, orderNo, diyOrderNo, orderName, orderTypeId, orderTypeName, createUser, scheme, customer, shopOrgan, shopDept, urlParam, quoteInfo]
+- name: quotation.order.result
+  title: 推送订单报价结果接口规范 (order quotation calculation result)
+  example_endpoint: https://www.xxxx.com/quotation/receiveMsg
+  operate_types:
+  - QUOTE_ORDER_CALCULATE
+  payload_fields: [operateType, operateUser, operateTime, subjectId, extParam (code, data = result JSON file path, key = result query token, errorMessage)]
+  note: Pairs with the synchronous 发起订单报价计算 / 获取订单报价计算结果 polling operations in the OpenAPI.
+- name: xml.pushed
+  title: 推送Xml信息接口规范 (scheme XML push)
+  example_endpoint: https://www.xxxx.com/quotation/receiveXml
+  trigger: a button added inside the 3D client
+  payload_fields: [schemeId, schemeName, organ, dept, author, orderInfo (OrderInfoBO, when an order file is open), xmlList (List<XmlBO> — network URLs of the XML files)]
+  note: Carries quotation XML, production/machining XML and the newer combined "2-in-1" XML as downloadable URLs.
+asyncapi_document: none
+gaps:
+- No AsyncAPI or CloudEvents document is published.
+- No self-service subscription API — endpoints are registered through a 3vjia project manager.
+- No published signature or shared-secret scheme on the inbound push; authenticity is not documented.
+- Retry count and backoff are described only as "a certain number of times" (一定次数).

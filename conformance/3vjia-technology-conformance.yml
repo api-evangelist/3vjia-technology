@@ -1,0 +1,95 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/3vjia-technology-open-platform-openapi.yml, the 3vjia Open Platform documentation at
+  https://dev.3vjia.com/v1/document, and live probes of open-gateway.3vjia.com / graph.3vjia.com
+  on 2026-09-05
+conformance:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749) — client credentials grant
+  conforms: true
+  evidence: >-
+    POST https://graph.3vjia.com/oauth/token with Content-Type application/x-www-form-urlencoded and
+    grant_type=client_credentials, client_id, client_secret; success returns {access_token, expires_in},
+    failure returns {error, error_description} with error=invalid_client — the RFC 6749 §4.4 / §5.2
+    shapes exactly. Documented at https://dev.3vjia.com/v1/document?apiId=3a985690d1a94edd924372f8c10187ca
+- id: oauth2-metadata
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: false
+  evidence: >-
+    https://graph.3vjia.com/.well-known/oauth-authorization-server returns HTTP 200 with the JSON
+    error envelope {"code":1700200026,...}, not metadata. Probed 2026-09-05.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: >-
+    No /.well-known/openid-configuration on any host (see well-known/3vjia-technology-well-known.yml).
+    The SSO surface at sso.3vjia.com is a proprietary MD5-signed redirect
+    (sign = MD5(userId + appId + time + appKey)), not OIDC.
+- id: rfc9457
+  name: Problem Details for HTTP APIs (RFC 9457)
+  conforms: false
+  evidence: >-
+    Errors use a proprietary {success, code, msg, data} envelope returned with HTTP 200; content-type
+    is application/json, never application/problem+json. See errors/3vjia-technology-problem-types.yml.
+- id: http-status-semantics
+  name: HTTP status semantics (RFC 9110)
+  conforms: false
+  evidence: >-
+    Live probe 2026-09-05: an unauthenticated call to a real operation and a call to a nonexistent
+    path both return HTTP 200. Authentication failure, routing failure and success are
+    status-indistinguishable.
+- id: idempotency
+  name: Idempotent request replay (Idempotency-Key)
+  conforms: false
+  evidence: No idempotency key, header or dedupe parameter in any of the 429 documented operations.
+- id: pagination
+  name: Consistent pagination
+  conforms: true
+  evidence: >-
+    Page-number pagination is applied consistently across the *ListByPage / *Page operations
+    (pageNo/pageSize in the request body, total/records in the response). No cursor pagination.
+- id: rest
+  name: REST / resource-oriented HTTP
+  conforms: false
+  evidence: >-
+    All 429 documented operations are POST regardless of semantics; verbs live in the path
+    (/api/v1/user/deleteBatch). This is RPC over HTTP, not REST.
+- id: openapi
+  name: OpenAPI specification published by the provider
+  conforms: false
+  evidence: >-
+    No OpenAPI, Swagger, GraphQL SDL, AsyncAPI, Protobuf, WSDL or Postman collection is published at
+    any probed location. 3vjia does publish a complete, anonymously readable machine-readable
+    documentation service (devapi.3vjia.com) — see openapi/_source-documentation/README.md.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: >-
+    A real webhook surface exists (7 documented push contracts) but is described only in prose tables.
+    See asyncapi/3vjia-technology-webhooks.yml.
+- id: soap
+  name: SOAP / WS-* 
+  conforms: false
+  evidence: >-
+    Explicitly excluded by the provider: the webhook specifications state "不支持SOAP协议
+    （WebService、WCF）等" — SOAP is not supported. No WSDL was found on any host.
+domain_standards:
+  market: home-furnishing / interior design / custom-furniture manufacturing (CAD, CAM, MES)
+  note: >-
+    REWARD-ONLY check, and this market's standards are file-format and machine standards (DXF/DWG,
+    STEP, IFC, ISO 10303, Woodworking/Homag CIX/BTL, OPC UA for the shop floor) rather than API
+    standards. 3vjia's contract declares none of them: the manufacturing exchange is a proprietary
+    3vjia XML ("报价XML", "生产加工信息", "新版本2合1XML") handed over as a downloadable URL, and the
+    CAD surface is 3vjia's own /api/cad path plus a documented real-time bridge to SketchUp and CAD
+    announced in the July 2026 product release notes. No SCIM, OData, OpenRTB, HL7, X12, ISO 20022,
+    LTI, ActivityPub or OAI-PMH signature appears anywhere in the contract. Recorded as absent, not
+    as a penalty.
+  declared: []
+compliance_certifications: []
+compliance_note: >-
+  No trust center, SOC 2, ISO 27001, PCI DSS or China MLPS (等级保护) certification claim was found on
+  any public 3vjia page. A privacy agreement is published
+  (https://3vj-fcontent.3vjia.com/agreement/2e6ef94b22b34d9db98e4ac9c28965eb.html) and the site
+  carries Chinese ICP filing 粤ICP备14070053号 and public-security filing 粤公网安备44010602002700号,
+  which are regulatory registrations, not security certifications. No Compliance pointer is emitted.

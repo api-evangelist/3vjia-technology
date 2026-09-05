@@ -1,0 +1,41 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  openapi/3vjia-technology-open-platform-openapi.yml plus the 3vjia Open Platform documentation at
+  https://dev.3vjia.com/v1/document. Every operationId referenced in these skills was verified to
+  exist in the derived contract; none was invented.
+note: >-
+  3vjia publishes no AGENTS.md, no skills and no agent-facing documentation of any kind. These are
+  API Evangelist-authored operating instructions grounded in real operationIds, the documented
+  auth model, and the error/idempotency/reversibility semantics recorded in conventions/ and errors/.
+skills:
+- name: 3vjia-authenticate
+  file: 3vjia-technology-authenticate.md
+  description: >-
+    Obtain and maintain an access_token, honour the single-token rule, and read the HTTP-200-on-failure
+    envelope correctly. Every other skill depends on this one.
+  operations: 1
+- name: 3vjia-run-quotation
+  file: 3vjia-technology-quotation.md
+  description: >-
+    Price a scheme or an order through the asynchronous quotation flow, handling errorCode 609006 as
+    the keep-polling signal and 609007 as key expiry.
+  operations: 6
+- name: 3vjia-order-to-production
+  file: 3vjia-technology-order-to-production.md
+  description: >-
+    Move an order from store submission through factory sign-off to a production batch, and reverse it
+    safely — including the returnable-node precondition query that stands in for a return window.
+  operations: 17
+- name: 3vjia-ai-generation
+  file: 3vjia-technology-ai-generation.md
+  description: >-
+    Submit AI image, video, model and floor-plan jobs and poll them to completion without double-spending
+    tenant creation points on a retried submit.
+  operations: 13
+cross_cutting_rules:
+- Branch on the response body's `success` field, never on the HTTP status — failures return HTTP 200.
+- There is no idempotency anywhere; never blind-retry a mutating call that timed out.
+- Only one access_token is valid per application; run a central token service.
+- Reversibility is `documented`, not `verified` — reversal operations exist, no window is published.
+- Documentation and error messages are Chinese-only.

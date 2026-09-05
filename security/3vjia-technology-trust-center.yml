@@ -1,0 +1,21 @@
+generated: '2026-09-05'
+method: searched
+source: www.3vjia.com, dev.3vjia.com, mall.3vjia.com, www.aihouse.com, searched 2026-09-05
+published: false
+certifications: []
+regulatory_registrations:
+- type: ICP filing (China)
+  value: 粤ICP备14070053号
+  registry: https://beian.miit.gov.cn/
+- type: Public security network filing (China)
+  value: 粤公网安备44010602002700号
+  registry: http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010602002700
+privacy:
+  published: true
+  url: https://3vj-fcontent.3vjia.com/agreement/2e6ef94b22b34d9db98e4ac9c28965eb.html
+  title: 隐私协议 (privacy agreement)
+note: >-
+  No trust center, no security portal, and no claim of SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or
+  China MLPS (等级保护) certification appears on any public 3vjia or AiHouse page. The ICP and public
+  security filings above are mandatory Chinese website registrations, not security certifications, and
+  must not be read as such. No TrustCenter and no Compliance pointer is emitted.

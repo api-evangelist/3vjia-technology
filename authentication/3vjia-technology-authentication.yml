@@ -1,0 +1,99 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document?apiId=3a985690d1a94edd924372f8c10187ca (获取access_token接口),
+  https://dev.3vjia.com/v1/document?apiId=d39aed16895f4f4bb88df99d38f93fb3 (新手指南),
+  the SSO联合单点登录 specification, and live probes of open-gateway.3vjia.com and
+  graph.3vjia.com on 2026-09-05. Baseline derived by 0-working/derive-authentication.py from
+  openapi/3vjia-technology-open-platform-openapi.yml, then upgraded from the documentation.
+docs: https://dev.3vjia.com/v1/document?apiId=3a985690d1a94edd924372f8c10187ca
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+  self_serve: false
+  sandbox: false
+schemes:
+- name: oauth2ClientCredentials
+  type: oauth2
+  applies_to: all 429 documented operations on open-gateway.3vjia.com
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://graph.3vjia.com/oauth/token
+    request_content_type: application/x-www-form-urlencoded
+    parameters:
+      grant_type: client_credentials
+      client_id: the application's appId
+      client_secret: the application's appKey
+    success_response: '{"access_token": "<token>", "expires_in": 7200}'
+    error_response: '{"error": "invalid_client", "error_description": "invalid client_id and client_secret"}'
+    scopes: 0
+    scopes_note: >-
+      No scopes are defined. The grant is all-or-nothing at the application level; authorisation is
+      enforced by which operations the enterprise's contract enables, not by scope.
+  token:
+    ttl_seconds: 7200
+    single_token_rule: >-
+      Only ONE access_token is valid per application at a time — issuing a new one invalidates the
+      previous one. The provider therefore requires an enterprise-wide central token service
+      ("企业需搭建access_token的中控服务"), and warns that independent per-system fetches will conflict.
+      The documentation also recommends exposing a passive refresh endpoint so a caller that observes
+      an expiry can trigger a refresh rather than waiting for the timer.
+    expiry_signal: 'code 1700200026 — 凭证已过期，请重新授权 (observed live on graph.3vjia.com, HTTP 200)'
+  transport:
+    current_gateway: >-
+      https://open-gateway.3vjia.com — the token is presented as the gateway requires; an
+      unauthenticated call returns HTTP 200 with {"code":100100002,"msg":"缺少访问凭证信息"}.
+    legacy_gateway: 'https://open.3vjia.com/<path>?sysCode=external&access_token=<token> — token in the query string'
+  credential_issuance:
+    self_serve: false
+    steps:
+    - Enterprise administrator applies as a developer at https://dev.3vjia.com/manage/my-app/developer
+    - Wait for 3vjia approval
+    - Register an application at https://dev.3vjia.com/manage/my-app/app-manage
+    - Wait for approval; appId/appKey are then issued
+  description: >-
+    OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at
+    https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the
+    previous token.
+  sources:
+  - https://dev.3vjia.com/v1/document?apiId=3a985690d1a94edd924372f8c10187ca
+  - openapi/3vjia-technology-open-platform-openapi.yml
+additional_mechanisms:
+- name: SSO 联合单点登录 (federated single sign-on)
+  type: signed redirect
+  host: https://sso.3vjia.com/JointLogin/Index
+  signature: MD5(userId + appId + time + appKey)
+  timestamp: 10-digit Unix seconds, ±5 minutes tolerance
+  parameters: [userid, appid, time, sign, redirect_uri]
+  binding: >-
+    An external user id is bound to a 3vjia account either in advance via the account-binding
+    operations, or interactively by the designer on first sign-in.
+  note: >-
+    A separate mechanism from the API token, on a separate host, with a separate credential use of
+    appKey. MD5 without a salt or HMAC construction is weak by modern standards; the ±5 minute
+    window is the only replay bound.
+  sources:
+  - https://dev.3vjia.com/v1/document (SSO联合单点登录)
+- name: 授权登录授权码 (authorization code for delegated login)
+  type: temporary code
+  operation: commonApiJoinAuthAuthorize
+  ttl: ten minutes (十分钟内有效)
+  note: >-
+    Exchanges an enterprise user id for a short-lived code plus a token expiry, for opening a 3vjia
+    application as a specific user.
+- name: OSS upload signatures
+  type: short-lived object-storage signature
+  operations:
+  - apiV1ModelOssGetUploadToken
+  - apiV1TextureOssGetUploadToken
+  - apiV1LineOssGetUploadToken
+  - apiV1NjvrStsGetSign
+  note: Direct-to-object-storage uploads are authorised by a separately issued, short-lived signature.
+gaps:
+- No scopes, so an application token carries the full contracted surface — no least privilege.
+- No authorization-server metadata (RFC 8414) and no OIDC discovery document.
+- No mutual TLS, no key rotation guidance, no published credential-revocation procedure.
+- No sandbox or test credential; there is nowhere to exercise auth without a production application.
+- Authentication failures return HTTP 200, so standard 401-driven token-refresh middleware will not fire.

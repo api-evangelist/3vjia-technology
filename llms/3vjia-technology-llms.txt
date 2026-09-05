@@ -1,0 +1,89 @@
+# 3vjia Technology (三维家 / AiHouse)
+
+> 3vjia Technology (Guangdong Sanweijia Information Technology Co., Ltd.) is a Guangzhou home-furnishing
+> industrial-software company founded in 2013. It runs a cloud 3D design and manufacturing platform for
+> the interior-decoration and custom-furniture industry, joining design, quotation, order placement,
+> order splitting and factory production into one chain. Its Open Platform exposes 429 documented
+> operations at https://open-gateway.3vjia.com.
+
+<!-- generated: 2026-09-05 -->
+<!-- method: generated -->
+<!-- source: apis.yml + repo artifacts; no /llms.txt is published by 3vjia on any host -->
+
+## What an agent needs to know first
+
+- **Access is gated.** Every operation requires an enterprise OAuth 2.0 `client_credentials` token.
+  appId/appKey are issued only after an enterprise developer application AND an application
+  registration are approved at https://dev.3vjia.com/manage/my-app/developer. There is no self-serve key.
+- **Failures are HTTP 200.** The gateway returns HTTP 200 for success, for a missing credential
+  (`code: 100100002`) and for an unrouted path (`code: 100001012`). Branch on the body's `success`
+  field, never on the status code.
+- **There is no idempotency.** No idempotency key, dedupe parameter or replay guard exists on any of
+  the 429 operations. A retried write is a real double-fire risk.
+- **Everything is POST.** All 429 operations are `POST` with `Content-Type: application/json;charset=utf-8`;
+  the verb lives in the path (`/api/v1/user/deleteBatch`). This is RPC over HTTP, not REST.
+- **Documentation is Chinese-only.**
+- **The provider publishes no OpenAPI.** It publishes a complete, anonymously readable documentation
+  service instead. The OpenAPI in this repository is a mechanical transform of it and is marked derived.
+
+## API
+
+- [3vjia Open Platform API](https://dev.3vjia.com/v1/document): 429 POST operations on
+  https://open-gateway.3vjia.com covering accounts and SSO, design schemes, product and material
+  libraries, quotation, store and factory orders, production batches, AIMES/MOS/DMS manufacturing data,
+  floor plans and generative AI.
+- [OpenAPI (derived)](openapi/3vjia-technology-open-platform-openapi.yml): OpenAPI 3.1.0, 429 operations,
+  19 tags, request/response examples on 420 of them.
+- [Verbatim source documentation](openapi/_source-documentation/): the unmodified JSON catalogs fetched
+  from 3vjia's own documentation API on 2026-09-05.
+
+## Authentication
+
+- [Authentication profile](authentication/3vjia-technology-authentication.yml)
+- Token endpoint: `POST https://graph.3vjia.com/oauth/token`,
+  `Content-Type: application/x-www-form-urlencoded`, `grant_type=client_credentials`,
+  `client_id=<appId>`, `client_secret=<appKey>`. Returns `{access_token, expires_in: 7200}`.
+- **Only one token is valid at a time.** A new token invalidates the previous one, so the provider
+  requires an enterprise-wide central token service rather than per-system fetches.
+- Separate SSO: `https://sso.3vjia.com/JointLogin/Index`, MD5-signed redirect
+  (`sign = MD5(userId + appId + time + appKey)`), ±5 minute clock tolerance.
+
+## Runtime semantics
+
+- [Conventions](conventions/3vjia-technology-conventions.yml): auth style, pagination, tracing,
+  versioning, idempotency (coverage: none) and reversibility (grade: documented).
+- [Error catalog](errors/3vjia-technology-problem-types.yml): the `{success, code, msg, data}` envelope
+  and every documented and probed error code.
+- [Rate limits](rate-limits/3vjia-technology-rate-limits.yml): none published — an honest zero, plus the
+  adjacent constraints (single-token rule, 7200s TTL, ±5 min SSO skew, quotation key expiry).
+- [Webhooks](asyncapi/3vjia-technology-webhooks.yml): seven documented push contracts the INTEGRATOR
+  implements on their own host, acknowledged with `{"code": 10000}`.
+- [Data model](data-model/3vjia-technology-data-model.yml): the entity graph rooted at `organId`.
+- [Overlay](overlays/3vjia-technology-open-platform-overlay.yaml): our findings, without mutating the contract.
+
+## Agent skills
+
+- [Skill index](skills/_index.yml)
+
+## What 3vjia does not publish
+
+- No OpenAPI, Swagger, GraphQL SDL, AsyncAPI, Protobuf, WSDL or Postman collection.
+- No `/llms.txt`, no `/.well-known/` documents on any of eight probed hosts, no agent card.
+- No MCP server — hosted or stdio. See [mcp/](mcp/3vjia-technology-mcp.yml) (`mode: none`).
+- No client SDK in any public package registry; the two GitHub organizations hold zero public repos.
+- No API changelog, no status page, no deprecation policy, no SLA, no published rate limits.
+- No security.txt, bug bounty, trust center or published certification.
+
+## Company
+
+- [Website](https://www.3vjia.com/)
+- [Open Platform](https://dev.3vjia.com/)
+- [Help center](https://www.3vjia.com/helpcenter) — also the only place dated release notes appear
+- [Pricing](https://mall.3vjia.com/) — for the design software; API access is contact-sales
+- [Privacy agreement](https://3vj-fcontent.3vjia.com/agreement/2e6ef94b22b34d9db98e4ac9c28965eb.html)
+- International brand: AiHouse (https://www.aihouse.com/)
+
+## About this file
+
+Generated by API Evangelist from the public 3vjia surface. This is an independent third-party profile;
+3vjia does not operate or endorse it. Corrections: https://github.com/api-evangelist/3vjia-technology

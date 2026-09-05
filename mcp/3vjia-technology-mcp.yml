@@ -1,0 +1,111 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Searched for an official 3vjia / AiHouse MCP server (web search, dev.3vjia.com, help.3vjia.com,
+  the GitHub 3vjia-* and aihouse-* accounts, npm and PyPI) on 2026-09-05 — none exists. The tools
+  below are CANDIDATES derived from openapi/3vjia-technology-open-platform-openapi.yml.
+status: candidate
+official_server: false
+apis_yml_pointer: none
+pointer_note: >-
+  NO type: MCPServer pointer is emitted in apis.yml. That pointer asserts the provider serves an MCP
+  server, and 3vjia does not — deployment.mode is none. This file records the absence and a candidate
+  tool set, not a surface anyone can call.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  note: >-
+    3vjia ships no MCP server of any kind — no hosted endpoint, no stdio package, no reference in
+    the Open Platform documentation. mode:none records that nobody ships one; the tools below are our
+    derivation, not a product. No endpoint was guessed and none should be inferred from this file.
+search_evidence:
+- probe: web search for "三维家 MCP" / "AiHouse MCP" / "3vjia model context protocol"
+  result: no first-party result
+- probe: https://dev.3vjia.com/v1/document (429 operations + 99 legacy documents)
+  result: the string MCP does not appear
+- probe: npm registry search 3vjia / aihouse / sanweijia
+  result: no first-party package
+- probe: github.com/3vjia-UED, github.com/3vjia-te
+  result: 0 public repositories
+candidate_tools:
+  note: >-
+    A first cut at the tool set an MCP server over this API would expose. Each binds to real
+    operationIds from the derived OpenAPI; see mcp/3vjia-technology-tool-crosswalk.yml for the full
+    binding table. Every tool would require an enterprise OAuth 2.0 client_credentials token, so this
+    is an operator-installed server, not an anonymous one.
+  tools:
+  - name: list_design_schemes
+    description: List a tenant's design schemes, optionally filtered by category, with paging.
+    rest: [apiV1SchemeGetSchemeListByPage, apiV2SchemeGetSchemeListByPage]
+    consequence: read
+  - name: get_design_scheme
+    description: Fetch one design scheme including its floor-plan information.
+    rest: [apiV1LayoutSchemeGetDetail]
+    consequence: read
+  - name: get_scheme_product_list
+    description: Fetch the product/BOM list attached to a design scheme.
+    rest: [apiV1SchemeGetSchemeProduct, apiV1QuotationGetSchemeProductPrice]
+    consequence: read
+  - name: get_scheme_renderings
+    description: List rendered effect images, panoramas and construction drawings for a scheme.
+    consequence: read
+  - name: start_quotation
+    description: Start an asynchronous quotation calculation for a scheme or order; returns a key.
+    rest: [apiV1QuotationQuoteScheme, apiV1QuotationQuoteOrder]
+    consequence: write
+  - name: get_quotation_result
+    description: Poll a quotation calculation by key. Code 609006 means keep polling.
+    rest: [apiV1QuotationQueryQuoteSchemeResult, apiV1QuotationQueryQuoteOrderResult]
+    consequence: read
+  - name: list_orders
+    description: List store or factory orders with paging.
+    consequence: read
+  - name: get_order
+    description: Fetch one order, its parts list, attachments, payment and follow-up records.
+    consequence: read
+  - name: submit_order
+    description: Submit a store order to the factory.
+    consequence: write
+    reversible_by: cancel/return order status transitions
+  - name: return_factory_order
+    description: Return a factory order to the store. Check returnable nodes first.
+    rest: [apiV1AimesFactoryOrderOpReturnFactoryOrder]
+    precondition: apiV1AimesFactoryOrderOpGetReturnSetting
+    consequence: write
+  - name: generate_production_batch
+    description: Generate a production batch from selected factory orders; poll for the result.
+    consequence: write
+  - name: list_materials
+    description: List a tenant's material/model library with category filters and paging.
+    consequence: read
+  - name: upload_material
+    description: Create a material upload task and upload a model, texture or moulding.
+    consequence: write
+  - name: list_accounts
+    description: List enterprise accounts, departments and stores.
+    rest: [apiV1UserListByPage, apiV1DepartmentGetDeptListByPage]
+    consequence: read
+  - name: bind_account
+    description: Bind an external system user to a 3vjia account for SSO.
+    consequence: write
+    rest: [apiV1AccountbindingBindAccount]
+    reversible_by: apiV1AccountbindingUnBindAccount
+  - name: generate_ai_image
+    description: Submit a 3vjia AI image-generation task (render, restyle, product replacement); returns a taskId.
+    consequence: write
+    cost: consumes tenant creation points
+  - name: get_ai_task
+    description: Poll a 3vjia AI task by taskId.
+    consequence: read
+  - name: list_floor_plans
+    description: Search the cloud floor-plan/property library.
+    consequence: read
+gaps_for_an_agent:
+- No MCP server, so an agent must call the HTTP API directly with an enterprise token.
+- Failures are HTTP 200 with the outcome in the body — an agent must branch on body.success, never status.
+- No idempotency, so a retried write is a genuine double-fire risk.
+- All operation summaries and field descriptions are Chinese-only.

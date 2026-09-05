@@ -1,0 +1,127 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document (3vjia Open Platform documentation, read via
+  devapi.3vjia.com on 2026-09-05) plus live unauthenticated probes of
+  https://open-gateway.3vjia.com and https://graph.3vjia.com
+format: proprietary
+rfc9457: false
+summary: >-
+  3vjia does NOT use RFC 9457 problem+json and does not signal failure with HTTP status codes on the
+  business gateway. open-gateway.3vjia.com answers HTTP 200 with content-type application/json for
+  success, for missing credentials AND for unrouted paths; the outcome lives entirely in the body
+  envelope. An agent that branches on HTTP status will read every failure as a success.
+envelope:
+  shape: '{"success": <bool>, "code": <int>, "msg": <string>, "data": <object|null>}'
+  legacy_shape: '{"success": <bool>, "errorCode": <int>, "errorMessage": <string>, "result": <object|null>}'
+  note: >-
+    The current gateway (open-gateway.3vjia.com) uses success/code/msg/data. The legacy gateway
+    (open.3vjia.com) documents success/errorCode/errorMessage/result. Both appear in the published
+    documentation; the legacy shape is what the older 接口规范 documents describe.
+  success_indicator: success == true (code 0 on the current gateway)
+transport_semantics:
+  http_status_on_business_error: 200
+  evidence:
+  - url: https://open-gateway.3vjia.com/api/v1/user/listByPage
+    method: POST
+    status: 200
+    body: '{"msg":"缺少访问凭证信息","code":100100002,"success":false}'
+    probed: '2026-09-05'
+  - url: https://open-gateway.3vjia.com/api/v1/this/path/does/not/exist
+    method: POST
+    status: 200
+    body: '{"msg":"请求资源不存在","code":100001012,"success":false}'
+    probed: '2026-09-05'
+  request_id_header: magiccube-req-id
+problem_types:
+- code: 100100002
+  title: 缺少访问凭证信息
+  title_en: Missing access credential
+  http_status: 200
+  category: authentication
+  remediation: >-
+    Obtain an access_token via POST https://graph.3vjia.com/oauth/token
+    (grant_type=client_credentials, client_id=appId, client_secret=appKey) and present it as the
+    gateway requires. Observed live 2026-09-05; also the signal that a documented path DOES exist.
+  method: probed
+- code: 100001012
+  title: 请求资源不存在
+  title_en: Requested resource does not exist
+  http_status: 200
+  category: routing
+  remediation: >-
+    The path is not routed by the gateway. Note this is indistinguishable from a typo'd path — it is
+    the gateway's soft-404. Observed live 2026-09-05.
+  method: probed
+- code: 1700200026
+  title: 凭证已过期，请重新授权
+  title_en: Credential expired, re-authorize
+  http_status: 200
+  host: graph.3vjia.com
+  category: authentication
+  remediation: access_token TTL is 7200 seconds; request a new one. Observed live 2026-09-05.
+  method: probed
+- code: 170020404
+  title: 服务响应失败，请稍后重试
+  title_en: Service response failed, retry later
+  http_status: 200
+  host: graph.3vjia.com
+  category: availability
+  method: probed
+- code: -3
+  title: 传入的参数不符合要求
+  title_en: Supplied parameters do not meet requirements
+  category: validation
+  source_doc: 获取报价计算结果接口 / 获取订单报价计算结果接口
+  method: searched
+- code: 609004
+  title: '报价计算失败，原因:xxx'
+  title_en: Quotation calculation failed
+  category: business
+  source_doc: 获取报价计算结果接口
+  method: searched
+- code: 609005
+  title: 查询报价的Key值非法
+  title_en: Quotation query key is invalid
+  category: validation
+  source_doc: 获取报价计算结果接口
+  method: searched
+- code: 609006
+  title: 正在计算报价
+  title_en: Quotation is still calculating
+  category: async-pending
+  remediation: >-
+    NOT a terminal failure — this is the poll-again signal. The documentation states explicitly that
+    errorCode 609006 means the client should keep polling 获取报价计算结果接口.
+  source_doc: 获取报价计算结果接口
+  method: searched
+- code: 609007
+  title: 查询报价的Key值已过期
+  title_en: Quotation query key has expired
+  category: expiry
+  source_doc: 获取报价计算结果接口
+  method: searched
+- code: 500001
+  title: 用户不存在 (example error message shown for the generic failure code)
+  title_en: Generic business failure (documented example — user does not exist)
+  category: business
+  source_doc: 获取报价计算结果接口 (请求失败数据结构 example)
+  method: searched
+oauth_errors:
+  host: graph.3vjia.com
+  shape: '{"error": <string>, "error_description": <string>}'
+  http_status: non-200
+  types:
+  - error: invalid_client
+    error_description: invalid client_id and client_secret
+    source_doc: 获取access_token接口
+webhook_acknowledgement_codes:
+  note: Codes an INTEGRATOR returns to 3vjia on a push; see asyncapi/3vjia-technology-webhooks.yml
+  10000: success
+  10001: decline permanently — stop sending this push
+  other: failure — 3vjia retries a bounded number of times
+gaps:
+- No consolidated error-code reference page is published; codes are scattered across per-operation docs.
+- The 100xxxxxx gateway code family is not documented at all — it was recovered by probing.
+- No RFC 9457 problem+json, no type URIs, no machine-readable error registry.
+- Failures are HTTP 200, so retry/backoff middleware keyed on status codes will not fire.

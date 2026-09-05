@@ -1,0 +1,55 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document, https://www.3vjia.com/helpcenter, and derived from
+  openapi/3vjia-technology-open-platform-openapi.yml
+versioning:
+  style: URI path segment
+  current: v1
+  observed_segments: [v1, v2]
+  policy_published: false
+  note: >-
+    /api/v1/... is the dominant prefix on open-gateway.3vjia.com; a small number of legacy
+    quotation paths carry /common/api/v2/ on open.3vjia.com. 3vjia publishes no versioning policy,
+    no version-support window and no version-negotiation mechanism.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: 0
+  note: >-
+    No operation in the published documentation is marked deprecated, and no Sunset or Deprecation
+    response header is documented or observed. The legacy gateway open.3vjia.com and its 99-document
+    doc set still stand alongside the current open-gateway.3vjia.com set with no stated migration
+    date, which is a de facto unmanaged deprecation.
+status_page:
+  published: false
+  probed:
+  - url: https://status.3vjia.com/
+    status: 200
+    finding: >-
+      soft-404 — resolves but serves the www.3vjia.com marketing homepage
+      (title "室内家装装修效果图设计软件-在线家装设计软件-三维家官网"). Not a status page.
+  note: No StatusPage pointer is emitted; 3vjia publishes no availability or incident page.
+sla:
+  published: false
+  note: No uptime commitment, support-response target or credit scheme is published on any public page.
+support:
+  channels:
+  - type: help center
+    url: https://www.3vjia.com/helpcenter
+  - type: phone
+    value: 400-0006-720
+    hours: 08:30-20:30 China time
+  - type: developer portal ticketing
+    url: https://dev.3vjia.com/
+    note: requires an approved developer account
+availability_observation:
+  host: open-gateway.3vjia.com
+  probed: '2026-09-05'
+  finding: >-
+    Intermittently unreachable from a United States vantage point — roughly one in three requests
+    timed out at 15-25s, the rest answered in under a second over HTTP/2 with valid TLS. The service
+    is fronted by Alibaba Cloud (response headers serve-vendor: ali). This is a latency/reachability
+    observation about cross-border access, not an outage claim.

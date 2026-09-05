@@ -1,0 +1,168 @@
+generated: '2026-09-05'
+method: probed
+source: live HTTP probes, 2026-09-05
+note: >-
+  Every named /.well-known/ path was probed on all eight hosts this record knows. NOTHING was
+  served. The 200s recorded below are NOT documents: www.3vjia.com, dev.3vjia.com and
+  help.3vjia.com are SPA catch-alls that answer 200 with an HTML shell for any path;
+  open-gateway.3vjia.com and graph.3vjia.com answer 200 with a JSON error envelope
+  ({"code":100001012,"msg":"请求资源不存在"} / {"code":1700200026,...}) for any unrouted path.
+  Per the pipeline rule, no WellKnown and no SecurityTxt pointer is emitted — this file records
+  a verified ABSENCE.
+hosts:
+- host: www.3vjia.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 302
+    note: redirects to the marketing site; not a document
+  - path: /.well-known/oauth-authorization-server
+    status: 302
+    note: redirects to the marketing site; not a document
+  - path: /.well-known/api-catalog
+    status: 302
+    note: redirects to the marketing site; not a document
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: 3vjia.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+  - path: /llms.txt
+    status: 301
+- host: dev.3vjia.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: SPA HTML shell, not a document
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: body is the literal string "Not found"
+  - path: /.well-known/api-catalog
+    status: 200
+    note: SPA HTML shell, not a document
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: devapi.3vjia.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: open-gateway.3vjia.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: 'JSON error envelope {"code":100001012,"msg":"请求资源不存在"} — not a document'
+  - path: /.well-known/api-catalog
+    status: 200
+    note: JSON error envelope — not a document
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    note: JSON error envelope — not a document
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: JSON error envelope — not a document
+  - path: /.well-known/agent.json
+    status: 200
+    note: JSON error envelope — not a document
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+- host: graph.3vjia.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: >-
+      JSON error envelope {"code":1700200026,"msg":"凭证已过期，请重新授权"} — not RFC 8414 metadata.
+      graph.3vjia.com IS the OAuth 2.0 token endpoint host (POST /oauth/token) but publishes no
+      authorization-server metadata document.
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: JSON error envelope — not OIDC discovery metadata
+  - path: /.well-known/security.txt
+    status: 200
+    note: JSON error envelope — not a document
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: JSON error envelope — not a document
+  - path: /.well-known/agent.json
+    status: 200
+    note: JSON error envelope — not a document
+- host: help.3vjia.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: SPA HTML shell, not a document
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: SPA HTML shell, not a document
+  - path: /.well-known/api-catalog
+    status: 200
+    note: SPA HTML shell, not a document
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: www.aihouse.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 307
+    note: locale redirect to /global/... which returns a Next.js error page
+  - path: /.well-known/openid-configuration
+    status: 307
+  - path: /.well-known/oauth-authorization-server
+    status: 307
+  - path: /.well-known/api-catalog
+    status: 307
+  - path: /.well-known/ai-plugin.json
+    status: 307
+  - path: /.well-known/agent-card.json
+    status: 307
+  - path: /.well-known/agent.json
+    status: 307
+  - path: /llms.txt
+    status: 307
+  - path: /robots.txt
+    status: 200
+    note: >-
+      served, but robots.txt is not one of the scored well-known documents. Declares
+      Sitemap https://www.aihouse.com/sitemap.xml and disallows /api/ and /graph/.

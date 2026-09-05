@@ -1,0 +1,21 @@
+generated: '2026-09-05'
+method: derived
+source: openapi/3vjia-technology-open-platform-openapi.yml
+schemes:
+- name: oauth2ClientCredentials
+  source: openapi/3vjia-technology-open-platform-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://graph.3vjia.com/oauth/token
+  description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application
+    approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting
+    invalidates the previous token.
+scopes: []
+scope_count: 0
+apis_yml_pointer: none
+note: >-
+  The OAuth 2.0 client_credentials grant on graph.3vjia.com defines NO scopes — the token carries the
+  whole contracted surface and authorisation is enforced by what the enterprise's contract enables, not
+  by scope. No type: OAuthScopes pointer is emitted in apis.yml, because there is no scope surface to
+  point at; authentication/3vjia-technology-authentication.yml carries the auth model. This file records
+  the verified zero.

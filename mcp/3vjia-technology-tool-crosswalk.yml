@@ -1,0 +1,99 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  mcp/3vjia-technology-mcp.yml (candidate tools) bound to
+  openapi/3vjia-technology-open-platform-openapi.yml operationIds
+note: >-
+  3vjia ships NO MCP server and NO GraphQL surface, so this is not a crosswalk between two shipped
+  interfaces. It is the forward map from the candidate tool set to the REST operations that would back
+  it, plus — the part that is actually load-bearing — the record of how much of the 429-operation REST
+  surface no plausible tool set reaches. Confidence is `high` only where a documented operationId is
+  named; the candidate tools were bound by name and semantics against the derived spec.
+surfaces:
+  openapi:
+    file: openapi/3vjia-technology-open-platform-openapi.yml
+    operations: 429
+    gated: true
+    note: enterprise OAuth 2.0 client_credentials; anonymous calls return code 100100002
+  graphql:
+    endpoint: null
+    present: false
+  mcp:
+    url: null
+    present: false
+crosswalk:
+- tool: list_design_schemes
+  category: schemes
+  rest: [apiV1SchemeGetSchemeListByPage, apiV2SchemeGetSchemeListByPage]
+  binding: one-to-one
+  confidence: high
+  note: v1 and v2 of the same operation are both live and both documented; a tool has to choose.
+- tool: get_design_scheme
+  category: schemes
+  rest: [apiV1LayoutSchemeGetDetail]
+  binding: one-to-one
+  confidence: medium
+  note: >-
+    several scheme-detail operations exist across product lines (apiV1LayoutSchemeGetDetail for
+    layout schemes, apiV1SchemesLandGetGoodsDetail for Design Island listings); the right one depends
+    on which product the tenant licenses.
+- tool: get_scheme_product_list
+  category: schemes
+  rest: [apiV1SchemeGetSchemeProduct, apiV1QuotationGetSchemeProductPrice]
+  binding: composite
+  confidence: high
+  note: 获取方案产品清单接口 and 获取方案成品清单接口 are separate operations covering the raw and priced BOM.
+- tool: start_quotation
+  category: quotation
+  rest: [apiV1QuotationQuoteScheme, apiV1QuotationQuoteOrder]
+  binding: one-to-many
+  confidence: high
+  note: two variants — scheme-level (quoteScheme) and order-level (quoteOrder).
+- tool: get_quotation_result
+  category: quotation
+  rest: [apiV1QuotationQueryQuoteSchemeResult, apiV1QuotationQueryQuoteOrderResult]
+  binding: one-to-many
+  confidence: high
+  note: poll the variant matching the submit call. Terminal condition is errorCode != 609006.
+- tool: return_factory_order
+  category: orders
+  rest: [apiV1AimesFactoryOrderOpReturnFactoryOrder]
+  binding: one-to-one
+  confidence: high
+  note: must be preceded by apiV1AimesFactoryOrderOpGetReturnSetting to learn which nodes still allow a return.
+- tool: list_accounts
+  category: accounts
+  rest: [apiV1UserListByPage, apiV1DepartmentGetDeptListByPage, apiV1DepartmentGetDeptTreeList]
+  binding: composite
+  confidence: high
+- tool: bind_account
+  category: accounts
+  rest: [apiV1AccountbindingBindAccount, apiV1AccountbindingUnBindAccount, apiV1AccountbindingGetAccountBindingRelation]
+  binding: inverse-pair
+  confidence: high
+mcp_only: []
+rest_only:
+  count_estimate: ~400
+  note: >-
+    The overwhelming majority of the 429 operations have no plausible agent tool, and the reason is
+    structural rather than an oversight on our part. Three groups:
+  groups:
+  - group: 专属服务 (dedicated services)
+    operations: 17 sub-categories keyed to individual enterprise ids (C00000022, C00000868, C11876880, ...)
+    reason: >-
+      single-customer operations. They are published in the public catalog but are only callable by
+      the one tenant they were built for, so no general tool can wrap them.
+  - group: AIMES / MOS shop-floor operations
+    reason: >-
+      packaging, batching, scheduling optimisation, material management and production registration —
+      machine-to-machine MES traffic with no agent-shaped intent.
+  - group: fine-grained CRUD
+    reason: >-
+      dozens of near-identical add/edit/delete operations per entity (materials, categories,
+      departments, shops, channels) that a tool set would collapse into a handful of parameterised tools.
+coverage:
+  rest_operations: 429
+  tools_defined: 18
+  bound_with_confirmed_operation_ids: 8
+  mcp_only: 0
+  graphql_only: 0

@@ -1,0 +1,73 @@
+generated: '2026-09-05'
+method: searched
+source: https://www.3vjia.com/helpcenter (更新通知 / 更新公告 sections), read 2026-09-05
+scheme: dated product release notes, per product line, published as help-center articles
+api_changelog: false
+note: >-
+  3vjia publishes NO API changelog. The Open Platform (dev.3vjia.com) carries no release notes, no
+  dated entries and no version history for its 429 operations. What IS published is a set of dated
+  PRODUCT release notes in the help center — one "更新通知" (update notice) category per product line
+  (3D Cloud Design, DMS, AI Dream Home, AI Light Design, MCS). They describe end-user features, not
+  contract changes, so an integrator cannot learn from them whether an operation changed.
+current_version:
+  note: no single platform version is published; each product line versions independently
+  observed:
+  - product: DMS 2.0
+    version: V2.3.6
+  - product: MCS 3.0
+    version: V2.6.0627.0
+entries:
+- date: '2026-07-30'
+  product: AI 轻设计 (AI Light Design)
+  title: 20260730功能更新
+  breaking: unknown
+  source: https://www.3vjia.com/helpcenter
+- date: '2026-06-30'
+  product: AI 轻设计 (AI Light Design)
+  title: 20260630功能更新
+  breaking: unknown
+  source: https://www.3vjia.com/helpcenter
+- date: '2026-06-09'
+  product: AI 轻设计 (AI Light Design)
+  title: 20260609功能更新
+  breaking: unknown
+  source: https://www.3vjia.com/helpcenter
+- date: '2026-05-30'
+  product: AI 轻设计 (AI Light Design)
+  title: 20260530功能更新
+  breaking: unknown
+  source: https://www.3vjia.com/helpcenter
+- date: null
+  date_text: 7月 (July)
+  product: 全屋定制 / 硬装 / 铝门窗 (whole-house customisation, hard decoration, aluminium doors and windows)
+  title: 7月新功能 | 全屋定制&硬装&铝门窗，前后端设计智造再升级
+  highlights: front-to-back design and manufacturing upgrade across the three product lines
+- date: null
+  date_text: 7月 (July)
+  product: 3D Cloud Design
+  title: 7月新功能 | 三维家与SketchUp、CAD实现实时同步互联，打通跨软件设计链路
+  highlights: real-time sync interoperability with SketchUp and CAD
+- date: null
+  date_text: 4月 (April)
+  product: 定制 / 报价 (customisation, quotation)
+  title: 4月新功能 | 定制能力升级，图纸报价上新，设计出图、下单报价一步到位
+  highlights: drawing-based quotation added
+- date: null
+  date_text: 3月 (March)
+  product: 渲染 (rendering)
+  title: 3月新功能 | 一键智能美化+新HDR外景
+  highlights: one-click smart beautification, new HDR exterior scenes
+- date: null
+  product: MCS 3.0
+  title: 功能更新 | MCS3.0-V2.6.0627.0多产线更新公告
+  highlights: multi-production-line update
+- date: null
+  product: DMS 2.0
+  title: 功能更新 | 【DMS-2.0】-DMS2.0-V2.3.6版本更新内容
+- date: null
+  product: DMS 2.0
+  title: 功能更新 | 【DMS-2.0】-DMS2.0-V2.2.5版本更新内容
+gaps:
+- No changelog, release notes or version history for the Open Platform API itself.
+- Entries carry no machine-readable date on the page and no RSS/Atom feed.
+- No breaking-change flagging of any kind.

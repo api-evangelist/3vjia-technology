@@ -1,0 +1,137 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://dev.3vjia.com/v1/document (3vjia Open Platform documentation, read via devapi.3vjia.com),
+  derived from openapi/3vjia-technology-open-platform-openapi.yml, and live probes of
+  open-gateway.3vjia.com on 2026-09-05
+api_style:
+  protocol: HTTP/2 over TLS, JSON
+  shape: RPC-over-POST — every one of the 429 documented operations is POST, none is GET/PUT/DELETE
+  path_style: '/api/v1/<domain>/<verbNoun>, e.g. /api/v1/user/listByPage, /api/v1/dms/order/deleteProduceOrder'
+  content_type: application/json;charset=utf-8
+  note: >-
+    Resource semantics are carried in the path verb, not the HTTP method. There is no HTTP caching,
+    conditional-request or method-based safety signal: a read and a delete are both POST.
+authentication:
+  style: OAuth 2.0 client_credentials bearer token
+  token_endpoint: https://graph.3vjia.com/oauth/token
+  token_ttl_seconds: 7200
+  credential: appId (client_id) + appKey (client_secret), issued after developer + app approval
+  legacy_transport: 'query string — https://open.3vjia.com/<path>?sysCode=external&access_token=<token>'
+  reuse_rule: >-
+    The docs REQUIRE a central token service: "企业需搭建access_token的中控服务" — each business system
+    must not fetch its own token, because a new token invalidates the previous one.
+  sso: >-
+    Separate MD5-signed redirect SSO at https://sso.3vjia.com/JointLogin/Index —
+    sign = MD5(userId + appId + time + appKey), ±5 minute clock tolerance.
+  see: authentication/3vjia-technology-authentication.yml
+idempotency:
+  coverage: none
+  supported: false
+  header: null
+  scope: []
+  evidence: >-
+    No Idempotency-Key, request-id-echo, client-token or dedupe parameter appears in any of the 429
+    documented operations, and the documentation never mentions replay protection. Every mutating
+    operation — 创建/添加/删除/提交/退回/作废 — is a plain POST with no replay guard, and because
+    failures return HTTP 200 a client cannot tell a lost response from a rejected one.
+  agent_risk: >-
+    HIGH. A timed-out create is unsafe to retry: there is no documented way to ask whether the first
+    attempt landed, and no server-side dedupe. The asynchronous quotation flow is the one partial
+    mitigation — 发起报价计算 returns a `key` and 获取报价计算结果 is safely re-pollable — but that is a
+    task-token pattern for one flow, not idempotency across the mutating surface.
+reversibility:
+  grade: documented
+  rationale: >-
+    Reversal operations exist and are documented for the account, order, batch and catalog surfaces,
+    but NO document states a time window for any of them. Per the pipeline rule that is `documented`
+    (reversal path present) and not `verified` (reversal path + stated window).
+  reversals:
+  - write: 删除账号接口 (delete accounts)
+    operationId: apiV1UserDeleteBatch
+    reversal: 恢复账号接口 (restore accounts)
+    reversal_operation_id: apiV1UserRecoverBatch
+    window: not stated in the documentation
+  - write: 门店提交订单接口 (store submits order)
+    reversal: 门店：取消订单 (C2_SHOP_CANCEL) / 工厂：取消订单 (C2_PLATFORM_CANCEL) — surfaced as order status transitions
+    window: not stated; governed by order state, not elapsed time
+  - write: 工厂签收订单接口 (factory signs for order)
+    reversal: 退回工厂单接口 (return factory order)
+    reversal_operation_id: apiV1AimesFactoryOrderOpReturnFactoryOrder
+    precondition_operation: apiV1AimesFactoryOrderOpGetReturnSetting (获取工厂单可退回节点信息接口 — which production nodes still permit a return)
+    window: >-
+      not a time window. The API publishes a PRECONDITION query instead: getReturnSetting returns the
+      production nodes from which the order may still be returned. An agent should call it before
+      attempting the reversal.
+  - write: order creation on a sales order
+    reversal: 按销售单作废全部关联工厂单 (invalidate all factory orders for a sales order)
+    reversal_operation_id: apiFactoryOrderOpInvalidateFactoryOrdersBySaleOrder
+    window: not stated
+  - write: 已完成工厂订单 (completed factory orders)
+    reversal: 已完成工厂订单批量退回门店 (batch-return completed factory orders to the store)
+    reversal_operation_id: apiFactoryOrderOpBatchReturnCompletedFactoryOrderToShop
+    window: not stated
+  - write: 账号绑定接口 (bind account)
+    reversal: 账号解绑接口 (unbind account)
+    reversal_operation_id: apiV1AccountbindingUnBindAccount
+    window: not stated
+  irreversible:
+  - >-
+    Deletes across schemes, materials, material categories, scheme categories, departments, shops,
+    customers, sale bills and production orders publish no restore counterpart. Only user accounts do.
+dry_run_mode:
+  supported: false
+  evidence: No preview/validate/simulate/dryRun parameter appears in any documented operation.
+pagination:
+  style: page-number in the request body
+  request_fields: [pageNo / pageNum, pageSize]
+  response_fields: [total, records / list, pages]
+  note: >-
+    Paged operations are named *ListByPage / *Page (e.g. apiV1UserListByPage,
+    apiV1AccountbindingGetCurrentAppBindingRelationPage). There is no cursor, no Link header and no documented page-size cap.
+  cursor: false
+field_expansion:
+  supported: false
+  note: >-
+    The quotation payload (QuoteInfoBO) is instead CONFIGURABLE PER CUSTOMER at bj.3vjia.com, so the
+    same operation returns a different shape for different tenants. This is the opposite of sparse
+    fieldsets — the variability is server-side and out of the client's control.
+metadata:
+  supported: partial
+  fields: [extraParams (AI operations — free-form JSON string), bizExtParams (authorization), extParam (webhook pushes)]
+request_tracing:
+  header: magiccube-req-id
+  direction: response
+  observed: '2026-09-05'
+  documented: false
+  note: >-
+    Every gateway response carries magiccube-req-id (plus serve-vendor: ali and sip). It is NOT
+    documented, so a client has no published guarantee it will persist, but it is the only correlation
+    identifier the API emits and support should be given it.
+versioning:
+  style: path segment
+  current: v1
+  observed: >-
+    /api/v1/... dominates; a handful of legacy paths use /common/api/v2/... on open.3vjia.com. There
+    is no version header, no version negotiation and no published version policy.
+  see: lifecycle/3vjia-technology-lifecycle.yml
+error_envelope:
+  shape: '{"success": bool, "code": int, "msg": string, "data": object}'
+  http_status_on_error: 200
+  see: errors/3vjia-technology-problem-types.yml
+rate_limit_signaling:
+  headers: none observed
+  documented: false
+  see: rate-limits/3vjia-technology-rate-limits.yml
+async_pattern:
+  present: true
+  shape: >-
+    Long-running work (quotation calculation, AI image/video/model generation, model parsing, batch
+    generation) returns a taskId or key immediately and is polled with a matching *Result / *Progress
+    operation; some flows additionally push a completion webhook. Quotation polling terminates on
+    errorCode 609006 (still calculating) versus a terminal code.
+  examples:
+  - initiate: 发起报价计算接口 -> poll 获取报价计算结果接口 (609006 = keep polling) -> webhook QUOTE_ORDER_CALCULATE
+  - initiate: AI 图片/视频/图生模 generation -> data.taskId -> 任务查询 (task query) operations
+  - initiate: 创建素材上传任务接口 -> 获取模型解析进度接口
+  - initiate: 生成批次接口 -> 获取批次生成结果接口

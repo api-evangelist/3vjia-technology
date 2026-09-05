@@ -1,0 +1,235 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/3vjia-technology-open-platform-openapi.yml (429 operations), plus the object structure
+  tables (SimpleOrganBO, SimpleDeptBO, SimpleUserBO, OrderInfoBO, QuoteResultBO, QuoteInfoBO,
+  QuoteItemBO) published in the 3vjia interface specifications at https://dev.3vjia.com/v1/document
+note: >-
+  3vjia publishes no components.schemas — schemas are per-operation parameter tables. This graph was
+  derived from id-reference field names counted across every request and response schema and from the
+  named *BO structures the specification documents repeat verbatim across operations.
+tenancy:
+  root: organ (企业 / enterprise)
+  identifier: organId (e.g. C00000022), also seen as tenantId
+  note: >-
+    Every surface is scoped to an enterprise. The "专属服务" (dedicated services) category in the
+    documentation is literally organised BY enterprise id — C00000022, C00000868, C00002170,
+    C11876880 and 13 others each get their own bespoke operation set, so a meaningful part of the
+    published API is single-customer.
+entities:
+- name: organ
+  chinese: 企业 / 机构
+  id: organId
+  fields: [organId, organName]
+  documented_as: SimpleOrganBO
+  relationships:
+  - has_many: dept
+    via: organId
+  - has_many: user
+    via: organId
+- name: dept
+  chinese: 部门 / 门店 (department / store)
+  id: deptId
+  fields: [deptId, outDeptId, deptName]
+  documented_as: SimpleDeptBO
+  relationships:
+  - belongs_to: organ
+    via: organId
+  - has_many: user
+    via: deptId
+  - has_one: external_dept
+    via: outDeptId
+    note: outDeptId is the integrator's own department/store id, set once the two are bound
+- name: shop
+  chinese: 门店
+  id: shopId
+  relationships:
+  - belongs_to: organ
+    via: organId
+  - has_many: dept
+    via: deptId
+    note: batch bind/unbind operations exist (批量设置/解除门店绑定部门接口)
+- name: user
+  chinese: 账号 / 用户
+  id: userId
+  fields: [userId, outUserId, userName, name, nickName, mobile, avatar]
+  documented_as: SimpleUserBO
+  relationships:
+  - belongs_to: organ
+    via: organId
+  - belongs_to: dept
+    via: deptId
+  - has_one: external_user
+    via: outUserId
+    note: the SSO account-binding relationship; bind/unbind/list operations exist
+- name: scheme
+  chinese: 方案 (design scheme)
+  id: schemeId
+  also: svjSchemeId, outerSchemeId
+  relationships:
+  - belongs_to: organ
+    via: organId
+  - belongs_to: dept
+    via: deptId
+  - belongs_to: user
+    via: createUser / designerId (author)
+  - belongs_to: scheme_category
+    via: categoryId / folderId
+  - has_one: house_type
+    via: houseTypeId
+  - has_many: room
+    via: roomId
+  - has_many: rendering
+    note: effect images, panoramas (panoLink), construction drawings, depth images
+  - has_one: quote
+    via: schemeId
+- name: scheme_category
+  chinese: 方案分类
+  id: categoryId
+  relationships:
+  - belongs_to: organ
+    via: organId
+  - has_many: scheme
+    via: categoryId
+- name: house_type
+  chinese: 户型 / 楼盘户型 (floor plan)
+  id: houseTypeId
+  also: platLayoutId, projectId
+  relationships:
+  - has_many: scheme
+    via: houseTypeId
+  - belongs_to: project
+    via: projectId
+- name: material
+  chinese: 素材 / 模型 / 贴图 / 线条 (model, texture, moulding)
+  id: materialId
+  also: materialCode
+  relationships:
+  - belongs_to: material_category
+    via: categoryId
+  - belongs_to: organ
+    via: organId
+  - has_one: product
+    note: a material may be published as a sellable product (编辑素材和商品接口)
+- name: material_category
+  chinese: 素材分类
+  id: categoryId
+  relationships:
+  - belongs_to: organ
+    via: organId
+  - has_many: material
+    via: categoryId
+  - belongs_to: material_category
+    via: parentId
+    note: self-referencing tree
+- name: quote
+  chinese: 报价 (quotation)
+  id: key
+  documented_as: QuoteResultBO / QuoteInfoBO / QuoteItemBO
+  relationships:
+  - belongs_to: scheme
+    via: schemeId
+  - belongs_to: factory_order
+    via: orderRecordId
+  - has_many: quote_item
+    note: 'grouped by Hardware, Garnish, Functor, doorBoard, Sliding, Part — the configurable QuoteInfoBO'
+  lifecycle: 发起报价计算 -> key -> poll 获取报价计算结果 (609006 = still calculating) -> webhook QUOTE_ORDER_CALCULATE
+- name: order
+  chinese: 订单
+  id: orderRecordId
+  also: [orderNo, diyOrderNo, customOrderNo, orderCode]
+  documented_as: OrderInfoBO
+  note: orderRecordId is the common id shared by the shop order and the factory order for one purchase
+  relationships:
+  - has_one: shop_order
+    via: shopOrderId
+  - has_one: factory_order
+    via: factoryOrderId
+  - belongs_to: scheme
+    via: schemeId
+  - belongs_to: customer
+    via: customerId / customerCode
+  - belongs_to: dept
+    via: shopDept
+  - belongs_to: organ
+    via: shopOrgan
+- name: factory_order
+  chinese: 工厂单
+  id: factoryOrderId
+  relationships:
+  - belongs_to: order
+    via: orderRecordId
+  - has_many: factory_order_product
+    via: factoryOrderProductId
+  - belongs_to: batch
+    via: batchNo
+  - has_many: attachment
+    note: quotation XML, split XML, CAD files, three-view files, 3D file URLs
+- name: factory_order_product
+  chinese: 工厂单产品
+  id: factoryOrderProductId
+  relationships:
+  - has_many: factory_order_product_item
+    via: factoryOrderProductItemId
+  - has_many: semi_finished
+    via: factoryOrderProductSemiFinishedId
+  - has_many: part
+    via: partBarCode / cncBarCode / panelId
+- name: part
+  chinese: 板件 (panel / part)
+  id: partBarCode
+  also: [cncBarCode, cabinetNo, groupCabinetNo, panelId]
+  relationships:
+  - belongs_to: factory_order_product
+    via: factoryOrderProductId
+- name: batch
+  chinese: 生产批次
+  id: batchNo
+  relationships:
+  - has_many: factory_order
+    via: factoryOrderId
+  lifecycle: 生成批次接口 -> poll 获取批次生成结果接口 -> webhook C2_PLATFORM_BATCH / COMPOSE_ORDER_BATCH
+- name: mes_material
+  chinese: 物料 (AIMES material)
+  id: mesMaterialId
+  also: mesMaterialCode
+  relationships:
+  - belongs_to: organ
+    via: organId
+- name: customer
+  chinese: 客户 (DMS customer)
+  id: customerId
+  also: customerCode
+  relationships:
+  - belongs_to: shop
+    via: shopId
+  - has_many: sale_bill
+    via: saleBillNo
+- name: sale_bill
+  chinese: 销售单
+  id: saleBillNo
+  relationships:
+  - belongs_to: customer
+    via: customerId
+  - has_many: factory_order
+    via: factoryOrderId
+    note: 按销售单批量退回 / 作废关联工厂订单
+- name: ai_task
+  chinese: AI 任务
+  id: taskId
+  relationships:
+  - belongs_to: organ
+    via: organId
+  lifecycle: >-
+    submit (image generation, video generation, image-to-model, spatial AI) -> data.taskId ->
+    poll the 任务查询 operations. 66 operations across the surface hand back a taskId.
+id_conventions:
+- pattern: 'organId — "C" + 8 digits (C00005842, C12684110)'
+- pattern: 'userId — 10-digit numeric string (1000123456)'
+- pattern: 'userName — "3vj" + mobile number (3vj13800000000)'
+- pattern: 'batchNo — <shop>-<yymmdd>-<seq> (3838-210330-01)'
+- pattern: 'taskId — UUID v4 (0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416)'
+- pattern: 'factory order key — 32-char uppercase hex (F053521B72F34613BEAD2CC8B6279E75)'
+gaps:
+- No components.schemas and no shared $ref: the same SimpleUserBO is retyped in dozens of operations.
+- No published entity reference or ERD; this graph is inferred from field names and repeated BO tables.
