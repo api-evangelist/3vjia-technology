@@ -1,16 +1,15 @@
 aid: 3vjia-technology
 name: 3vjia Technology
-description: >-
-  3vjia Technology (Guangdong Sanweijia Information Technology Co., Ltd. / 三维家, international brand
-  AiHouse) is a Guangzhou-based home-furnishing industrial-software company founded in 2013 that runs a
-  cloud 3D design and manufacturing platform for the interior-decoration and custom-furniture industry.
-  Its products span 3D cloud design, AI Dream Home (AI梦想家), AI Light Design (AI轻设计), CAD and
-  rendering engines, the DMS order-splitting system, the MOS/MCS manufacturing execution systems and the
-  AIMES manufacturing platform, joining design, quotation, order placement, splitting and factory
-  production into one chain. It operates a public Open Platform (dev.3vjia.com) whose gateway
-  open-gateway.3vjia.com exposes 429 documented POST operations covering accounts and SSO, design
-  schemes, product/material libraries, quotation, orders, production batches, floor plans and generative
-  AI, authenticated with OAuth 2.0 client credentials issued against graph.3vjia.com.
+description: 3vjia Technology (Guangdong Sanweijia Information Technology Co., Ltd. / 三维家, international
+  brand AiHouse) is a Guangzhou-based home-furnishing industrial-software company founded in 2013 that
+  runs a cloud 3D design and manufacturing platform for the interior-decoration and custom-furniture industry.
+  Its products span 3D cloud design, AI Dream Home (AI梦想家), AI Light Design (AI轻设计), CAD and rendering
+  engines, the DMS order-splitting system, the MOS/MCS manufacturing execution systems and the AIMES manufacturing
+  platform, joining design, quotation, order placement, splitting and factory production into one chain.
+  It operates a public Open Platform (dev.3vjia.com) whose gateway open-gateway.3vjia.com exposes 429
+  documented POST operations covering accounts and SSO, design schemes, product/material libraries, quotation,
+  orders, production batches, floor plans and generative AI, authenticated with OAuth 2.0 client credentials
+  issued against graph.3vjia.com.
 url: https://raw.githubusercontent.com/api-evangelist/3vjia-technology/refs/heads/main/apis.yml
 image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 x-type: company
@@ -28,26 +27,43 @@ tags:
 - CAD
 - Rendering
 - Artificial Intelligence
+- Software-as-a-Service
+- China
+- Open Platform
+tags_raw:
+- Company
+- 3D Design
+- Home Furnishing
+- Interior Design
+- Manufacturing
+- Custom Furniture
+- CAD
+- Rendering
+- Artificial Intelligence
 - SaaS
 - China
 - Open Platform
 apis:
-- aid: 3vjia-technology-open-platform-api
+- aid: 3vjia-technology:3vjia-technology-open-platform-api
   name: 3vjia Open Platform API
-  description: >-
-    The 3vjia (三维家) Open Platform API — 429 documented POST operations on
-    open-gateway.3vjia.com covering account and single-sign-on management, design schemes,
-    product and material libraries, quotation, store and factory orders, production batches,
-    AIMES/MOS/DMS manufacturing data, floor plans and generative-AI image, video and model
-    tasks. Authentication is OAuth 2.0 client_credentials against
-    https://graph.3vjia.com/oauth/token using an appId/appKey issued after developer and
-    application approval; tokens live 7200 seconds. Every operation is POST with
-    Content-Type application/json;charset=utf-8 and returns the envelope
-    {success, code, msg, data}.
+  description: The 3vjia (三维家) Open Platform API — 429 documented POST operations on open-gateway.3vjia.com
+    covering account and single-sign-on management, design schemes, product and material libraries, quotation,
+    store and factory orders, production batches, AIMES/MOS/DMS manufacturing data, floor plans and generative-AI
+    image, video and model tasks. Authentication is OAuth 2.0 client_credentials against https://graph.3vjia.com/oauth/token
+    using an appId/appKey issued after developer and application approval; tokens live 7200 seconds. Every
+    operation is POST with Content-Type application/json;charset=utf-8 and returns the envelope {success,
+    code, msg, data}.
   humanURL: https://dev.3vjia.com/v1/document
   baseURL: https://open-gateway.3vjia.com
   image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
   tags:
+  - 3D Design
+  - Home Furnishing
+  - Manufacturing
+  - Quotation
+  - Order
+  - Artificial Intelligence
+  tags_raw:
   - 3D Design
   - Home Furnishing
   - Manufacturing
@@ -86,12 +102,11 @@ apis:
     documentation-api-status: 200
     operations-read: 430
     unique-operations: 429
-    note: >-
-      The provider publishes no OpenAPI, Swagger, GraphQL SDL, AsyncAPI or Postman collection.
-      It does publish a complete, anonymously readable, machine-readable documentation service
-      (devapi.3vjia.com) that returns per-operation method, absolute URL, parameters with types
-      and required flags, response fields and request/response examples. The OpenAPI in
-      openapi/ is a mechanical transform of those records and is marked method:derived.
+    note: The provider publishes no OpenAPI, Swagger, GraphQL SDL, AsyncAPI or Postman collection. It
+      does publish a complete, anonymously readable, machine-readable documentation service (devapi.3vjia.com)
+      that returns per-operation method, absolute URL, parameters with types and required flags, response
+      fields and request/response examples. The OpenAPI in openapi/ is a mechanical transform of those
+      records and is marked method:derived.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
