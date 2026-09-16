@@ -44,35 +44,16 @@ tags_raw:
 - China
 - Open Platform
 apis:
-- aid: 3vjia-technology:3vjia-technology-open-platform-api
-  name: 3vjia Open Platform API
-  description: The 3vjia (三维家) Open Platform API — 429 documented POST operations on open-gateway.3vjia.com
-    covering account and single-sign-on management, design schemes, product and material libraries, quotation,
-    store and factory orders, production batches, AIMES/MOS/DMS manufacturing data, floor plans and generative-AI
-    image, video and model tasks. Authentication is OAuth 2.0 client_credentials against https://graph.3vjia.com/oauth/token
-    using an appId/appKey issued after developer and application approval; tokens live 7200 seconds. Every
-    operation is POST with Content-Type application/json;charset=utf-8 and returns the envelope {success,
-    code, msg, data}.
+- aid: 3vjia-technology:3vjia-technology-3d-show-api
+  name: 3vjia Technology 3D Show API
+  description: 3D秀
   humanURL: https://dev.3vjia.com/v1/document
   baseURL: https://open-gateway.3vjia.com
-  image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
   tags:
-  - 3D Design
-  - Home Furnishing
-  - Manufacturing
-  - Quotation
-  - Order
-  - Artificial Intelligence
-  tags_raw:
-  - 3D Design
-  - Home Furnishing
-  - Manufacturing
-  - Quotation
-  - Orders
-  - Artificial Intelligence
+  - 3D Show
   properties:
   - type: OpenAPI
-    url: openapi/3vjia-technology-open-platform-openapi.yml
+    url: openapi/3vjia-technology-3d-show-api-openapi.yml
   - type: Documentation
     url: https://dev.3vjia.com/v1/document
   - type: DeveloperPortal
@@ -87,32 +68,524 @@ apis:
     url: conventions/3vjia-technology-conventions.yml
   - type: DataModel
     url: data-model/3vjia-technology-data-model.yml
-  - type: Overlay
-    url: overlays/3vjia-technology-open-platform-overlay.yaml
   - type: ToolCrosswalk
     url: mcp/3vjia-technology-tool-crosswalk.yml
-  - type: AgentSkill
-    url: skills/_index.yml
   - type: RateLimits
     url: rate-limits/3vjia-technology-rate-limits.yml
-  x-evidence:
-    verified: '2026-09-05'
-    method: probed
-    documentation-api: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList
-    documentation-api-status: 200
-    operations-read: 430
-    unique-operations: 429
-    note: The provider publishes no OpenAPI, Swagger, GraphQL SDL, AsyncAPI or Postman collection. It
-      does publish a complete, anonymously readable, machine-readable documentation service (devapi.3vjia.com)
-      that returns per-operation method, absolute URL, parameters with types and required flags, response
-      fields and request/response examples. The OpenAPI in openapi/ is a mechanical transform of those
-      records and is marked method:derived.
+- aid: 3vjia-technology:3vjia-technology-3vjia-ai-api
+  name: 3vjia Technology 3vjia AI API
+  description: 三维家AI
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - 3vjia AI
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-3vjia-ai-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-accounts-api
+  name: 3vjia Technology Accounts API
+  description: 账号模块
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-aimes-api
+  name: 3vjia Technology AIMES API
+  description: AIMES系统
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - AIMES
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-aimes-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-asset-management-api
+  name: 3vjia Technology Asset Management API
+  description: 资产管理
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Asset Management
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-asset-management-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-authorization-api
+  name: 3vjia Technology Authorization API
+  description: 登录授权
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-cad-api
+  name: 3vjia Technology CAD API
+  description: CAD模块
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - CAD
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-cad-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-chuangdian-api
+  name: 3vjia Technology Chuangdian API
+  description: 创点系统
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Chuangdian
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-chuangdian-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-common-services-api
+  name: 3vjia Technology Common Services API
+  description: 通用服务
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Common Services
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-common-services-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-dedicated-services-api
+  name: 3vjia Technology Dedicated Services API
+  description: 专属服务
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Dedicated Services
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-dedicated-services-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-design-schemes-api
+  name: 3vjia Technology Design Schemes API
+  description: 方案模块
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Design Schemes
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-design-schemes-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-dms-api
+  name: 3vjia Technology DMS API
+  description: DMS系统
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - DMS
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-dms-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-dreamer-api
+  name: 3vjia Technology Dreamer API
+  description: 梦想家
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Dreamer
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-dreamer-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-floor-plans-api
+  name: 3vjia Technology Floor Plans API
+  description: 楼盘户型
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Floor Plans
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-floor-plans-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-light-design-api
+  name: 3vjia Technology Light Design API
+  description: 轻设计
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Light Design
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-light-design-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-mos-api
+  name: 3vjia Technology MOS API
+  description: MOS系统
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - MOS
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-mos-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-products-api
+  name: 3vjia Technology Products API
+  description: 产品模块
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-products-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-quotation-api
+  name: 3vjia Technology Quotation API
+  description: 报价模块
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Quotation
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-quotation-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
+- aid: 3vjia-technology:3vjia-technology-xuanchi-ai-api
+  name: 3vjia Technology Xuanchi AI API
+  description: 玄尺AI
+  humanURL: https://dev.3vjia.com/v1/document
+  baseURL: https://open-gateway.3vjia.com
+  tags:
+  - Xuanchi AI
+  properties:
+  - type: OpenAPI
+    url: openapi/3vjia-technology-xuanchi-ai-api-openapi.yml
+  - type: Documentation
+    url: https://dev.3vjia.com/v1/document
+  - type: DeveloperPortal
+    url: https://dev.3vjia.com/
+  - type: Authentication
+    url: authentication/3vjia-technology-authentication.yml
+  - type: Webhooks
+    url: asyncapi/3vjia-technology-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/3vjia-technology-problem-types.yml
+  - type: Conventions
+    url: conventions/3vjia-technology-conventions.yml
+  - type: DataModel
+    url: data-model/3vjia-technology-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/3vjia-technology-tool-crosswalk.yml
+  - type: RateLimits
+    url: rate-limits/3vjia-technology-rate-limits.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/3vjia-technology-open-platform-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Website
   url: https://www.3vjia.com/
 - type: DeveloperPortal
