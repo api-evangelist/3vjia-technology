@@ -1,0 +1,4453 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Design Schemes API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Design Schemes
+  description: 方案模块
+paths:
+  /api/schemecategory/updateSchemeCategory:
+    post:
+      operationId: apiSchemecategoryUpdateSchemeCategory
+      summary: 编辑方案分类接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=475026463813349465
+      x-documentation-category: 方案模块 / 方案分类
+      description: 编辑方案分类
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryCode:
+                  type: string
+                  description: 分类代码，可自定义的代码，不超过32个字符
+                categoryId:
+                  type: string
+                  description: 要修改的分类的ID
+                categoryName:
+                  type: string
+                  description: 分类名称，不能超过512个字符
+                hasChildren:
+                  type: integer
+                  format: int32
+                  description: 是否有子分类，1=有，0=无，默认0
+                parentId:
+                  type: string
+                  description: 分类所属的上级ID
+                sortCode:
+                  type: integer
+                  format: int32
+                  description: 分类排序码，会影响显示顺序，默认为0
+            example:
+              hasChildren: 0
+              categoryCode: ''
+              categoryName: ''
+              sortCode: 0
+              parentId: ''
+              categoryId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/taggroup/page:
+    post:
+      operationId: apiTaggroupPage
+      summary: 分页查询标签组和标签信息
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=744248039480377472
+      x-documentation-category: 方案模块 / 方案岛
+      description: 分页查询标签组信息
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pageIndex:
+                  type: integer
+                  format: int32
+                pageSize:
+                  type: integer
+                  format: int32
+                sorts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sortField:
+                        type: string
+                        description: 排序字段
+                      sortType:
+                        type: string
+                        description: 排序类型，asc或者desc
+                  description: "This is List Type  \n查询排序集合"
+                where:
+                  type: object
+                  properties:
+                    groupStatus:
+                      type: string
+                      description: 分组状态：enable-启用，disable-禁用
+                    groupType:
+                      type: integer
+                      format: int32
+                      description: 标签组类型：0-全屋空间案例库，1-营销活动套餐库，2-卫浴空间案例库，3-阳台空间案例库，4-全场景高端定制方案，5-卫浴个性空间案例库，6-淋浴房空间案例库
+                    isShowDisabledTags:
+                      type: integer
+                      format: int32
+                      description: 是否显示禁用标签项，0-不显示，1-显示
+                  description: 分页查询标签分组
+            example:
+              pageSize: 0
+              pageIndex: 0
+              where:
+                groupType: 0
+                groupStatus: ''
+                isShowDisabledTags: 0
+              sorts:
+              - sortType: ''
+                sortField: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            creator:
+                              type: string
+                              description: 创建人
+                            groupName:
+                              type: string
+                              description: 分组名称
+                            groupStatus:
+                              type: string
+                              description: 是否启用：enable-启用，disable-禁用
+                            groupType:
+                              type: integer
+                              format: int32
+                              description: 标签组类型：0-全屋空间案例库，1-营销活动套餐库，2-卫浴空间案例库，3-阳台空间案例库，4-全场景高端定制方案，5-卫浴个性空间案例库，6-淋浴房空间案例库
+                            id:
+                              type: string
+                              description: 主键ID
+                            imagePath:
+                              type: string
+                              description: “不限”选项的封面图
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否删除
+                            modify:
+                              type: string
+                              description: 修改人
+                            modifyDate:
+                              type: string
+                              description: 修改时间
+                            organId:
+                              type: string
+                              description: 机构ID
+                            sortNo:
+                              type: integer
+                              format: int32
+                              description: 排序
+                            tags:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  createDate:
+                                    type: string
+                                    description: 创建时间
+                                  creator:
+                                    type: string
+                                    description: 创建人
+                                  id:
+                                    type: string
+                                    description: 标签ID
+                                  imagePath:
+                                    type: string
+                                    description: 标签图片
+                                  modify:
+                                    type: string
+                                    description: 修改人
+                                  modifyDate:
+                                    type: string
+                                    description: 修改时间
+                                  organId:
+                                    type: string
+                                    description: 机构ID
+                                  sortNo:
+                                    type: integer
+                                    format: int32
+                                    description: 排序
+                                  tagName:
+                                    type: string
+                                    description: 标签名称
+                                  tagStatus:
+                                    type: string
+                                    description: 标签状态
+                                  tenantId:
+                                    type: string
+                                    description: tenantId租户id(兼容)
+                              description: 标签表OutputDto
+                        description: 标签分组结果
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - creator: ''
+                    groupType: 0
+                    modifyDate: ''
+                    imagePath: ''
+                    isDelete: 0
+                    groupStatus: ''
+                    tags:
+                    - creator: ''
+                      modifyDate: ''
+                      tagStatus: ''
+                      imagePath: ''
+                      tagName: ''
+                      sortNo: 0
+                      modify: ''
+                      tenantId: ''
+                      organId: ''
+                      id: ''
+                      createDate: ''
+                    sortNo: 0
+                    modify: ''
+                    groupName: ''
+                    organId: ''
+                    id: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/Goods/getAllPage:
+    post:
+      operationId: apiV1GoodsGetAllPage
+      summary: 获取方案岛所有商品方案数据接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=505401177635147811
+      x-documentation-category: 方案模块 / 方案岛
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pageIndex:
+                  type: integer
+                  format: int32
+                pageSize:
+                  type: integer
+                  format: int32
+                sorts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sortField:
+                        type: string
+                      sortType:
+                        type: string
+                  description: 'ThisisListType
+
+                    查询排序集合'
+                where:
+                  type: object
+                  properties:
+                    activitiesName:
+                      type: string
+                      description: 相关活动关键字
+                    atlasStatus:
+                      type: integer
+                      format: int32
+                      description: 图谱状态，-1为删除，0为入库，1为上架或者发布，2为下架，不传则查询全部
+                    begCreateDate:
+                      type: string
+                      description: 创建时间开始
+                    begDelDate:
+                      type: string
+                      description: 删除时间开始
+                    begSchemeSized:
+                      type: number
+                      format: double
+                      description: 面积开始
+                    begStatusDate:
+                      type: string
+                      description: 状态时间开始
+                    categorys:
+                      type: object
+                      description: 类目数组
+                    endCreateDate:
+                      type: string
+                      description: 创建时间结束
+                    endDelDate:
+                      type: string
+                      description: 删除时间结束
+                    endSchemeSized:
+                      type: number
+                      format: double
+                      description: 面积结束
+                    endStatusDate:
+                      type: string
+                      description: 状态时间结束
+                    goodsName:
+                      type: string
+                      description: 名称
+                    goodsStatus:
+                      type: string
+                      description: 商品状态empty：草稿checking：上架审核reject：上架驳回upShelves：上架offShelves：下架
+                    goodsType:
+                      type: string
+                      description: 商品类型，scheme=全景方案,excellent=优秀方案
+                    isActivities:
+                      type: integer
+                      format: int32
+                      description: 是否查询企业活动投稿方案0：查看非投稿1：查看投稿null：查看全部
+                    isHotSell:
+                      type: integer
+                      format: int32
+                      description: 是否热销方案
+                    isUpShelves:
+                      type: integer
+                      format: int32
+                      description: 是否查询已上架方案0：查询未上架方案（包含上架、参与活动的方案）1：查询已上架方案（未上架、未参与活动的方案）null：查询全部
+                    keyword:
+                      type: string
+                      description: 方案名称或者产品型号模糊搜索
+                    organId:
+                      type: string
+                      description: 机构id,前端有需求免登陆指定机构id获取方案列表
+                    price:
+                      type: integer
+                      format: int32
+                      description: 售价,0：免费，1：付费
+                    productNo:
+                      type: string
+                      description: 产品型号
+                    schemeId:
+                      type: string
+                      description: 3D方案id
+                    schemeRoom:
+                      type: string
+                      description: 空间
+                    schemeStyle:
+                      type: string
+                      description: 风格
+                    schemeType:
+                      type: string
+                      description: 户型
+                    tagId:
+                      type: string
+                      description: 标签ID
+                    tagIdList:
+                      type: array
+                      items: {}
+                      description: 'ThisisListType
+
+                        标签id集合'
+                    tenantId:
+                      type: string
+                      description: tenantId租户id(兼容)
+                    userId:
+                      type: string
+                      description: 用户id
+                    userName:
+                      type: string
+                      description: 设计师帐号，精确查询
+                  description: '商品方案表SearchInputDto
+
+                    分页查询条件'
+            example:
+              pageSize: 0
+              pageIndex: 0
+              where:
+                schemeType: ''
+                tagId: ''
+                endCreateDate: ''
+                begCreateDate: ''
+                schemeId: ''
+                endDelDate: ''
+                endStatusDate: ''
+                price: 0
+                isHotSell: 0
+                schemeRoom: ''
+                keyword: ''
+                goodsName: ''
+                productNo: ''
+                categorys: ''
+                atlasStatus: 0
+                schemeStyle: ''
+                isUpShelves: 0
+                userName: ''
+                userId: ''
+                activitiesName: ''
+                goodsType: ''
+                begStatusDate: ''
+                isActivities: 0
+                goodsStatus: ''
+                tenantId: ''
+                organId: ''
+                begDelDate: ''
+                tagIdList: []
+              sorts:
+              - sortType: ''
+                sortField: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            atlasId:
+                              type: string
+                              description: 图谱ID
+                            atlasStatus:
+                              type: integer
+                              format: int32
+                              description: 图谱状态，-1为删除，0为入库，1为上架或者发布，2为下架，不传则查询全部
+                            buyNums:
+                              type: integer
+                              format: int32
+                              description: 购买数量
+                            buyScores:
+                              type: integer
+                              format: int32
+                              description: 购买分数
+                            checkDate:
+                              type: string
+                              description: 方案审核时间
+                            checkUserId:
+                              type: string
+                              description: 方案审核人用户id
+                            checkUserNickName:
+                              type: string
+                              description: 方案审核人用户id
+                            commentNums:
+                              type: integer
+                              format: int32
+                              description: 评论数量
+                            content:
+                              type: string
+                              description: 商品介绍
+                            coverPageFileId:
+                              type: string
+                              description: 封面文件ID
+                            coverPageUrl:
+                              type: string
+                              description: 封面地址
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            creator:
+                              type: string
+                              description: 创建人
+                            favoriteNums:
+                              type: integer
+                              format: int32
+                              description: 收藏数量
+                            goodsName:
+                              type: string
+                              description: 名称
+                            goodsStatus:
+                              type: string
+                              description: 商品状态
+                            goodsStatusDesc:
+                              type: string
+                              description: 商品状态显示文本
+                            goodsType:
+                              type: string
+                              description: 商品类型
+                            goodsTypeDesc:
+                              type: string
+                              description: 商品类型
+                            hasSmartRoom:
+                              type: integer
+                              format: int32
+                              description: 是否有智能样板间
+                            id:
+                              type: string
+                              description: 商品ID
+                            isBuy:
+                              type: boolean
+                              description: 是否购买（使用权）
+                            isBuySource:
+                              type: boolean
+                              description: 是否已购买了源文件
+                            isFavorite:
+                              type: boolean
+                              description: 是否已收藏：true=是false=否
+                            isHotSell:
+                              type: integer
+                              format: int32
+                              description: 是否热销方案1=热销（优秀方案）
+                            isPraise:
+                              type: boolean
+                              description: 是否已点赞：true=是false=否
+                            lookNums:
+                              type: integer
+                              format: int32
+                              description: 浏览数量
+                            modifyDate:
+                              type: string
+                              description: 最后修改时间(删除时间）
+                            orderNum:
+                              type: integer
+                              format: int32
+                              description: 九牧定制:下单量
+                            organId:
+                              type: string
+                              description: 机构ID
+                            praiseNums:
+                              type: integer
+                              format: int32
+                              description: 点赞数量
+                            price:
+                              type: integer
+                              format: int32
+                              description: 售价
+                            relGoodIds:
+                              type: array
+                              items: {}
+                              description: 'ThisisListType
+
+                                关联商品Id列表'
+                            schemeDepthImageUrl:
+                              type: string
+                              description: 深度图地址
+                            schemeId:
+                              type: string
+                              description: 方案ID
+                            schemeSized:
+                              type: number
+                              format: double
+                              description: 面积
+                            schemeSizedStr:
+                              type: string
+                              description: 面积
+                            schemeStyle:
+                              type: string
+                              description: 风格
+                            schemeStyleDesc:
+                              type: string
+                              description: 风格显示文本
+                            schemeType:
+                              type: string
+                              description: 户型
+                            schemeTypeDesc:
+                              type: string
+                              description: 户型显示文本
+                            schemeVerion:
+                              type: string
+                              description: 方案版本号
+                            schemeVrUrl:
+                              type: string
+                              description: 全景图链接地址
+                            sourcePrice:
+                              type: integer
+                              format: int32
+                              description: 源文件售价：0=免费，-1=不销售
+                            statusDate:
+                              type: string
+                              description: 状态时间
+                            statusReason:
+                              type: string
+                              description: 状态原因
+                            tenantId:
+                              type: string
+                              description: tenantId租户id(兼容)
+                            topSortCode:
+                              type: integer
+                              format: int64
+                              description: 置顶排序序号（序号越大，越前）
+                            userId:
+                              type: string
+                              description: 归属用户ID
+                            userImageUrl:
+                              type: string
+                              description: 归属用户头像图片地址
+                            userName:
+                              type: string
+                              description: 归属用户帐号
+                            userNickName:
+                              type: string
+                              description: 归属用户名称
+                        description: 商品方案表列表OutputDto
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - isBuy: false
+                    statusDate: ''
+                    userImageUrl: ''
+                    praiseNums: 0
+                    schemeType: ''
+                    statusReason: ''
+                    price: 0
+                    isBuySource: false
+                    checkUserNickName: ''
+                    id: ''
+                    userNickName: ''
+                    goodsName: ''
+                    relGoodIds: []
+                    modifyDate: ''
+                    schemeSizedStr: ''
+                    coverPageFileId: ''
+                    lookNums: 0
+                    goodsType: ''
+                    goodsTypeDesc: ''
+                    schemeStyleDesc: ''
+                    favoriteNums: 0
+                    organId: ''
+                    isFavorite: false
+                    schemeVerion: ''
+                    schemeDepthImageUrl: ''
+                    atlasId: ''
+                    checkUserId: ''
+                    orderNum: 0
+                    schemeId: ''
+                    schemeTypeDesc: ''
+                    buyNums: 0
+                    content: ''
+                    sourcePrice: 0
+                    isHotSell: 0
+                    createDate: ''
+                    atlasStatus: 0
+                    creator: ''
+                    schemeStyle: ''
+                    hasSmartRoom: 0
+                    coverPageUrl: ''
+                    topSortCode: 0
+                    checkDate: ''
+                    goodsStatusDesc: ''
+                    userName: ''
+                    userId: ''
+                    buyScores: 0
+                    commentNums: 0
+                    goodsStatus: ''
+                    schemeVrUrl: ''
+                    tenantId: ''
+                    isPraise: false
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/Goods/getHomePage:
+    post:
+      operationId: apiV1GoodsGetHomePage
+      summary: 获取商品方案
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=744249709870334034
+      x-documentation-category: 方案模块 / 方案岛
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filterDesign:
+                  type: boolean
+                  description: 是否过滤design方案
+                pageIndex:
+                  type: integer
+                  format: int32
+                pageSize:
+                  type: integer
+                  format: int32
+                sorts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sortField:
+                        type: string
+                        description: 排序字段
+                      sortType:
+                        type: string
+                        description: 排序类型
+                  description: "This is List Type  \n查询排序集合"
+                where:
+                  type: object
+                  properties:
+                    activitiesName:
+                      type: string
+                      description: 相关活动关键字
+                    atlasStatus:
+                      type: integer
+                      format: int32
+                      description: 图谱状态，-1为删除，0为入库，1为上架或者发布，2为下架，不传则查询全部
+                    begCreateDate:
+                      type: string
+                      description: 创建时间开始
+                    begDelDate:
+                      type: string
+                      description: 删除时间开始
+                    begSchemeSized:
+                      type: number
+                      format: double
+                      description: 面积开始
+                    begStatusDate:
+                      type: string
+                      description: 状态时间开始
+                    categorys:
+                      type: object
+                      description: 类目数组
+                    endCreateDate:
+                      type: string
+                      description: 创建时间结束
+                    endDelDate:
+                      type: string
+                      description: 删除时间结束
+                    endSchemeSized:
+                      type: number
+                      format: double
+                      description: 面积结束
+                    endStatusDate:
+                      type: string
+                      description: 状态时间结束
+                    goodsMarketingType:
+                      type: integer
+                      format: int32
+                      description: 方案类型：0-全屋空间案例库，1-营销活动套餐库，2-卫浴空间案例库，3-阳台空间案例库，4-全场景高端定制方案，5-卫浴个性空间案例库，6-淋浴房空间案例库
+                    goodsName:
+                      type: string
+                      description: 名称
+                    goodsStatus:
+                      type: string
+                      description: 商品状态empty：草稿checking：上架审核reject：上架驳回upShelves：上架offShelves：下架
+                    goodsType:
+                      type: string
+                      description: 商品类型，scheme=全景方案,excellent=优秀方案
+                    isActivities:
+                      type: integer
+                      format: int32
+                      description: 是否查询企业活动投稿方案0：查看非投稿1：查看投稿null：查看全部
+                    isHotSell:
+                      type: integer
+                      format: int32
+                      description: 是否热销方案
+                    isUpShelves:
+                      type: integer
+                      format: int32
+                      description: 是否查询已上架方案0：查询未上架方案（包含上架、参与活动的方案）1：查询已上架方案（未上架、未参与活动的方案）null：查询全部
+                    keyword:
+                      type: string
+                      description: 方案名称或者产品型号模糊搜索
+                    marketTagIds:
+                      type: array
+                      items: {}
+                      description: "This is List Type  \n标签ID列表，用于总部空间库和门店自营库"
+                    price:
+                      type: integer
+                      format: int32
+                      description: 售价,0：免费，1：付费
+                    productNo:
+                      type: string
+                      description: 产品型号
+                    schemeId:
+                      type: string
+                      description: 3D方案id
+                    schemeRoom:
+                      type: string
+                      description: 空间
+                    schemeStyle:
+                      type: string
+                      description: 风格
+                    schemeType:
+                      type: string
+                      description: 户型
+                    tagId:
+                      type: string
+                      description: 标签ID
+                    tagIdList:
+                      type: array
+                      items: {}
+                      description: "This is List Type  \n标签id集合"
+                    userId:
+                      type: string
+                      description: 用户id
+                    userName:
+                      type: string
+                      description: 设计师帐号，精确查询
+                  description: "商品方案表SearchInputDto  \n分页查询条件"
+            example:
+              filterDesign: false
+              pageSize: 0
+              pageIndex: 0
+              where:
+                schemeType: ''
+                tagId: ''
+                endCreateDate: ''
+                begCreateDate: ''
+                schemeId: ''
+                endDelDate: ''
+                endStatusDate: ''
+                price: 0
+                isHotSell: 0
+                schemeRoom: ''
+                keyword: ''
+                goodsName: ''
+                productNo: ''
+                categorys: ''
+                atlasStatus: 0
+                schemeStyle: ''
+                isUpShelves: 0
+                userName: ''
+                userId: ''
+                activitiesName: ''
+                goodsType: ''
+                begStatusDate: ''
+                isActivities: 0
+                goodsStatus: ''
+                goodsMarketingType: 0
+                marketTagIds: []
+                begDelDate: ''
+                tagIdList: []
+              sorts:
+              - sortType: ''
+                sortField: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            associatedGoodId:
+                              type: string
+                              description: 关联的方案ID
+                            atlasId:
+                              type: string
+                              description: 图谱ID
+                            atlasStatus:
+                              type: integer
+                              format: int32
+                              description: 图谱状态，-1为删除，0为入库，1为上架或者发布，2为下架，不传则查询全部
+                            buyNums:
+                              type: integer
+                              format: int32
+                              description: 购买数量
+                            buyScores:
+                              type: integer
+                              format: int32
+                              description: 购买分数
+                            checkDate:
+                              type: string
+                              description: 方案审核时间
+                            checkUserId:
+                              type: string
+                              description: 方案审核人用户id
+                            checkUserNickName:
+                              type: string
+                              description: 方案审核人用户id
+                            commentNums:
+                              type: integer
+                              format: int32
+                              description: 评论数量
+                            content:
+                              type: string
+                              description: 商品介绍
+                            coverPageFileId:
+                              type: string
+                              description: 封面文件ID
+                            coverPageUrl:
+                              type: string
+                              description: 封面地址
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            creator:
+                              type: string
+                              description: 创建人
+                            favoriteNums:
+                              type: integer
+                              format: int32
+                              description: 收藏数量
+                            goodsMarketingType:
+                              type: integer
+                              format: int32
+                              description: 方案类型：0-全屋空间案例库，1-营销活动套餐库，2-卫浴空间案例库，3-阳台空间案例库，4-全场景高端定制方案，5-卫浴个性空间案例库，6-淋浴房空间案例库
+                            goodsName:
+                              type: string
+                              description: 名称
+                            goodsStatus:
+                              type: string
+                              description: 商品状态
+                            goodsStatusDesc:
+                              type: string
+                              description: 商品状态显示文本
+                            goodsType:
+                              type: string
+                              description: 商品类型
+                            goodsTypeDesc:
+                              type: string
+                              description: 商品类型
+                            hasSmartRoom:
+                              type: integer
+                              format: int32
+                              description: 是否有智能样板间
+                            id:
+                              type: string
+                              description: 商品ID
+                            isBuy:
+                              type: boolean
+                              description: 是否购买（使用权）
+                            isBuySource:
+                              type: boolean
+                              description: 是否已购买了源文件
+                            isFavorite:
+                              type: boolean
+                              description: 是否已收藏：true=是false=否
+                            isHotSell:
+                              type: integer
+                              format: int32
+                              description: 是否热销方案1=热销（优秀方案）
+                            isPraise:
+                              type: boolean
+                              description: 是否已点赞：true=是false=否
+                            lookNums:
+                              type: integer
+                              format: int32
+                              description: 浏览数量
+                            modifyDate:
+                              type: string
+                              description: 最后修改时间(删除时间）
+                            orderNum:
+                              type: integer
+                              format: int32
+                              description: 九牧定制:下单量
+                            organId:
+                              type: string
+                              description: 机构ID
+                            praiseNums:
+                              type: integer
+                              format: int32
+                              description: 点赞数量
+                            price:
+                              type: integer
+                              format: int32
+                              description: 售价
+                            relGoodIds:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n关联商品Id列表"
+                            schemeDepthImageUrl:
+                              type: string
+                              description: 深度图地址
+                            schemeId:
+                              type: string
+                              description: 方案ID
+                            schemeSized:
+                              type: number
+                              format: double
+                              description: 面积
+                            schemeSizedStr:
+                              type: string
+                              description: 面积
+                            schemeStyle:
+                              type: string
+                              description: 风格
+                            schemeStyleDesc:
+                              type: string
+                              description: 风格显示文本
+                            schemeType:
+                              type: string
+                              description: 户型
+                            schemeTypeDesc:
+                              type: string
+                              description: 户型显示文本
+                            schemeVerion:
+                              type: string
+                              description: 方案版本号
+                            schemeVrUrl:
+                              type: string
+                              description: 全景图链接地址
+                            sourcePrice:
+                              type: integer
+                              format: int32
+                              description: 源文件售价：0=免费，-1=不销售
+                            statusDate:
+                              type: string
+                              description: 状态时间
+                            statusReason:
+                              type: string
+                              description: 状态原因
+                            tenantId:
+                              type: string
+                              description: tenantId租户id(兼容)
+                            topSortCode:
+                              type: integer
+                              format: int64
+                              description: 置顶排序序号（序号越大，越前）
+                            userId:
+                              type: string
+                              description: 归属用户ID
+                            userImageUrl:
+                              type: string
+                              description: 归属用户头像图片地址
+                            userName:
+                              type: string
+                              description: 归属用户帐号
+                            userNickName:
+                              type: string
+                              description: 归属用户名称
+                        description: 商品方案表列表OutputDto
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - isBuy: false
+                    statusDate: ''
+                    userImageUrl: ''
+                    praiseNums: 0
+                    schemeType: ''
+                    associatedGoodId: ''
+                    statusReason: ''
+                    price: 0
+                    isBuySource: false
+                    checkUserNickName: ''
+                    id: ''
+                    userNickName: ''
+                    goodsName: ''
+                    relGoodIds: []
+                    modifyDate: ''
+                    schemeSizedStr: ''
+                    coverPageFileId: ''
+                    lookNums: 0
+                    goodsType: ''
+                    goodsTypeDesc: ''
+                    schemeStyleDesc: ''
+                    favoriteNums: 0
+                    organId: ''
+                    isFavorite: false
+                    schemeVerion: ''
+                    schemeDepthImageUrl: ''
+                    atlasId: ''
+                    checkUserId: ''
+                    orderNum: 0
+                    schemeId: ''
+                    schemeTypeDesc: ''
+                    buyNums: 0
+                    content: ''
+                    sourcePrice: 0
+                    isHotSell: 0
+                    createDate: ''
+                    atlasStatus: 0
+                    creator: ''
+                    schemeStyle: ''
+                    hasSmartRoom: 0
+                    coverPageUrl: ''
+                    topSortCode: 0
+                    checkDate: ''
+                    goodsStatusDesc: ''
+                    userName: ''
+                    userId: ''
+                    buyScores: 0
+                    commentNums: 0
+                    goodsStatus: ''
+                    schemeVrUrl: ''
+                    tenantId: ''
+                    isPraise: false
+                    goodsMarketingType: 0
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/admin/schemeDelete:
+    post:
+      operationId: apiV1AdminSchemeDelete
+      summary: 批量删除方案接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=652912755690598420
+      x-documentation-category: 方案模块 / 方案管理
+      description: 注意：删除方案后，可通过【三维家工作台】-【方案管理】-【回收站】还原，删除超过3个月的方案数据将不可恢复，请谨慎操作！
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeIds:
+                  type: array
+                  items: {}
+                  description: 方案ID集合
+              required:
+              - schemeIds
+            example:
+              schemeIds: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: false
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/ai/scheme/project/listByPage:
+    post:
+      operationId: apiV1AiSchemeProjectListByPage
+      summary: 查询方案秀方案列表接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=600736973753311288
+      x-documentation-category: 方案模块 / 方案秀
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createUser:
+                  type: string
+                  description: 创建人ID（三维家用户）
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 当前页
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页大小
+                projectName:
+                  type: string
+                  description: 项目名称或ID
+                styleId:
+                  type: string
+                  description: 风格ID
+                enterpriseUserIds:
+                  type: array
+                  items: {}
+                  description: 企业用户ID集合
+            example:
+              enterpriseUserIds: []
+              pageSize: 0
+              pageIndex: 0
+              styleId: ''
+              createUser: ''
+              projectName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      recordCount:
+                        type: integer
+                        format: int32
+                        description: 总记录数
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            auditStatus:
+                              type: integer
+                              format: int32
+                              description: 审核状态
+                            cityAndDistrict:
+                              type: string
+                              description: 市区
+                            coverImage:
+                              type: string
+                              description: 主方案封面图
+                            createDate:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            createType:
+                              type: integer
+                              format: int32
+                              description: 创建方式
+                            createUser:
+                              type: string
+                              description: 创建人
+                            errorId:
+                              type: integer
+                              format: int32
+                              description: 错误信息ID
+                            errorMsg:
+                              type: string
+                              description: 错误信息
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否删除
+                            isTenantPublic:
+                              type: integer
+                              format: int32
+                              description: 是否全租户共享
+                            layOutImage:
+                              type: string
+                              description: 户型图
+                            layoutId:
+                              type: integer
+                              format: int32
+                              description: 户型ID
+                            layoutOrganType:
+                              type: integer
+                              format: int32
+                              description: 设计规则户型分类
+                            layoutRenderVersion:
+                              type: integer
+                              format: int32
+                              description: 项目版本
+                            lightDesignVersion:
+                              type: integer
+                              format: int32
+                              description: 轻设计版本号
+                            mobile:
+                              type: string
+                              description: 手机号
+                            nickName:
+                              type: string
+                              description: 昵称
+                            planId:
+                              type: string
+                              description: 方案ID
+                            projectId:
+                              type: integer
+                              format: int32
+                              description: 项目ID
+                            projectName:
+                              type: string
+                              description: 项目名称
+                            projectType:
+                              type: integer
+                              format: int32
+                              description: 项目类型
+                            publishState:
+                              type: integer
+                              format: int32
+                              description: 发布状态
+                            publishVersion:
+                              type: integer
+                              format: int32
+                              description: 当前使用的发布版本
+                            publishVersionId:
+                              type: integer
+                              format: int32
+                              description: 当前使用的发布版本ID
+                            ruleId:
+                              type: integer
+                              format: int32
+                              description: 设计规则ID
+                            schemeId:
+                              type: string
+                              description: 3D方案ID
+                            status:
+                              type: integer
+                              format: int32
+                              description: 项目状态
+                            styleId:
+                              type: string
+                              description: 风格ID
+                            styleName:
+                              type: string
+                              description: 风格名称
+                            tenantId:
+                              type: string
+                              description: 租户ID
+                            thumbnail:
+                              type: string
+                              description: 项目封面图
+                            updateDate:
+                              type: string
+                              format: date-time
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人
+                            vrExpMode:
+                              type: string
+                              description: 项目结果类型
+                            vrStagePercentage:
+                              type: string
+                              description: 制作进度
+                            zipCode:
+                              type: string
+                              description: 实拍码
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  result:
+                  - publishState: 0
+                    vrStagePercentage: ''
+                    zipCode: ''
+                    updateDate: ''
+                    lightDesignVersion: 0
+                    projectType: 0
+                    createType: 0
+                    schemeId: ''
+                    styleName: ''
+                    cityAndDistrict: ''
+                    publishVersionId: 0
+                    styleId: ''
+                    coverImage: ''
+                    planId: ''
+                    errorId: 0
+                    ruleId: 0
+                    createDate: ''
+                    thumbnail: ''
+                    publishVersion: 0
+                    isDelete: 0
+                    nickName: ''
+                    mobile: ''
+                    updateUser: ''
+                    layoutId: 0
+                    errorMsg: ''
+                    isTenantPublic: 0
+                    layOutImage: ''
+                    layoutRenderVersion: 0
+                    vrExpMode: ''
+                    tenantId: ''
+                    auditStatus: 0
+                    createUser: ''
+                    projectName: ''
+                    projectId: 0
+                    layoutOrganType: 0
+                    status: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/designscheme/copyScheme:
+    post:
+      operationId: apiV1DesignschemeCopyScheme
+      summary: 复制方案接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=620982492899467341
+      x-documentation-category: 方案模块 / 方案管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 源方案ID
+                schemeName:
+                  type: string
+                  description: 目标方案名称
+                userId:
+                  type: string
+                  description: 目标用户ID
+              required:
+              - schemeId
+            example:
+              schemeName: ''
+              schemeId: ''
+              userId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/designschemesland/getFilterDictionary:
+    post:
+      operationId: apiV1DesignschemeslandGetFilterDictionary
+      summary: 获取方案岛分类过滤字典接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=475003581611716680
+      x-documentation-category: 方案模块 / 方案岛
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      displayValue:
+                        type: string
+                        description: 显示值
+                      realValue:
+                        type: string
+                        description: 真实值
+                      type:
+                        type: string
+                        description: 类型，属于哪个模块
+              example:
+                msg: ''
+                code: 0
+                data:
+                - type: ''
+                  displayValue: ''
+                  realValue: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/goods/listPageByModityDate:
+    post:
+      operationId: apiV1GoodsListPageByModityDate
+      summary: 根据修改时间获取商品方案列表
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=460809040625205344
+      x-documentation-category: 方案模块 / 方案岛
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modifyTimeEnd:
+                  type: string
+                  description: 结束时间（格式：yyyy-MM-dd HH:mm:ss）
+                  examples:
+                  - '2020-10-18 00:00:00'
+                modifyTimeStart:
+                  type: string
+                  description: 开始时间（格式：yyyy-MM-dd HH:mm:ss）
+                  examples:
+                  - '2020-10-10 00:00:00'
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 当前查询第几页
+                  examples:
+                  - '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 当前查询页记录数
+                  examples:
+                  - '20'
+            example:
+              pageSize: 20
+              modifyTimeEnd: '2020-10-18 00:00:00'
+              modifyTimeStart: '2020-10-10 00:00:00'
+              pageIndex: 1
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      recordCount:
+                        type: integer
+                        format: int32
+                        description: 总数
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            buyNums:
+                              type: integer
+                              format: int32
+                              description: 购买数量
+                            buyScores:
+                              type: integer
+                              format: int32
+                              description: 购买分数
+                            coverPageUrl:
+                              type: string
+                              description: 封面地址
+                            favoriteNums:
+                              type: integer
+                              format: int32
+                              description: 收藏数量
+                            goodsName:
+                              type: string
+                              description: 名称
+                            goodsStatus:
+                              type: string
+                              description: 商品状态
+                            goodsStatusDesc:
+                              type: string
+                              description: 商品状态显示文本
+                            goodsType:
+                              type: string
+                              description: 商品类型
+                            id:
+                              type: string
+                              description: 商品ID
+                            lookNums:
+                              type: integer
+                              format: int32
+                              description: 浏览数量
+                            orderNum:
+                              type: integer
+                              format: int32
+                              description: 九牧定制:下单量
+                            praiseNums:
+                              type: integer
+                              format: int32
+                              description: 点赞数量
+                            relGoodIds:
+                              type: array
+                              items: {}
+                              description: 'ThisisListType
+
+                                关联商品Id列表'
+                            schemeId:
+                              type: string
+                              description: 方案ID
+                            schemeSized:
+                              type: number
+                              format: double
+                              description: 面积
+                            topSortCode:
+                              type: integer
+                              format: int64
+                              description: 置顶排序序号（序号越大，越前）
+                            userImageUrl:
+                              type: string
+                              description: 归属用户头像图片地址
+                            userName:
+                              type: string
+                              description: 归属用户帐号
+                            userNickName:
+                              type: string
+                              description: 归属用户名称
+                        description: 商品方案表列表OutputDto
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  result:
+                  - relGoodIds: []
+                    userImageUrl: ''
+                    praiseNums: 0
+                    coverPageUrl: ''
+                    lookNums: 0
+                    orderNum: 0
+                    schemeId: ''
+                    topSortCode: 0
+                    buyNums: 0
+                    goodsStatusDesc: ''
+                    userName: ''
+                    goodsType: ''
+                    buyScores: 0
+                    goodsStatus: ''
+                    favoriteNums: 0
+                    id: ''
+                    userNickName: ''
+                    goodsName: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quotation/getSchemeProductPrice:
+    post:
+      operationId: apiV1QuotationGetSchemeProductPrice
+      summary: 获取方案成品清单接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=453646779758477328
+      x-documentation-category: 方案模块 / 方案数据
+      description: 获取方案成品清单，带单价、数量和金额信息，且只包含企业自己的素材
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '51024567'
+              required:
+              - schemeId
+            example:
+              schemeId: '51024567'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                            examples:
+                            - https://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg
+                          mobile:
+                            type: string
+                            description: 手机号码
+                            examples:
+                            - '13800000000'
+                          name:
+                            type: string
+                            description: 姓名
+                            examples:
+                            - 小蔡
+                          nickName:
+                            type: string
+                            description: 昵称
+                            examples:
+                            - 小蔡
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                            examples:
+                            - '123456'
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                            examples:
+                            - '1000123456'
+                          userName:
+                            type: string
+                            description: 三维家账号
+                            examples:
+                            - 3vj13800000000
+                        description: 操作用户
+                      dept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                            examples:
+                            - '12332'
+                          deptId:
+                            type: string
+                            description: 部门ID
+                            examples:
+                            - 00013678
+                          deptName:
+                            type: string
+                            description: 部门名称
+                            examples:
+                            - 运营管理部
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                            examples:
+                            - '123456'
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                            examples:
+                            - '1'
+                        description: 上级部门信息
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                            examples:
+                            - C00000000
+                          organName:
+                            type: string
+                            description: 企业名称
+                            examples:
+                            - XXX信息科技
+                        description: 部门所属机构信息
+                      productList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            amount:
+                              type: object
+                              examples:
+                              - '1'
+                            materialId:
+                              type: string
+                              description: 素材id
+                              examples:
+                              - '12233'
+                            materialName:
+                              type: string
+                              description: 素材名称
+                              examples:
+                              - 毛巾
+                            num:
+                              type: object
+                              examples:
+                              - '12'
+                            price:
+                              type: object
+                              examples:
+                              - '160.3233'
+                            productCode:
+                              type: string
+                              description: 产品编码，取商品的默认SKU
+                              examples:
+                              - 3vjiawx-zh24-6
+                            productName:
+                              type: string
+                              description: 商品名称
+                              examples:
+                              - 3vjiawx-zh24-6
+                            room:
+                              type: object
+                              properties:
+                                roomId:
+                                  type: string
+                                  description: 空间ID
+                                  examples:
+                                  - 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                                roomName:
+                                  type: string
+                                  description: 空间名称
+                                  examples:
+                                  - 主卧
+                              description: 产品关联的空间信息
+                        description: 方案成品报价结构，V2
+                      schemeId:
+                        type: string
+                        description: 方案Id
+                        examples:
+                        - '50053081'
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                        examples:
+                        - 广州碧桂园·樾时光—毁梦3vj
+              example:
+                msg: ''
+                code: 0
+                data:
+                  organ:
+                    organName: XXX信息科技
+                    organId: C00000000
+                  author:
+                    nickName: 小蔡
+                    mobile: '13800000000'
+                    avatar: https://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg
+                    outUserId: '123456'
+                    userName: 3vj13800000000
+                    userId: '1000123456'
+                    name: 小蔡
+                  schemeName: 广州碧桂园·樾时光—毁梦3vj
+                  schemeId: '50053081'
+                  dept:
+                    deptName: 运营管理部
+                    storeType: 1
+                    deptId: 00013678
+                    customerCode: '12332'
+                    outDeptId: '123456'
+                  productList:
+                  - amount: ''
+                    num: ''
+                    materialId: '12233'
+                    productName: 3vjiawx-zh24-6
+                    room:
+                      roomId: 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                      roomName: 主卧
+                    materialName: 毛巾
+                    productCode: 3vjiawx-zh24-6
+                    price: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/scheme/getScheme:
+    post:
+      operationId: apiV1SchemeGetScheme
+      summary: 获取方案详细数据接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=453640446674010117
+      x-documentation-category: 方案模块 / 方案数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '51024567'
+              required:
+              - schemeId
+            example:
+              schemeId: '51024567'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      areaId:
+                        type: string
+                        description: 面积范围（31-40㎡、41-50㎡....）分类的ID
+                        examples:
+                        - '15416'
+                      areaName:
+                        type: string
+                        description: 面积范围（31-40㎡、41-50㎡....）分类的名称
+                        examples:
+                        - 31-40㎡
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                            examples:
+                            - "\thttps://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg"
+                          mobile:
+                            type: string
+                            description: 手机号码
+                            examples:
+                            - '13800000000'
+                          name:
+                            type: string
+                            description: 姓名
+                            examples:
+                            - 小蔡
+                          nickName:
+                            type: string
+                            description: 昵称
+                            examples:
+                            - 小蔡
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                            examples:
+                            - '123456'
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                            examples:
+                            - '1000123456'
+                          userName:
+                            type: string
+                            description: 三维家账号
+                            examples:
+                            - 3vj13800000000
+                        description: 操作用户
+                      budgetId:
+                        type: string
+                        description: 预算（小于1w、大于1w....）分类的ID
+                        examples:
+                        - '2029176'
+                      budgetName:
+                        type: string
+                        description: 预算（小于1w、大于1w....）分类的名称
+                        examples:
+                        - 小于1w
+                      building:
+                        type: object
+                        properties:
+                          buildingId:
+                            type: string
+                            description: 三维家楼盘ID
+                            examples:
+                            - 00005689
+                          buildingName:
+                            type: string
+                            description: 楼盘名称
+                            examples:
+                            - 天健上城
+                          city:
+                            type: string
+                            description: 城市
+                            examples:
+                            - 广州市
+                          cityId:
+                            type: string
+                            description: 城市ID
+                            examples:
+                            - '440100'
+                          modelArea:
+                            type: object
+                            examples:
+                            - '13.40'
+                          modelId:
+                            type: string
+                            description: 三维家楼号户型ID
+                            examples:
+                            - '00041555'
+                          modelImagePath:
+                            type: string
+                            description: 户型图地址
+                            examples:
+                            - "\thttps://img3.admin.3vjia.com/UpFile_Building/C00005842/3D/BuildingRoomModel/202009/440100/01914439/105753835/96feb749155e4b71a9fce3bd162c063b.jpg"
+                          modelName:
+                            type: string
+                            description: 楼号户型名称
+                            examples:
+                            - A1栋1203号
+                          modelType:
+                            type: string
+                            description: 户型类型
+                            examples:
+                            - 3室2厅1卫1厨
+                          province:
+                            type: string
+                            description: 省份
+                            examples:
+                            - 广东省
+                          provinceId:
+                            type: string
+                            description: 省份ID
+                            examples:
+                            - '440000'
+                        description: 方案户型信息
+                      createTime:
+                        type: string
+                        description: 方案创建时间，格式yyyy-MM-ddHH:mm:ss
+                        examples:
+                        - '2020-05-02 20:11:00'
+                      customer:
+                        type: object
+                        properties:
+                          customerAddress:
+                            type: string
+                            description: 客户地址
+                            examples:
+                            - 天河区软件路15号
+                          customerCode:
+                            type: string
+                            description: 客户编码
+                            examples:
+                            - '1000123456'
+                          customerId:
+                            type: string
+                            description: 客户ID
+                            examples:
+                            - '1000123456'
+                          customerMobile:
+                            type: string
+                            description: 客户手机
+                            examples:
+                            - '13800000000'
+                          customerName:
+                            type: string
+                            description: 客户名称
+                            examples:
+                            - 朱女士
+                        description: 客户信息
+                      dept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 客户编码
+                            examples:
+                            - '1000123456'
+                          deptId:
+                            type: string
+                            description: 部门ID
+                            examples:
+                            - 00013678
+                          deptName:
+                            type: string
+                            description: 部门名称
+                            examples:
+                            - 运营管理部
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                            examples:
+                            - '123456'
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                            examples:
+                            - '1'
+                        description: 上级部门信息
+                      houseTypeId:
+                        type: string
+                        description: 户型（一居室、两居室....）分类的ID
+                        examples:
+                        - '7026'
+                      houseTypeName:
+                        type: string
+                        description: 户型（一居室、两居室....）分类的名称
+                        examples:
+                        - 一居室
+                      imagePath:
+                        type: string
+                        description: 方案主图路径
+                        examples:
+                        - http://3vj-scheme.3vjia.com/UpFile_Scheme/C00004768/20200504/1b41/1b41e2d1-8156-45f4-a364-4d917dec4089.jpg
+                      info:
+                        type: string
+                        description: 方案介绍
+                        examples:
+                        - 测试方案
+                      isEnable:
+                        type: integer
+                        format: int32
+                        description: 查询账号有使用权限的方案（0=无使用权，1=有使用权）
+                        examples:
+                        - "\t0"
+                      kindsId:
+                        type: string
+                        description: 品类（生活创意类、家具类....）分类的ID
+                        examples:
+                        - '7069'
+                      kindsName:
+                        type: string
+                        description: 品类（生活创意类、家具类....）分类的名称
+                        examples:
+                        - 家具类
+                      mainPhotoDesc:
+                        type: string
+                        description: 方案主图描述
+                        examples:
+                        - 测试方案主图
+                      modifyTime:
+                        type: string
+                        description: 方案最后修改时间，格式yyyy-MM-ddHH:mm:ss
+                        examples:
+                        - '2020-05-02 20:11:00'
+                      productList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            materialId:
+                              type: string
+                              description: 素材id
+                              examples:
+                              - '22107004'
+                            materialName:
+                              type: string
+                              description: 素材名称
+                              examples:
+                              - 毛巾
+                            num:
+                              type: string
+                              description: 数量，可能为小数字符串（贴图类）、也可能为整数字符串（模型类）
+                              examples:
+                              - '1'
+                            organ:
+                              type: object
+                              description: 部门所属机构信息
+                            productCode:
+                              type: string
+                              description: 产品编码，取商品的默认SKU
+                              examples:
+                              - 3vjiawx-zh24-6
+                            productId:
+                              type: string
+                              description: 商品ID
+                              examples:
+                              - '123456'
+                            productName:
+                              type: string
+                              description: 商品名称
+                              examples:
+                              - 3vjiawx-zh24-6
+                            productStatus:
+                              type: integer
+                              format: int32
+                              description: 商品上下架状态，0=下架，1=上架
+                              examples:
+                              - '1'
+                            room:
+                              type: object
+                              properties:
+                                roomId:
+                                  type: string
+                                  description: 空间ID
+                                  examples:
+                                  - 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                                roomName:
+                                  type: string
+                                  description: 空间名称
+                                  examples:
+                                  - 主卧
+                              description: 产品关联的空间信息
+                        description: 方案成品结构，V2
+                      render720Url:
+                        type: string
+                        description: 720全景图地址（单空间），类型为全景图时有值
+                        examples:
+                        - https://720.3vjia.com/Q123456
+                      renderImageList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 渲染时间，格式yyyy-MM-ddHH:mm:ss
+                              examples:
+                              - '2020-05-02 14:50:54'
+                            height:
+                              type: integer
+                              format: int32
+                              description: 图片高度
+                              examples:
+                              - '600'
+                            imageId:
+                              type: string
+                              description: 渲染图ID
+                              examples:
+                              - 2ddb3ec39c8d4b1d8c75bd73c43edc17
+                            imageName:
+                              type: string
+                              description: 自动生成的渲染图名称
+                              examples:
+                              - 测试方案202005041843-20200504
+                            imageSpecification:
+                              type: string
+                              description: 渲染图的规格，标清/高清/超清/4K
+                              examples:
+                              - 标清
+                            imageTypeCode:
+                              type: integer
+                              format: int32
+                              description: 渲染图类型代码，0=效果图，1=全景图，2=俯视图
+                              examples:
+                              - '2'
+                            imageTypeName:
+                              type: string
+                              description: 渲染图类型名称，效果图/全景图/俯视图
+                              examples:
+                              - 俯视图
+                            imageUrl:
+                              type: string
+                              description: 渲染图地址
+                              examples:
+                              - "\thttps://3vj-render.3vjia.com/UpFile_Render/C00004768/DesignSchemeRenderFile/55473563/QO202005040000000000000025726676/QO202005040000000000000025726676.jpg"
+                            render720Url:
+                              type: string
+                              description: 720全景图地址（单空间），类型为全景图时有值
+                            room:
+                              type: object
+                              properties:
+                                roomId:
+                                  type: string
+                                  description: 空间ID
+                                  examples:
+                                  - 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                                roomName:
+                                  type: string
+                                  description: 空间名称
+                                  examples:
+                                  - 主卧
+                              description: 产品关联的空间信息
+                            width:
+                              type: integer
+                              format: int32
+                              description: 图片宽度
+                              examples:
+                              - '800'
+                        description: 渲染图结构，V2
+                      roomList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            area:
+                              type: number
+                              format: double
+                              description: 空间面积大小
+                              examples:
+                              - '13.45'
+                            categoryId:
+                              type: string
+                              description: 空间类型分类ID
+                              examples:
+                              - '10742'
+                            categoryName:
+                              type: string
+                              description: 空间类型分类名称
+                              examples:
+                              - 主卧
+                            roomId:
+                              type: string
+                              description: 空间ID
+                              examples:
+                              - 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                            roomName:
+                              type: string
+                              description: 空间名称
+                              examples:
+                              - 主卧
+                            roomShapeId:
+                              type: string
+                              description: 房间形状（矩型、L型....）的分类的ID
+                              examples:
+                              - '7064'
+                            roomShapeName:
+                              type: string
+                              description: 房间形状（矩型、L型....）的分类的名称
+                              examples:
+                              - 矩型
+                            styleId:
+                              type: string
+                              description: 风格（现代、简约、欧式....）分类的ID
+                              examples:
+                              - '7045'
+                            styleName:
+                              type: string
+                              description: 风格（现代、简约、欧式....）分类的名称
+                              examples:
+                              - 现代
+                        description: 方案空间结构，V2
+                      roomShapeId:
+                        type: string
+                        description: 房间形状（矩型、L型....）的分类的ID
+                        examples:
+                        - '7064'
+                      roomShapeName:
+                        type: string
+                        description: 房间形状（矩型、L型....）的分类的名称
+                        examples:
+                        - 矩型
+                      roomTypeId:
+                        type: string
+                        description: 空间类型（主卧、客厅....）的分类的ID
+                        examples:
+                        - '10742'
+                      roomTypeName:
+                        type: string
+                        description: 空间类型（主卧、客厅....）的分类的名称
+                        examples:
+                        - 主卧
+                      schemeId:
+                        type: string
+                        description: 方案Id
+                        examples:
+                        - '50053081'
+                      schemeIdEncryption:
+                        type: string
+                        description: 加密方案ID
+                        examples:
+                        - 1IDDIGDL
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                        examples:
+                        - 广州碧桂园·樾时光—毁梦3vj
+                      sort:
+                        type: integer
+                        format: int32
+                        description: 方案排序号，主要用于一些列表页的显示顺序，如新品推荐
+                        examples:
+                        - '0'
+                      styleId:
+                        type: string
+                        description: 风格（现代、简约、欧式....）分类的ID
+                        examples:
+                        - '7045'
+                      styleName:
+                        type: string
+                        description: 风格（现代、简约、欧式....）分类的名称
+                        examples:
+                        - 现代
+                      totalArea:
+                        type: number
+                        format: double
+                        description: 方案总面积
+                        examples:
+                        - '64.44'
+                      totalFavorite:
+                        type: integer
+                        format: int32
+                        description: 被收藏数
+                        examples:
+                        - '10'
+                      totalPraise:
+                        type: integer
+                        format: int32
+                        description: 被点赞数
+                        examples:
+                        - '10'
+                      totalViews:
+                        type: integer
+                        format: int32
+                        description: 被点击（观看）数
+                        examples:
+                        - '10'
+                      uploadImageList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 渲染时间，格式yyyy-MM-ddHH:mm:ss
+                              examples:
+                              - '2020-05-02 14:50:54'
+                            height:
+                              type: integer
+                              format: int32
+                              description: 图片高度
+                              examples:
+                              - '600'
+                            imageId:
+                              type: string
+                              description: 渲染图ID
+                              examples:
+                              - 2ddb3ec39c8d4b1d8c75bd73c43edc17
+                            imageName:
+                              type: string
+                              description: 自动生成的渲染图名称
+                              examples:
+                              - 测试方案202005041843-20200504
+                            imageSpecification:
+                              type: string
+                              description: 渲染图的规格，标清/高清/超清/4K
+                              examples:
+                              - 标清
+                            imageUrl:
+                              type: string
+                              description: 渲染图地址
+                              examples:
+                              - "\thttps://3vj-render.3vjia.com/UpFile_Render/C00004768/DesignSchemeRenderFile/55473563/QO202005040000000000000025726676/QO202005040000000000000025726676.jpg"
+                            width:
+                              type: integer
+                              format: int32
+                              description: 图片宽度
+                              examples:
+                              - '800'
+                        description: 方案上传的图片结构，V2
+              example:
+                msg: ''
+                code: 0
+                data:
+                  imagePath: http://3vj-scheme.3vjia.com/UpFile_Scheme/C00004768/20200504/1b41/1b41e2d1-8156-45f4-a364-4d917dec4089.jpg
+                  totalPraise: 10
+                  schemeId: '50053081'
+                  kindsName: 家具类
+                  styleName: 现代
+                  houseTypeId: '7026'
+                  building:
+                    city: 广州市
+                    modelId: '00041555'
+                    modelImagePath: "\thttps://img3.admin.3vjia.com/UpFile_Building/C00005842/3D/BuildingRoomModel/202009/440100/01914439/105753835/96feb749155e4b71a9fce3bd162c063b.jpg"
+                    modelArea: ''
+                    cityId: '440100'
+                    modelType: 3室2厅1卫1厨
+                    provinceId: '440000'
+                    buildingId: 00005689
+                    buildingName: 天健上城
+                    modelName: A1栋1203号
+                    province: 广东省
+                  roomTypeId: '10742'
+                  isEnable: 0
+                  renderImageList:
+                  - imageId: 2ddb3ec39c8d4b1d8c75bd73c43edc17
+                    imageName: 测试方案202005041843-20200504
+                    imageSpecification: 标清
+                    room:
+                      roomId: 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                      roomName: 主卧
+                    imageUrl: "\thttps://3vj-render.3vjia.com/UpFile_Render/C00004768/DesignSchemeRenderFile/55473563/QO202005040000000000000025726676/QO202005040000000000000025726676.jpg"
+                    width: 800
+                    imageTypeCode: 2
+                    imageTypeName: 俯视图
+                    createDate: '2020-05-02 14:50:54'
+                    height: 600
+                    render720Url: ''
+                  schemeIdEncryption: 1IDDIGDL
+                  modifyTime: '2020-05-02 20:11:00'
+                  uploadImageList:
+                  - imageId: 2ddb3ec39c8d4b1d8c75bd73c43edc17
+                    imageName: 测试方案202005041843-20200504
+                    imageSpecification: 标清
+                    imageUrl: "\thttps://3vj-render.3vjia.com/UpFile_Render/C00004768/DesignSchemeRenderFile/55473563/QO202005040000000000000025726676/QO202005040000000000000025726676.jpg"
+                    width: 800
+                    createDate: '2020-05-02 14:50:54'
+                    height: 600
+                  areaName: 31-40㎡
+                  styleId: '7045'
+                  info: 测试方案
+                  roomShapeId: '7064'
+                  author:
+                    nickName: 小蔡
+                    mobile: '13800000000'
+                    avatar: "\thttps://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg"
+                    outUserId: '123456'
+                    userName: 3vj13800000000
+                    userId: '1000123456'
+                    name: 小蔡
+                  roomTypeName: 主卧
+                  schemeName: 广州碧桂园·樾时光—毁梦3vj
+                  houseTypeName: 一居室
+                  budgetId: '2029176'
+                  dept:
+                    deptName: 运营管理部
+                    storeType: 1
+                    deptId: 00013678
+                    customerCode: '1000123456'
+                    outDeptId: '123456'
+                  sort: 0
+                  budgetName: 小于1w
+                  areaId: '15416'
+                  createTime: '2020-05-02 20:11:00'
+                  totalFavorite: 10
+                  roomShapeName: 矩型
+                  totalViews: 10
+                  kindsId: '7069'
+                  mainPhotoDesc: 测试方案主图
+                  productList:
+                  - organ: {}
+                    productId: '123456'
+                    num: '1'
+                    productStatus: 1
+                    materialId: '22107004'
+                    productName: 3vjiawx-zh24-6
+                    room:
+                      roomId: 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                      roomName: 主卧
+                    materialName: 毛巾
+                    productCode: 3vjiawx-zh24-6
+                  roomList:
+                  - roomShapeId: '7064'
+                    styleName: 现代
+                    categoryName: 主卧
+                    roomId: 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                    roomName: 主卧
+                    roomShapeName: 矩型
+                    styleId: '7045'
+                    categoryId: '10742'
+                  customer:
+                    customerAddress: 天河区软件路15号
+                    customerCode: '1000123456'
+                    customerName: 朱女士
+                    customerId: '1000123456'
+                    customerMobile: '13800000000'
+                  render720Url: https://720.3vjia.com/Q123456
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/scheme/getSchemeListByPage:
+    post:
+      operationId: apiV1SchemeGetSchemeListByPage
+      summary: 获取方案列表v1接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474664222039572486
+      x-documentation-category: 方案模块 / 方案数据
+      description: 分页获取方案列表，当不需要过滤时，入参请传空字典，而非不传。
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                area:
+                  type: string
+                  description: 面积范围（31-40㎡、41-50㎡....）的分类ID
+                createBeginTime:
+                  type: string
+                  description: 方案创建开始时间，格式yyyy-MM-ddHH:mm:ss,默认值10天前，createBeginTime和createEndTime的时间差不能超过90天
+                createEndTime:
+                  type: string
+                  description: 方案创建结束时间，格式yyyy-MM-ddHH:mm:ss,默认当前时间，createBeginTime和createEndTime的时间差不能超过90天
+                deptId:
+                  type: string
+                  description: 部门id
+                houseType:
+                  type: string
+                  description: 户型（一居室、两居室....）的分类ID
+                isEnable:
+                  type: integer
+                  format: int32
+                  description: 查询账号有使用权限的方案（0=无使用权，1=有使用权）
+                keyword:
+                  type: string
+                  description: 关键字，模糊搜索方案名称和方案ID
+                kinds:
+                  type: string
+                  description: 品类（生活创意类、家具类....）的分类ID
+                modifyBeginTime:
+                  type: string
+                  description: 方案修改开始时间，格式yyyy-MM-ddHH:mm:ss,modifyBeginTime和modifyEndTime之间的时间差不能超过90天
+                modifyEndTime:
+                  type: string
+                  description: 方案修改结束时间，格式yyyy-MM-ddHH:mm:ss,modifyBeginTime和modifyEndTime之间的时间差不能超过90天
+                orderBy:
+                  type: string
+                  description: "排序方式：MODIFY_TIME_DESC 按更新时间倒序，MODIFY_TIME_ASC 按更新时间正序，CREATE_TIME_DESC 创建时间倒序，CREATE_TIME_ASC 按创建时间正序\tCREATE_TIME_DESC"
+                outUserId:
+                  type: string
+                  description: 绑定过三维家账号的企业系统的用户ID，当userId、userName为空时，outUserId有效
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码，最小值为1，默认值为1
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 分页大小，最小值1，最大值500，默认值50
+                publishState:
+                  type: integer
+                  format: int32
+                  description: 发布状态（0=未发布，1=已发布，不传查全部）
+                roomShape:
+                  type: string
+                  description: 房间形状（矩型、L型....）的分类ID
+                roomType:
+                  type: string
+                  description: 空间类型（主卧、客厅....）的分类ID
+                style:
+                  type: string
+                  description: 风格（现代、简约、欧式....）的分类ID
+                userId:
+                  type: string
+                  description: 三维家用户ID，若传了userId，当忽略userName、outUserId字段
+                userName:
+                  type: string
+                  description: 三维家账号，当userId为空时，userName有效，传了userName将忽略outUserId字段
+            example:
+              area: ''
+              publishState: 0
+              createBeginTime: ''
+              houseType: ''
+              deptId: ''
+              orderBy: ''
+              pageSize: 0
+              kinds: ''
+              modifyEndTime: ''
+              modifyBeginTime: ''
+              outUserId: ''
+              userName: ''
+              userId: ''
+              isEnable: 0
+              roomShape: ''
+              pageIndex: 0
+              createEndTime: ''
+              style: ''
+              keyword: ''
+              roomType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            areaId:
+                              type: string
+                              description: 面积范围（31-40㎡、41-50㎡....）分类的ID
+                            areaName:
+                              type: string
+                              description: 面积范围（31-40㎡、41-50㎡....）分类的名称
+                            author:
+                              type: object
+                              properties:
+                                avatar:
+                                  type: string
+                                  description: 设计师头像
+                                mobile:
+                                  type: string
+                                  description: 手机号码
+                                name:
+                                  type: string
+                                  description: 姓名
+                                nickName:
+                                  type: string
+                                  description: 昵称
+                                outUserId:
+                                  type: string
+                                  description: 账号绑定的企业系统用户ID
+                                userId:
+                                  type: string
+                                  description: 三维家用户ID
+                                userName:
+                                  type: string
+                                  description: 三维家账号
+                              description: 操作用户
+                            budgetId:
+                              type: string
+                              description: 预算（小于1w、大于1w....）分类的ID
+                            budgetName:
+                              type: string
+                              description: 预算（小于1w、大于1w....）分类的名称
+                            createTime:
+                              type: string
+                              description: 方案创建时间，格式yyyy-MM-ddHH:mm:ss
+                            customer:
+                              type: object
+                              properties:
+                                customerAddress:
+                                  type: string
+                                  description: 客户地址
+                                customerCode:
+                                  type: string
+                                  description: 客户编码
+                                customerId:
+                                  type: string
+                                  description: 客户ID
+                                customerMobile:
+                                  type: string
+                                  description: 客户手机
+                                customerName:
+                                  type: string
+                                  description: 客户名称
+                              description: 客户信息
+                            dept:
+                              type: object
+                              properties:
+                                customerCode:
+                                  type: string
+                                  description: 部门对应客户部门编码
+                                deptId:
+                                  type: string
+                                  description: 部门ID
+                                deptName:
+                                  type: string
+                                  description: 部门名称
+                                outDeptId:
+                                  type: string
+                                  description: 部门所绑定企业系统部门ID，绑定过才有值
+                                storeType:
+                                  type: integer
+                                  format: int32
+                                  description: 类型0=门店，1=部门
+                              description: 上级部门信息
+                            houseTypeId:
+                              type: string
+                              description: 户型（一居室、两居室....）分类的ID
+                            houseTypeName:
+                              type: string
+                              description: 户型（一居室、两居室....）分类的名称
+                            imagePath:
+                              type: string
+                              description: 方案主图路径
+                            info:
+                              type: string
+                              description: 方案介绍
+                            isEnable:
+                              type: integer
+                              format: int32
+                              description: 查询账号有使用权限的方案（0=无使用权，1=有使用权）
+                            kindsId:
+                              type: string
+                              description: 品类（生活创意类、家具类....）分类的ID
+                            kindsName:
+                              type: string
+                              description: 品类（生活创意类、家具类....）分类的名称
+                            mainPhotoDesc:
+                              type: string
+                              description: 方案主图描述
+                            modifyTime:
+                              type: string
+                              description: 方案最后修改时间，格式yyyy-MM-ddHH:mm:ss
+                            organ:
+                              type: object
+                              properties:
+                                organId:
+                                  type: string
+                                  description: 企业ID
+                                organName:
+                                  type: string
+                                  description: 企业名称
+                              description: 部门所属机构信息
+                            publishState:
+                              type: integer
+                              format: int32
+                              description: 发布状态（0=未发布，1=已发布，不传查全部）
+                            render720Url:
+                              type: string
+                              description: 720全景Url
+                            roomShapeId:
+                              type: string
+                              description: 房间形状（矩型、L型....）的分类的ID
+                            roomShapeName:
+                              type: string
+                              description: 房间形状（矩型、L型....）的分类的名称
+                            roomTypeId:
+                              type: string
+                              description: 空间类型（主卧、客厅....）的分类的ID
+                            roomTypeName:
+                              type: string
+                              description: 空间类型（主卧、客厅....）的分类的名称
+                            schemeId:
+                              type: string
+                              description: 方案Id
+                            schemeIdEncryption:
+                              type: string
+                              description: 加密方案ID
+                            schemeName:
+                              type: string
+                              description: 方案名称
+                            sort:
+                              type: integer
+                              format: int32
+                              description: 方案排序号，主要用于一些列表页的显示顺序，如新品推荐
+                            styleId:
+                              type: string
+                              description: 风格（现代、简约、欧式....）分类的ID
+                            styleName:
+                              type: string
+                              description: 风格（现代、简约、欧式....）分类的名称
+                            totalArea:
+                              type: number
+                              format: double
+                              description: 方案总面积
+                            totalFavorite:
+                              type: integer
+                              format: int32
+                              description: 被收藏数
+                            totalPraise:
+                              type: integer
+                              format: int32
+                              description: 被点赞数
+                            totalViews:
+                              type: integer
+                              format: int32
+                              description: 被点击（观看）数
+                        description: 方案列表实体，出参，V2
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - organ:
+                      organName: ''
+                      organId: ''
+                    publishState: 0
+                    imagePath: ''
+                    totalPraise: 0
+                    schemeId: ''
+                    kindsName: ''
+                    styleName: ''
+                    houseTypeId: ''
+                    roomTypeId: ''
+                    isEnable: 0
+                    schemeIdEncryption: ''
+                    modifyTime: ''
+                    areaName: ''
+                    styleId: ''
+                    info: ''
+                    roomShapeId: ''
+                    author:
+                      nickName: ''
+                      mobile: ''
+                      avatar: ''
+                      outUserId: ''
+                      userName: ''
+                      userId: ''
+                      name: ''
+                    roomTypeName: ''
+                    schemeName: ''
+                    houseTypeName: ''
+                    budgetId: ''
+                    dept:
+                      deptName: ''
+                      storeType: 0
+                      deptId: ''
+                      customerCode: ''
+                      outDeptId: ''
+                    sort: 0
+                    budgetName: ''
+                    areaId: ''
+                    createTime: ''
+                    totalFavorite: 0
+                    roomShapeName: ''
+                    totalViews: 0
+                    kindsId: ''
+                    mainPhotoDesc: ''
+                    customer:
+                      customerAddress: ''
+                      customerCode: ''
+                      customerName: ''
+                      customerId: ''
+                      customerMobile: ''
+                    render720Url: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/scheme/getSchemeProduct:
+    post:
+      operationId: apiV1SchemeGetSchemeProduct
+      summary: 获取方案产品清单接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=453646779758477330
+      x-documentation-category: 方案模块 / 方案数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '50053081'
+              required:
+              - schemeId
+            example:
+              schemeId: '50053081'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                            examples:
+                            - https://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg
+                          mobile:
+                            type: string
+                            description: 手机号码
+                            examples:
+                            - '13800000000'
+                          name:
+                            type: string
+                            description: 姓名
+                            examples:
+                            - 小蔡
+                          nickName:
+                            type: string
+                            description: 昵称
+                            examples:
+                            - 小蔡
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                            examples:
+                            - '122323'
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                            examples:
+                            - '1000123456'
+                          userName:
+                            type: string
+                            description: 三维家账号
+                            examples:
+                            - 3vj13800000000
+                        description: 操作用户
+                      dept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                            examples:
+                            - '122323'
+                          deptId:
+                            type: string
+                            description: 部门ID
+                            examples:
+                            - 00013678
+                          deptName:
+                            type: string
+                            description: 部门名称
+                            examples:
+                            - 运营管理部
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                            examples:
+                            - '121232'
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                            examples:
+                            - '1'
+                        description: 上级部门信息
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                            examples:
+                            - C00000022
+                          organName:
+                            type: string
+                            description: 企业名称
+                            examples:
+                            - XXX信息科技
+                        description: 部门所属机构信息
+                      productList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            materialId:
+                              type: string
+                              description: 素材id
+                              examples:
+                              - '22107004'
+                            materialName:
+                              type: string
+                              description: 素材名称
+                              examples:
+                              - 毛巾
+                            num:
+                              type: string
+                              description: 数量，可能为小数字符串（贴图类）、也可能为整数字符串（模型类）
+                              examples:
+                              - '12'
+                            organ:
+                              type: object
+                              properties:
+                                organId:
+                                  type: string
+                                  description: 企业ID
+                                  examples:
+                                  - C00000022
+                                organName:
+                                  type: string
+                                  description: 企业名称
+                                  examples:
+                                  - XXX信息科技
+                              description: 部门所属机构信息
+                            productCode:
+                              type: string
+                              description: 产品编码，取商品的默认SKU
+                              examples:
+                              - 3vjiawx-zh24-6
+                            productId:
+                              type: string
+                              description: 商品ID
+                              examples:
+                              - '123456'
+                            productName:
+                              type: string
+                              description: 商品名称
+                              examples:
+                              - 毛巾
+                            productStatus:
+                              type: integer
+                              format: int32
+                              description: 商品上下架状态，0=下架，1=上架
+                              examples:
+                              - '1'
+                            room:
+                              type: object
+                              properties:
+                                roomId:
+                                  type: string
+                                  description: 空间ID
+                                  examples:
+                                  - 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                                roomName:
+                                  type: string
+                                  description: 空间名称
+                                  examples:
+                                  - 主卧
+                              description: 产品关联的空间信息
+                        description: 方案成品结构，V2
+                      schemeId:
+                        type: string
+                        description: 方案Id
+                        examples:
+                        - '50053081'
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                        examples:
+                        - 广州碧桂园·樾时光—毁梦3vj
+              example:
+                msg: ''
+                code: 0
+                data:
+                  organ:
+                    organName: XXX信息科技
+                    organId: C00000022
+                  author:
+                    nickName: 小蔡
+                    mobile: '13800000000'
+                    avatar: https://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg
+                    outUserId: '122323'
+                    userName: 3vj13800000000
+                    userId: '1000123456'
+                    name: 小蔡
+                  schemeName: 广州碧桂园·樾时光—毁梦3vj
+                  schemeId: '50053081'
+                  dept:
+                    deptName: 运营管理部
+                    storeType: 1
+                    deptId: 00013678
+                    customerCode: '122323'
+                    outDeptId: '121232'
+                  productList:
+                  - organ:
+                      organName: XXX信息科技
+                      organId: C00000022
+                    productId: '123456'
+                    num: '12'
+                    productStatus: 1
+                    materialId: '22107004'
+                    productName: 毛巾
+                    room:
+                      roomId: 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                      roomName: 主卧
+                    materialName: 毛巾
+                    productCode: 3vjiawx-zh24-6
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/scheme/getSchemeRender:
+    post:
+      operationId: apiV1SchemeGetSchemeRender
+      summary: 获取方案效果图列表接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=453644780388286500
+      x-documentation-category: 方案模块 / 方案数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '50053081'
+              required:
+              - schemeId
+            example:
+              schemeId: '50053081'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                            examples:
+                            - https://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg
+                          mobile:
+                            type: string
+                            description: 手机号码
+                            examples:
+                            - '13800000000'
+                          name:
+                            type: string
+                            description: 姓名
+                            examples:
+                            - 小蔡
+                          nickName:
+                            type: string
+                            description: 昵称
+                            examples:
+                            - 小蔡
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                            examples:
+                            - '123456'
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                            examples:
+                            - '1000123456'
+                          userName:
+                            type: string
+                            description: 三维家账号
+                            examples:
+                            - 3vj13800000000
+                        description: 操作用户
+                      dept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                            examples:
+                            - '123456'
+                          deptId:
+                            type: string
+                            description: 部门ID
+                            examples:
+                            - 00013678
+                          deptName:
+                            type: string
+                            description: 部门名称
+                            examples:
+                            - 运营管理部
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                            examples:
+                            - '123456'
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                            examples:
+                            - '1'
+                        description: 上级部门信息
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                            examples:
+                            - C00000000
+                          organName:
+                            type: string
+                            description: 企业名称
+                            examples:
+                            - XXX信息科技
+                        description: 部门所属机构信息
+                      render720Url:
+                        type: string
+                        description: 720全景图地址（单空间），类型为全景图时有值
+                        examples:
+                        - https://720.3vjia.com/Q123456
+                      renderImageList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 渲染时间，格式yyyy-MM-ddHH:mm:ss
+                              examples:
+                              - '2020-05-02 14:50:54'
+                            height:
+                              type: integer
+                              format: int32
+                              description: 图片高度
+                              examples:
+                              - '600'
+                            imageId:
+                              type: string
+                              description: 渲染图ID
+                              examples:
+                              - 2ddb3ec39c8d4b1d8c75bd73c43edc17
+                            imageName:
+                              type: string
+                              description: 自动生成的渲染图名称
+                              examples:
+                              - 测试方案202005041843-20200504
+                            imageSpecification:
+                              type: string
+                              description: 渲染图的规格，标清/高清/超清/4K
+                              examples:
+                              - 标清
+                            imageTypeCode:
+                              type: integer
+                              format: int32
+                              description: 渲染图类型代码，0=效果图，1=全景图，2=俯视图
+                              examples:
+                              - '2'
+                            imageTypeName:
+                              type: string
+                              description: 渲染图类型名称，效果图/全景图/俯视图
+                              examples:
+                              - 俯视图
+                            imageUrl:
+                              type: string
+                              description: 渲染图地址
+                              examples:
+                              - https://3vj-render.3vjia.com/UpFile_Render/C00004768/DesignSchemeRenderFile/55473563/QO202005040000000000000025726676/QO202005040000000000000025726676.jpg
+                            render720Url:
+                              type: string
+                              description: 720全景图地址（单空间），类型为全景图时有值
+                            room:
+                              type: object
+                              properties:
+                                roomId:
+                                  type: string
+                                  description: 空间ID
+                                  examples:
+                                  - 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                                roomName:
+                                  type: string
+                                  description: 空间名称
+                                  examples:
+                                  - 主卧
+                              description: 产品关联的空间信息
+                            width:
+                              type: integer
+                              format: int32
+                              description: 图片宽度
+                              examples:
+                              - '800'
+                        description: 渲染图结构，V2
+                      schemeId:
+                        type: string
+                        description: 方案Id
+                        examples:
+                        - '50053081'
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                        examples:
+                        - 广州碧桂园·樾时光—毁梦3vj
+              example:
+                msg: ''
+                code: 0
+                data:
+                  organ:
+                    organName: XXX信息科技
+                    organId: C00000000
+                  author:
+                    nickName: 小蔡
+                    mobile: '13800000000'
+                    avatar: https://img3.admin.3vjia.com/UpFile/C00005842/ADMIN/UserSetting/202005/1001266879/89faef49527140eb883d7a5190c0048a.jpg
+                    outUserId: '123456'
+                    userName: 3vj13800000000
+                    userId: '1000123456'
+                    name: 小蔡
+                  schemeName: 广州碧桂园·樾时光—毁梦3vj
+                  schemeId: '50053081'
+                  dept:
+                    deptName: 运营管理部
+                    storeType: 1
+                    deptId: 00013678
+                    customerCode: '123456'
+                    outDeptId: '123456'
+                  renderImageList:
+                  - imageId: 2ddb3ec39c8d4b1d8c75bd73c43edc17
+                    imageName: 测试方案202005041843-20200504
+                    imageSpecification: 标清
+                    room:
+                      roomId: 2C8FF05E-60AF-DCE8-0FD1-DEE87A74FB86
+                      roomName: 主卧
+                    imageUrl: https://3vj-render.3vjia.com/UpFile_Render/C00004768/DesignSchemeRenderFile/55473563/QO202005040000000000000025726676/QO202005040000000000000025726676.jpg
+                    width: 800
+                    imageTypeCode: 2
+                    imageTypeName: 俯视图
+                    createDate: '2020-05-02 14:50:54'
+                    height: 600
+                    render720Url: ''
+                  render720Url: https://720.3vjia.com/Q123456
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/schemeCategory/getSchemeCategoryList:
+    post:
+      operationId: apiV1SchemeCategoryGetSchemeCategoryList
+      summary: 获取方案分类列表接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474670751249698881
+      x-documentation-category: 方案模块 / 方案数据
+      description: 获取方案分类，可以选择只返回企业自己的分类或企业分类+三维家系统分类。
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                containSystemCategory:
+                  type: integer
+                  format: int32
+                  description: 是否包含三维家的系统方案分类，0=不包含，1=包含
+                  examples:
+                  - '1'
+            example:
+              containSystemCategory: 1
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      categoryId:
+                        type: string
+                        description: 分类ID
+                        examples:
+                        - '8414625'
+                      categoryName:
+                        type: string
+                        description: 分类名称
+                        examples:
+                        - 风格
+                      children:
+                        type: array
+                        items: {}
+                        description: 方案分类结构，V2
+              example:
+                msg: 成功
+                code: 0
+                data:
+                - categoryName: 风格
+                  children: []
+                  categoryId: '8414625'
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/schemecategory/createSchemeCategory:
+    post:
+      operationId: apiV1SchemecategoryCreateSchemeCategory
+      summary: 添加方案分类接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=475026463813349467
+      x-documentation-category: 方案模块 / 方案分类
+      description: 新建方案分类
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryCode:
+                  type: string
+                  description: 分类代码，可自定义的代码，不超过32个字符
+                categoryName:
+                  type: string
+                  description: 分类名称
+                hasChildren:
+                  type: integer
+                  format: int32
+                  description: 是否有子分类，1=有，0=无，默认0
+                parentId:
+                  type: string
+                  description: 分类所属的上级ID
+                sortCode:
+                  type: integer
+                  format: int32
+                  description: 分类排序码，会影响显示顺序，默认为0
+            example:
+              hasChildren: 0
+              categoryCode: ''
+              categoryName: ''
+              sortCode: 0
+              parentId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      categoryId:
+                        type: string
+                        description: 创建成功生成的分类ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  categoryId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/schemecategory/deleteSchemeCategory:
+    post:
+      operationId: apiV1SchemecategoryDeleteSchemeCategory
+      summary: 删除方案分类接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=475003581611716682
+      x-documentation-category: 方案模块 / 方案分类
+      description: 删除方案分类
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryIdList:
+                  type: array
+                  items: {}
+                  description: 要删除的分类ID列表
+                  examples:
+                  - '"7041","7042"'
+            example:
+              categoryIdList: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: 成功
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/schemesLand/getGoodsDetail:
+    post:
+      operationId: apiV1SchemesLandGetGoodsDetail
+      summary: 获取方案岛商品方案详细信息接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474669185604096008
+      x-documentation-category: 方案模块 / 方案岛
+      description: 获取方案岛商品（案例）详情信息
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 商品ID
+                  examples:
+                  - 417d1a5a80bb4039b0c969e67dac0024
+            example:
+              id: 417d1a5a80bb4039b0c969e67dac0024
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      activitiesName:
+                        type: string
+                        description: 企业活动名称
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                          mobile:
+                            type: string
+                            description: 手机号码
+                          name:
+                            type: string
+                            description: 姓名
+                          nickName:
+                            type: string
+                            description: 昵称
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                          userName:
+                            type: string
+                            description: 三维家账号
+                        description: 操作用户
+                      buyNums:
+                        type: integer
+                        format: int32
+                        description: 购买数量
+                      checkDate:
+                        type: string
+                        description: 方案审核时间，格式yyyy-MM-ddHH:mm:ss
+                      checkUser:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                          mobile:
+                            type: string
+                            description: 手机号码
+                          name:
+                            type: string
+                            description: 姓名
+                          nickName:
+                            type: string
+                            description: 昵称
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                          userName:
+                            type: string
+                            description: 三维家账号
+                        description: 操作用户
+                      content:
+                        type: string
+                        description: 商品介绍
+                      coverPageUrl:
+                        type: string
+                        description: 封面地址
+                      createDate:
+                        type: string
+                        description: 创建时间，格式yyyy-MM-ddHH:mm:ss
+                      favoriteNums:
+                        type: integer
+                        format: int32
+                        description: 收藏数
+                      goodsDetails:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            categoryList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  selectedList:
+                                    type: array
+                                    items: {}
+                                    description: 商品详情-通用下拉结构
+                                  text:
+                                    type: string
+                                    description: 显示值
+                                  value:
+                                    type: string
+                                    description: 值
+                              description: 商品详情-通用下拉结构
+                            categoryNames:
+                              type: array
+                              items: {}
+                              description: 分类，矩阵结构
+                            content:
+                              type: string
+                              description: 介绍
+                            coverImage:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  fileFullPath:
+                                    type: string
+                                    description: 文件路径
+                                  fileName:
+                                    type: string
+                                    description: 文件名
+                              description: 商品详情图片结构
+                            coverPageUrl:
+                              type: string
+                              description: 详情封面地址
+                            depthImageUrl:
+                              type: string
+                              description: 深度图地址
+                            id:
+                              type: string
+                              description: 商品详情ID
+                            imageFileList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  fileFullPath:
+                                    type: string
+                                    description: 文件路径
+                                  fileName:
+                                    type: string
+                                    description: 文件名
+                              description: 商品详情图片结构
+                            imageList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  fileFullPath:
+                                    type: string
+                                    description: 文件路径
+                                  fileName:
+                                    type: string
+                                    description: 文件名
+                              description: 商品详情图片结构
+                            roomId:
+                              type: string
+                              description: 3D方案空间ID
+                            sortNo:
+                              type: integer
+                              format: int32
+                              description: 排序码
+                            title:
+                              type: string
+                              description: 标题
+                            vrImageUrl:
+                              type: string
+                              description: 全景图地址
+                        description: 商品详情
+                      goodsExt:
+                        type: object
+                        properties:
+                          areaCode:
+                            type: string
+                            description: 区县代码
+                          areaName:
+                            type: string
+                            description: 区县名称
+                          buildingNo:
+                            type: string
+                            description: 楼栋号
+                          cityCode:
+                            type: string
+                            description: 城市代码
+                          cityName:
+                            type: string
+                            description: 城市名称
+                          provinceCode:
+                            type: string
+                            description: 省份代码
+                          provinceName:
+                            type: string
+                            description: 省份名称
+                          residential:
+                            type: string
+                            description: 小区/楼盘
+                          roomNo:
+                            type: string
+                            description: 房号
+                          unitNo:
+                            type: string
+                            description: 单元号
+                        description: 商品扩展信息，包含地址内容等扩展资料
+                      goodsName:
+                        type: string
+                        description: 商品名称
+                      goodsProductStr:
+                        type: string
+                        description: 商品产品型号字符串，多个用英文逗号分隔
+                      goodsProducts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            productNo:
+                              type: string
+                              description: 产品型号
+                            sortNo:
+                              type: integer
+                              format: int32
+                              description: 排序
+                        description: 商品产品结构
+                      goodsStatus:
+                        type: string
+                        description: 商品状态代码，empty=草稿，checking=审核，reject=上架驳回，upShelves=上架，offShelves=下架
+                      goodsStatusDesc:
+                        type: string
+                        description: 商品状态
+                      goodsTags:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tagId:
+                              type: string
+                              description: 标签ID
+                            tagName:
+                              type: string
+                              description: 标签名称
+                        description: 商品标签信息
+                      goodsType:
+                        type: string
+                        description: 商品类型
+                      id:
+                        type: string
+                        description: 商品ID
+                      lookNums:
+                        type: integer
+                        format: int32
+                        description: 查看数
+                      orderNum:
+                        type: integer
+                        format: int32
+                        description: 下单数
+                      planMapUrl:
+                        type: string
+                        description: 平面布置图
+                      praiseNums:
+                        type: integer
+                        format: int32
+                        description: 点赞数
+                      price:
+                        type: integer
+                        format: int32
+                        description: 售价
+                      relGoodIds:
+                        type: array
+                        items: {}
+                        description: 关联设计师案例ID
+                      schemeDepthImageUrl:
+                        type: string
+                        description: 深度图地址
+                      schemeId:
+                        type: string
+                        description: 3D方案ID
+                      schemeSized:
+                        type: number
+                        format: double
+                        description: 面积
+                      schemeSizedStr:
+                        type: string
+                        description: 面积区间
+                      schemeStyle:
+                        type: string
+                        description: 风格ID
+                      schemeStyleDesc:
+                        type: string
+                        description: 风格
+                      schemeTop:
+                        type: integer
+                        format: int32
+                        description: 是否加精，0=没有加精；1=加精
+                      schemeType:
+                        type: string
+                        description: 户型ID
+                      schemeTypeDesc:
+                        type: string
+                        description: 户型
+                      schemeUrl:
+                        type: string
+                        description: 3D方案地址
+                      schemeVrImageUrl:
+                        type: string
+                        description: 全景图地址
+                      schemeVrPreImageUrl:
+                        type: string
+                        description: 全景图预览地址
+                      schemeVrUrl:
+                        type: string
+                        description: 全景图链接地址
+                      sourcePrice:
+                        type: integer
+                        format: int32
+                        description: 源文件售价：0=免费，-1=不销售，其他值表示价格
+                      statusDate:
+                        type: string
+                        description: 审核时间（通过/不通过）,格式yyyy-MM-ddHH:mm:ss
+                      statusReason:
+                        type: string
+                        description: 审核通过/不通过原因
+                      topSortCode:
+                        type: integer
+                        format: int64
+                        description: 置顶排序序号（序号越大，越前）
+                      goodsMarketingType:
+                        type: integer
+                        format: int32
+                        description: 商品营销类型：0=全屋空间案例库，1=营销活动套餐库，2=卫浴空间案例库，3=阳台空间案例库，4=全场景高端定制方案，5=卫浴个性空间案例库，6=淋浴房空间案例库
+              example:
+                msg: ''
+                code: 0
+                data:
+                  statusDate: ''
+                  praiseNums: 0
+                  schemeType: ''
+                  goodsProducts:
+                  - sortNo: 0
+                    productNo: ''
+                  schemeDepthImageUrl: ''
+                  goodsProductStr: ''
+                  orderNum: 0
+                  schemeId: ''
+                  schemeTypeDesc: ''
+                  buyNums: 0
+                  planMapUrl: ''
+                  content: ''
+                  sourcePrice: 0
+                  schemeVrPreImageUrl: ''
+                  goodsTags:
+                  - tagId: ''
+                    tagName: ''
+                  schemeTop: 0
+                  statusReason: ''
+                  price: 0
+                  id: ''
+                  goodsName: ''
+                  createDate: ''
+                  relGoodIds: []
+                  goodsDetails:
+                  - imageFileList:
+                    - fileName: ''
+                      fileFullPath: ''
+                    vrImageUrl: ''
+                    coverPageUrl: ''
+                    title: ''
+                    content: ''
+                    roomId: ''
+                    categoryNames: []
+                    sortNo: 0
+                    depthImageUrl: ''
+                    coverImage:
+                    - fileName: ''
+                      fileFullPath: ''
+                    categoryList:
+                    - selectedList: []
+                      text: ''
+                      value: ''
+                    id: ''
+                    imageList:
+                    - fileName: ''
+                      fileFullPath: ''
+                  schemeStyle: ''
+                  author:
+                    nickName: ''
+                    mobile: ''
+                    avatar: ''
+                    outUserId: ''
+                    userName: ''
+                    userId: ''
+                    name: ''
+                  coverPageUrl: ''
+                  goodsExt:
+                    unitNo: ''
+                    roomNo: ''
+                    cityCode: ''
+                    provinceCode: ''
+                    areaCode: ''
+                    residential: ''
+                    cityName: ''
+                    areaName: ''
+                    buildingNo: ''
+                    provinceName: ''
+                  schemeSizedStr: ''
+                  schemeUrl: ''
+                  lookNums: 0
+                  topSortCode: 0
+                  checkDate: ''
+                  goodsStatusDesc: ''
+                  activitiesName: ''
+                  goodsType: ''
+                  checkUser:
+                    nickName: ''
+                    mobile: ''
+                    avatar: ''
+                    outUserId: ''
+                    userName: ''
+                    userId: ''
+                    name: ''
+                  goodsStatus: ''
+                  schemeVrUrl: ''
+                  schemeStyleDesc: ''
+                  schemeVrImageUrl: ''
+                  favoriteNums: 0
+                  goodsMarketingType: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v2/scheme/getSchemeListByPage:
+    post:
+      operationId: apiV2SchemeGetSchemeListByPage
+      summary: 获取方案列表v2接口
+      tags:
+      - Design Schemes
+      x-source-documentation: https://dev.3vjia.com/document?apiId=665501438172098592
+      x-documentation-category: 方案模块 / 方案数据
+      description: 具备和【工作台】-【方案管理】-【方案列表】一致的查询能力，支持返回多层方案数据等。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                areaType:
+                  type: integer
+                  format: int32
+                  description: 标签筛选：面积
+                beginCreateDate:
+                  type: string
+                  format: date
+                  description: 起始创建时间
+                  examples:
+                  - '2024-01-10'
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  examples:
+                  - '1'
+                  default: '1'
+                customCategoryIds:
+                  type: array
+                  items: {}
+                  description: 自定义分类ID集合
+                designerUsername:
+                  type: string
+                  description: 设计师账号
+                endCreateDate:
+                  type: string
+                  format: date
+                  description: 结束创建时间
+                  examples:
+                  - '2025-01-01'
+                houseType:
+                  type: string
+                  description: 标签筛选：户型
+                likeCustomerName:
+                  type: string
+                  description: 客户名称
+                likeDesignerName:
+                  type: string
+                  description: 设计师姓名
+                likeSchemeName:
+                  type: string
+                  description: 方案名称
+                publishState:
+                  type: integer
+                  format: int32
+                  description: 发布状态
+                roomType:
+                  type: string
+                  description: 标签筛选：空间
+                schemeId:
+                  type: string
+                  description: 方案编号
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  examples:
+                  - '20'
+                  default: '20'
+                sortType:
+                  type: string
+                  description: 排序方式：MODIFY_TIME_DESC 按更新时间倒序，MODIFY_TIME_ASC 按更新时间正序，CREATE_TIME_DESC 创建时间倒序，CREATE_TIME_ASC 按创建时间正序
+                  examples:
+                  - CREATE_TIME_DESC
+                  default: CREATE_TIME_DESC
+                sourceType:
+                  type: integer
+                  format: int32
+                  description: 方案来源:1=企业，2=门店
+                styleType:
+                  type: string
+                  description: 标签筛选：风格
+              required:
+              - current
+              - size
+            example:
+              publishState: 0
+              designerUsername: ''
+              endCreateDate: '2025-01-01'
+              houseType: ''
+              schemeId: ''
+              beginCreateDate: '2024-01-10'
+              styleType: ''
+              current: 1
+              likeSchemeName: ''
+              size: 20
+              sortType: CREATE_TIME_DESC
+              sourceType: 0
+              areaType: 0
+              customCategoryIds: []
+              roomType: ''
+              likeCustomerName: ''
+              likeDesignerName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            designerName:
+                              type: string
+                              description: 设计师
+                            imagePath:
+                              type: string
+                              description: 封面图，完整路径自行拼接：https://3vj-scheme.3vjia.com+字段值
+                              examples:
+                              - https://3vj-scheme.3vjia.com/UpFile_Scheme/C01833639/20250102/50a2/50a2e390-6a2b-4fee-992d-a04f930654e3.jpg
+                            isMainScheme:
+                              type: integer
+                              format: int32
+                              description: 是否主方案：多层中只有一个主方案。非多层的，方案本身为主方案
+                            isNewArrival:
+                              type: integer
+                              format: int32
+                              description: 是否是样板间方案
+                            modifyDate:
+                              type: string
+                              format: date-time
+                              description: 更新时间
+                            projectId:
+                              type: integer
+                              format: int64
+                              description: 项目ID
+                            publishState:
+                              type: integer
+                              format: int32
+                              description: 发布状态：0=未提交，1=待审核，2=审核通过（已发布）
+                            schemeId:
+                              type: string
+                              description: 方案编号
+                            schemeName:
+                              type: string
+                              description: 方案名称
+                            schemeType:
+                              type: integer
+                              format: int32
+                              description: 方案类型：1=3D，2=自定义
+                            sourceType:
+                              type: integer
+                              format: int32
+                              description: 方案来源：1=企业，2=门店
+                            storeyId:
+                              type: integer
+                              format: int64
+                              description: 楼层ID
+                            user:
+                              type: string
+                              description: 使用者
+                            userName:
+                              type: string
+                              description: 使用者账号
+                            fullHouse2dPic:
+                              type: string
+                              description: 户型2D图全路径（带域名，新增用于兼容客户端直显）
+                            fullImagePath:
+                              type: string
+                              description: 方案图片全路径（带域名，新增用于兼容客户端直显）
+                            house2dPic:
+                              type: string
+                              description: 户型图2D
+                        description: 方案列表查询出参
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - publishState: 0
+                    modifyDate: ''
+                    schemeType: 0
+                    isMainScheme: 0
+                    fullImagePath: ''
+                    imagePath: https://3vj-scheme.3vjia.com/UpFile_Scheme/C01833639/20250102/50a2/50a2e390-6a2b-4fee-992d-a04f930654e3.jpg
+                    fullHouse2dPic: ''
+                    schemeName: ''
+                    storeyId: 0
+                    schemeId: ''
+                    userName: ''
+                    designerName: ''
+                    sourceType: 0
+                    house2dPic: ''
+                    isNewArrival: 0
+                    projectId: 0
+                    user: ''
+                    createDate: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

@@ -1,0 +1,1340 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Floor Plans API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Floor Plans
+  description: 楼盘户型
+paths:
+  /api/V1/building/getProvinceAndCityList:
+    post:
+      operationId: apiV1BuildingGetProvinceAndCityList
+      summary: 获取全国城市名称和编码列表
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=456509490821398562
+      x-documentation-category: 楼盘户型
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      cityList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              description: 城市代码
+                            name:
+                              type: string
+                              description: 省份名称
+                        description: 下属城市列表
+                      code:
+                        type: string
+                        description: 省份代码
+                      name:
+                        type: string
+                        description: 省份名称
+              example:
+                msg: ''
+                code: ''
+                data:
+                - code: ''
+                  cityList:
+                  - code: ''
+                    name: ''
+                  name: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/building/getBuildingList:
+    post:
+      operationId: apiV1BuildingGetBuildingList
+      summary: 搜索楼盘
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=456505806972592158
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cityCode:
+                  type: string
+                  description: 城市代码。未指定则查询全国
+                  examples:
+                  - '440100'
+                keyWord:
+                  type: string
+                  description: 关键字。支持楼盘名、别名，同时还支持拼音输入搜索
+                  examples:
+                  - 万科城
+                size:
+                  type: integer
+                  format: int32
+                  description: 返回记录条数。最多支持10条
+                  examples:
+                  - '5'
+                  default: '10'
+                filterNoRoom:
+                  type: boolean
+                  description: 是否过滤没有户型的楼盘
+                  examples:
+                  - 'false'
+                  default: 'false'
+              required:
+              - keyWord
+            example:
+              cityCode: '440100'
+              keyWord: 万科城
+              size: 5
+              filterNoRoom: false
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      buildingAlias:
+                        type: string
+                        description: 楼盘别名。存在多个，则英文逗号隔开
+                      buildingName:
+                        type: string
+                        description: 楼盘名称
+                        examples:
+                        - 万科城别墅
+                      cityName:
+                        type: string
+                        description: 市名称
+                        examples:
+                        - 广州市
+                      provinceName:
+                        type: string
+                        description: 省名称
+                        examples:
+                        - 广东省
+                      roomCount:
+                        type: integer
+                        format: int32
+                        description: 户型数
+                        examples:
+                        - '20'
+                      address:
+                        type: string
+                        description: 详细地址
+                      districtName:
+                        type: string
+                        description: 区名称
+                      cityCode:
+                        type: string
+                        description: 市编码
+                      districtCode:
+                        type: string
+                        description: 区编码
+                      provinceCode:
+                        type: string
+                        description: 省编码
+              example:
+                msg: ''
+                code: 0
+                data:
+                - roomCount: 20
+                  address: ''
+                  districtCode: ''
+                  districtName: ''
+                  cityCode: ''
+                  provinceCode: ''
+                  buildingAlias: ''
+                  buildingName: 万科城别墅
+                  cityName: 广州市
+                  provinceName: 广东省
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/add:
+    post:
+      operationId: apiV1BuildingroomAdd
+      summary: 添加楼盘户型接口
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=537659380930265099
+      x-documentation-category: 楼盘户型
+      description: '**楼盘名称参数要求：**
+
+        1）长度限定2~15个字符
+
+        2）支持中文、英文、数字及部分特殊符号-|·()
+
+        3）不支持全数字、全字母及全特殊符号'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  description: 详细地址
+                  examples:
+                  - 天河健明四路和天坤三路交汇处
+                area:
+                  type: number
+                  format: double
+                  description: 建筑面积
+                  examples:
+                  - '118'
+                buildingName:
+                  type: string
+                  description: 楼盘名称
+                  examples:
+                  - 城投珠江·天河壹品
+                cityName:
+                  type: string
+                  description: 市
+                  examples:
+                  - 广州市
+                districtName:
+                  type: string
+                  description: 区
+                  examples:
+                  - 天河区
+                filePath:
+                  type: string
+                  description: 户型图片URL
+                  examples:
+                  - http://xxxxxx/xxx.jpg
+                orientationsType:
+                  type: integer
+                  format: int32
+                  description: 户型朝向：0-东、1-南、2-西、3-北、4-东南、5-东北、6-西北、7-西南、8-无。
+                  examples:
+                  - '8'
+                provinceName:
+                  type: string
+                  description: 省
+                  examples:
+                  - 广东省
+                roomType:
+                  type: string
+                  description: 户型类型：8位数字字符串，例如03020101，表示3房2厅1卫1厨。
+                  examples:
+                  - '04020201'
+              required:
+              - address
+              - area
+              - buildingName
+              - cityName
+              - districtName
+              - filePath
+              - orientationsType
+              - provinceName
+              - roomType
+            example:
+              area: 118
+              address: 天河健明四路和天坤三路交汇处
+              districtName: 天河区
+              filePath: http://xxxxxx/xxx.jpg
+              buildingName: 城投珠江·天河壹品
+              cityName: 广州市
+              orientationsType: 8
+              provinceName: 广东省
+              roomType: '04020201'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      buildingRoomId:
+                        type: string
+                        description: 户型ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  buildingRoomId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/addBatch:
+    post:
+      operationId: apiV1BuildingroomAddBatch
+      summary: 批量添加楼盘户型
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=689416581335380047
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  description: 详细地址
+                buildingAlias:
+                  type: string
+                  description: 楼盘别名
+                buildingName:
+                  type: string
+                  description: 楼盘名称
+                cityName:
+                  type: string
+                  description: 城市
+                districtName:
+                  type: string
+                  description: 地区
+                roomModels:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      areaStr:
+                        type: string
+                        description: 建筑面积
+                      filePath:
+                        type: string
+                        description: 户型图原文件URL
+                      modelName:
+                        type: string
+                        description: 户型名称
+                      orientationsTypeStr:
+                        type: string
+                        description: 户型朝向
+                      roomTypeStr:
+                        type: string
+                        description: 户型类型
+                  description: 楼盘户型请求入参
+                sourceType:
+                  type: integer
+                  format: int32
+                  description: 来源类型
+            example:
+              address: ''
+              districtName: ''
+              buildingAlias: ''
+              buildingName: ''
+              cityName: ''
+              sourceType: 0
+              roomModels:
+              - areaStr: ''
+                filePath: ''
+                roomTypeStr: ''
+                modelName: ''
+                orientationsTypeStr: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      addRoomModelDtoRsps:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              description: 户型id
+                            message:
+                              type: string
+                              description: 结果
+                            roomImagePath:
+                              type: string
+                              description: 户型原图url
+                            success:
+                              type: boolean
+                              description: 是否成功
+                          required:
+                          - success
+                        description: 添加或更新户型结果
+                      buildingId:
+                        type: integer
+                        format: int64
+                        description: 新增的楼盘ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  addRoomModelDtoRsps:
+                  - roomImagePath: ''
+                    message: ''
+                    success: false
+                    id: 0
+                  buildingId: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/cadReadDwg:
+    post:
+      operationId: apiV1BuildingroomCadReadDwg
+      summary: CAD解析
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=753907296437964886
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cadType:
+                  type: string
+                  description: CAD文件类型，支持dwg和dxf两种格式
+                cadUrl:
+                  type: string
+                  description: CAD文件的网络访问路径，与dwgString二选一，路径中不能包含中文字符
+                dwgString:
+                  type: string
+                  description: CAD文件的Base64编码字符串，与cadUrl二选一，优先使用此参数
+              required:
+              - cadType
+            example:
+              dwgString: ''
+              cadType: ''
+              cadUrl: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      resJsonUrl:
+                        type: string
+                        description: 解析的文件数据json地址，用于保存埋点
+                      returnList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            background:
+                              type: string
+                              description: 白底黑线的户型图，用于底图显示
+                            entityData:
+                              type: string
+                              description: CAD解析后生成的json数据，记录户型的点线数据
+                            imageAddress:
+                              type: string
+                              description: 白底黑线的户型图，用于缩略图显示（基本用不上）
+                            imgBgSize:
+                              type: integer
+                              format: int32
+                              description: 户型对应的真实尺寸
+                            index:
+                              type: integer
+                              format: int32
+                              description: 户型索引
+                            maxPoint:
+                              type: array
+                              items: {}
+                              description: 户型区域在CAD文件中的最大边界点
+                            minPoint:
+                              type: array
+                              items: {}
+                              description: 户型区域在CAD文件中的最小边界点
+                            originPicture:
+                              type: string
+                              description: 黑底白线的户型图，用于识别
+                            physicalSize:
+                              type: integer
+                              format: int32
+                              description: 户型对应的真实尺寸
+                            xMin:
+                              type: integer
+                              format: int32
+                              description: 户型区域在CAD文件中的最小x坐标
+                        description: CAD解析返回的户型数据项
+              example:
+                msg: ''
+                code: 0
+                data:
+                  resJsonUrl: ''
+                  returnList:
+                  - minPoint: []
+                    physicalSize: 0
+                    index: 0
+                    xMin: 0
+                    imgBgSize: 0
+                    maxPoint: []
+                    background: ''
+                    imageAddress: ''
+                    originPicture: ''
+                    entityData: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/checkHouse:
+    post:
+      operationId: apiV1BuildingroomCheckHouse
+      summary: 户型检测
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=490551146084159580
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                json:
+                  type: string
+                  description: json格式方案的base64字符串（详情见：三维家通用方案描述-简版V1.3.doc）
+                roomIds:
+                  type: array
+                  items: {}
+                  description: 需要检查的房间ID，不传为全部
+                xml:
+                  type: string
+                  description: xml格式方案的base64字符串（详情见：三维家通用方案描述-简版V1.3.doc）
+              required:
+              - xml
+            example:
+              roomIds: []
+              xml: ''
+              json: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      details:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                            message:
+                              type: string
+                            pass:
+                              type: boolean
+                            score:
+                              type: number
+                              format: double
+                        description: 空间评分详细信息
+                      name:
+                        type: string
+                        description: 空间名称
+                      pass:
+                        type: boolean
+                        description: 空间评测结果
+                      roomId:
+                        type: string
+                        description: 空间Id
+                      roomUID:
+                        type: string
+                        description: 空间UId
+                      score:
+                        type: number
+                        format: double
+                        description: 空间本次结果评分
+                    required:
+                    - details
+                    - name
+                    - pass
+                    - roomId
+                    - roomUID
+                    - score
+              example:
+                msg: ''
+                code: 0
+                data:
+                - pass: false
+                  roomUID: ''
+                  roomId: ''
+                  score: 0
+                  name: ''
+                  details:
+                  - code: ''
+                    pass: false
+                    message: ''
+                    score: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/getBuildingRoomById:
+    post:
+      operationId: apiV1BuildingroomGetBuildingRoomById
+      summary: 根据户型ID获取户型详情接口
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=512671072529756201
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                openRoomId:
+                  type: string
+                  description: 开放平台户型ID
+              required:
+              - openRoomId
+            example:
+              openRoomId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      area:
+                        type: number
+                        format: double
+                        description: 建筑面积
+                      buildingAlias:
+                        type: string
+                        description: 楼盘别名
+                      buildingName:
+                        type: string
+                        description: 楼盘名字
+                      city:
+                        type: string
+                        description: 城市编码
+                      cityName:
+                        type: string
+                        description: 城市名称
+                      imagePath:
+                        type: string
+                        description: 户型图URL
+                      modelName:
+                        type: string
+                        description: 户型名字
+                      openRoomId:
+                        type: string
+                        description: 户型ID
+                      province:
+                        type: string
+                        description: 省编码
+                      provinceName:
+                        type: string
+                        description: 省名称
+              example:
+                msg: ''
+                code: 0
+                data:
+                  area: 0
+                  city: ''
+                  imagePath: ''
+                  openRoomId: ''
+                  buildingAlias: ''
+                  buildingName: ''
+                  modelName: ''
+                  cityName: ''
+                  province: ''
+                  provinceName: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/getRoomContentById:
+    post:
+      operationId: apiV1BuildingroomGetRoomContentById
+      summary: 根据户型ID获取户型结构数据
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=456509372651085864
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                buildingRoomId:
+                  type: string
+                  description: 户型ID。户型搜索接口返回
+              required:
+              - buildingRoomId
+            example:
+              buildingRoomId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      roomContent:
+                        type: string
+                        description: 户型结构数据
+                      buildingRoomImagePath:
+                        type: string
+                        description: 户型主图URL
+                      insideArea:
+                        type: number
+                        format: double
+                        description: 套内面积
+                      orientationsType:
+                        type: integer
+                        format: int32
+                        description: 户型朝向：0-东、1-南、2-西、3-北、4-东南、5-东北、6-西北、7-西南、8-无。
+                      roomXmlContentUrl:
+                        type: string
+                        description: 户型XML数据
+                      roomType:
+                        type: string
+                        description: 户型类型，例如03020101，表示3房2厅1卫1厨。
+              example:
+                msg: ''
+                code: 0
+                data:
+                  insideArea: 0
+                  roomXmlContentUrl: ''
+                  roomContent: ''
+                  orientationsType: 0
+                  buildingRoomImagePath: ''
+                  roomType: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/getRoomContentByImage:
+    post:
+      operationId: apiV1BuildingroomGetRoomContentByImage
+      summary: 户型识别
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=456508514391625812
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgBase64String:
+                  type: string
+                  description: 文件Base64字符串，和文件路径二选一。
+                insideArea:
+                  type: number
+                  format: double
+                  description: 套内面积，仅适用图片类的识别。
+                scale:
+                  type: string
+                  description: 户型比例尺，仅适用图片类的识别。
+                filePath:
+                  type: string
+                  description: 文件路径，和文件Base64字符二选一。
+                fileType:
+                  type: string
+                  description: 文件类型，支持png、jpg、jpeg、dwg、dxf
+                  examples:
+                  - dwg
+                  default: png
+                imageFlag:
+                  type: boolean
+                  description: 用于选择是否基于CAD户型图进行图片识别，准确率会更高，速度更快，但是没有还原到原始CAD户型数据，适用于不那么精准的户型场景应用，imagFlag默认为false
+                mutiFlag:
+                  type: boolean
+                  description: 是否多户型识别
+                language:
+                  type: string
+                  description: 语言类型：chinese=中文，english=英语，国内默认为chinese
+                  default: chinese
+            example:
+              insideArea: 0
+              imageFlag: false
+              filePath: ''
+              scale: ''
+              language: ''
+              imgBase64String: ''
+              mutiFlag: false
+              fileType: dwg
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      roomContent:
+                        type: string
+                        description: 户型结构数据
+                      buildingRoomImagePath:
+                        type: string
+                        description: 户型主图URL
+                      insideArea:
+                        type: number
+                        format: double
+                        description: 套内面积
+                      orientationsType:
+                        type: integer
+                        format: int32
+                        description: 户型朝向：0-东、1-南、2-西、3-北、4-东南、5-东北、6-西北、7-西南、8-无。
+                      roomXmlContentUrl:
+                        type: string
+                        description: 户型XML内容URL
+                      roomType:
+                        type: string
+                        description: 户型类型，例如03020101，表示3房2厅1卫1厨。
+              example:
+                msg: ''
+                code: 0
+                data:
+                  insideArea: 0
+                  roomXmlContentUrl: ''
+                  roomContent: ''
+                  orientationsType: 0
+                  buildingRoomImagePath: ''
+                  roomType: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/getRoomContentBySchemeId:
+    post:
+      operationId: apiV1BuildingroomGetRoomContentBySchemeId
+      summary: 根据方案ID获取户型结构数据
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=466966800630886495
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '12345678'
+              required:
+              - schemeId
+            example:
+              schemeId: '12345678'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/getRoomXmlByImage:
+    post:
+      operationId: apiV1BuildingroomGetRoomXmlByImage
+      summary: 根据图片生成空间xml
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=754043333030068332
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filePath:
+                  type: string
+                  description: 文件路径
+                fileStr:
+                  type: string
+                  description: 文件内容Base64
+                fileType:
+                  type: string
+                  description: 文件类型，支持png、jpg、jpeg、dwg、dxf
+                imageFlag:
+                  type: boolean
+                  description: 是否进行图片识别
+                insideArea:
+                  type: number
+                  format: double
+                  description: 套内面积
+                scale:
+                  type: string
+                  description: 户型比例尺
+            example:
+              imageFlag: false
+              insideArea: 0
+              filePath: ''
+              scale: ''
+              fileStr: ''
+              fileType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      insideArea:
+                        type: number
+                        format: double
+                        description: 套内面积
+                      orientationsType:
+                        type: integer
+                        format: int32
+                        description: 户型朝向，0-东、1-南、2-西、3-北、4-东南、5-东北、6-西北、7-西南、8-无。
+                      roomType:
+                        type: string
+                        description: 户型，8位数字字符串：xx房xx厅xx卫xx厨
+                      roomXmlContentUrl:
+                        type: string
+                        description: 户型XML数据
+              example:
+                msg: ''
+                code: 0
+                data:
+                  insideArea: 0
+                  roomXmlContentUrl: ''
+                  orientationsType: 0
+                  roomType: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/recognitionScaleByRoomImg:
+    post:
+      operationId: apiV1BuildingroomRecognitionScaleByRoomImg
+      summary: 根据户型图识别比例尺
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=458630044672131137
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgBase64String:
+                  type: string
+                  description: 图片Base64加密字符串
+                  examples:
+                  - /9j/4AAQSkZJRgABAQAAAQABAAD//gB7==
+              required:
+              - imgBase64String
+            example:
+              imgBase64String: /9j/4AAQSkZJRgABAQAAAQABAAD//gB7==
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      scaleData:
+                        type: string
+                        description: 比例尺数据（json格式）
+                        examples:
+                        - '{\"ocr_start_x\": 569, \"ocr_start_y\": 295, \"ocr_end_x\": 716, \"ocr_end_y\": 295, \"ocr_number\": \"3000\", \"haveocr\": true, \"status\": true}'
+              example:
+                msg: ''
+                code: 0
+                data:
+                  scaleData: '{"ocr_start_x": 569, "ocr_start_y": 295, "ocr_end_x": 716, "ocr_end_y": 295, "ocr_number": "3000", "haveocr": true, "status": true}'
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildingroom/search:
+    post:
+      operationId: apiV1BuildingroomSearch
+      summary: 搜索户型
+      tags:
+      - Floor Plans
+      x-source-documentation: https://dev.3vjia.com/document?apiId=456508514391625810
+      x-documentation-category: 楼盘户型
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accurate:
+                  type: boolean
+                  description: 是否精准匹配
+                  examples:
+                  - 'false'
+                  default: 'false'
+                cityCode:
+                  type: string
+                  description: 城市代码
+                  examples:
+                  - '440100'
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前页。首页从1开始
+                  examples:
+                  - '1'
+                keyWord:
+                  type: string
+                  description: 关键字。支持楼盘名、别名
+                  examples:
+                  - 万科城
+                maxArea:
+                  type: integer
+                  format: int32
+                  description: 最大户型面积（建筑面积）
+                  examples:
+                  - '100'
+                minArea:
+                  type: integer
+                  format: int32
+                  description: 最小户型面积（建筑面积）
+                  examples:
+                  - '10'
+                roomType:
+                  type: integer
+                  format: int32
+                  description: 户型类型。1=一居室，2=二居室，3=三居室，4=四居室，5=五居室及以上，未指定或其它值则表示全部
+                  examples:
+                  - '3'
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数。最多支持10条
+                  examples:
+                  - '8'
+              required:
+              - current
+              - keyWord
+            example:
+              accurate: false
+              cityCode: '440100'
+              keyWord: 万科城
+              current: 1
+              size: 8
+              maxArea: 100
+              minArea: 10
+              roomType: 3
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            area:
+                              type: number
+                              format: double
+                              description: 建筑面积
+                            buildingAlias:
+                              type: string
+                              description: 楼盘别名
+                            buildingName:
+                              type: string
+                              description: 楼盘名称
+                            buildingRoomId:
+                              type: string
+                              description: 户型ID。临时生成，有效期为24小时
+                            buildingRoomImagePath:
+                              type: string
+                              description: 户型图URL
+                            cityCode:
+                              type: string
+                              description: 市编码
+                            cityName:
+                              type: string
+                              description: 市名称
+                            provinceCode:
+                              type: string
+                              description: 省编码
+                            provinceName:
+                              type: string
+                              description: 省名称
+                            roomTypeName:
+                              type: string
+                              description: 户型（X房X厅X卫X厨）
+                            insideArea:
+                              type: number
+                              format: double
+                              description: 套内面积
+                            orientationsType:
+                              type: integer
+                              format: int32
+                              description: 户型朝向：0-东、1-南、2-西、3-北、4-东南、5-东北、6-西北、7-西南、8-无。
+                            address:
+                              type: string
+                              description: 详细地址
+                            districtCode:
+                              type: string
+                              description: 区编码
+                            districtName:
+                              type: string
+                              description: 区名称
+                            roomType:
+                              type: string
+                              description: 户型类型，例如03020101，表示3房2厅1卫1厨。
+                            latitude:
+                              type: string
+                              description: 纬度
+                            longitude:
+                              type: string
+                              description: 经度
+                            modelName:
+                              type: string
+                              description: 户型名字,xxx楼盘 3室2厅
+                        description: 户型信息返回
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数。最多查询200条记录
+                    required:
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - area: 0
+                    address: ''
+                    districtCode: ''
+                    districtName: ''
+                    cityCode: ''
+                    provinceCode: ''
+                    insideArea: 0
+                    latitude: ''
+                    roomTypeName: ''
+                    buildingRoomId: ''
+                    buildingAlias: ''
+                    buildingName: ''
+                    modelName: ''
+                    cityName: ''
+                    orientationsType: 0
+                    buildingRoomImagePath: ''
+                    provinceName: ''
+                    roomType: ''
+                    longitude: ''
+                  total: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

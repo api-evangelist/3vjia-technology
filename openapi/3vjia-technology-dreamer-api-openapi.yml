@@ -1,0 +1,572 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Dreamer API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Dreamer
+  description: 梦想家
+paths:
+  /api/chat/v1/conversation:
+    post:
+      operationId: apiChatV1Conversation
+      summary: 对话
+      tags:
+      - Dreamer
+      x-source-documentation: https://dev.3vjia.com/document?apiId=752849221425709155
+      x-documentation-category: 梦想家
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                botId:
+                  type: integer
+                  format: int64
+                  description: 机器人Id
+                botType:
+                  type: integer
+                  format: int32
+                  description: 机器人类型,0:专家,1:画图师:2:报价师,3:导购助理，5:店长助理,6:经营顾问,7:生产xml检查,8:AI云设计Ask,9:AI云设计Agent,10:轻设计维仔,11:户型识别,12:户型搜索
+                businessType:
+                  type: integer
+                  format: int32
+                  description: chat来自哪个业务方,0:梦想家,1:3d云设计,99:其他
+                chatConversationId:
+                  type: integer
+                  format: int64
+                  description: 对话记录id,不传默认创建一个标题为第一次聊天的提示词简介
+                chatQuestionExt:
+                  type: string
+                  description: 提问扩展信息
+                conversationId:
+                  type: string
+                  description: 对话id，传id可以保持上下文，否则开启新对话
+                emptyRoom:
+                  type: integer
+                  format: int32
+                  description: 毛胚图生图 可选参数 是否清除空间杂物，0为否 1为是
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                lightPrompt:
+                  type: string
+                  description: 家居背景改图plus 可选参数，可增加效果图光照效果,光照语义提示，例如输入 light and shadow
+                productImgUrl:
+                  type: string
+                  description: 换家具的产品图
+                prompt:
+                  type: string
+                  description: 提示词,如果闲了图像生成，自动加上 帮我生成图片，风格，空间等都加到提示词中
+                referenceImgUrl:
+                  type: string
+                  description: 参考图url，旧房改造的期望设计图,家具背景替换背景涂抹图，家具替换的涂抹图，全屋换材质图，线框图生图的风格参考图,换涂料的涂料图片,添加产品的产品图,换砖的瓷砖的图片,换门板的门板图,换台面的台面图
+                similar:
+                  type: integer
+                  format: int32
+                  description: 指定风格改图的相似度,0:低,1:中,2:高
+                sourceImgUrl:
+                  type: string
+                  description: 原图url，毛坯全屋设计毛坯房图，旧房全屋改造旧房图，家具背景替换原图，家具替换原场景图，全屋换材质原场景图,线框图生图的线框图，换涂料的场景图，添加产品的场景图,换砖的场景图,换门板的场景图,换台面的场景图
+                toolType:
+                  type: integer
+                  format: int32
+                  description: 梦想家业务字段 生图工具类型，具体参考 DreamerToolTypeEnum
+                type:
+                  type: integer
+                  format: int32
+                  description: 对话类型,0:文字（通用的gpt chat聊天）;1:文生图，2:毛坯全屋设计; 3:旧房全屋改造，4:家具背景替换,5:房屋换家具,6:全屋换材质,7:图像消除,8:精装房软装添加,9:重绘,10:Gemini改图,11:线框图生图,12:指定风格改图,13:家居背景改图plus,14:换涂料,15:添加产品,16:换砖,17:换门板,18:换台面
+              required:
+              - type
+            example:
+              similar: 0
+              productImgUrl: ''
+              conversationId: ''
+              imgCount: 0
+              chatConversationId: 0
+              sourceImgUrl: ''
+              type: 0
+              toolType: 0
+              referenceImgUrl: ''
+              emptyRoom: 0
+              lightPrompt: ''
+              botType: 0
+              chatQuestionExt: ''
+              botId: 0
+              businessType: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      chatAnswer:
+                        type: string
+                        description: 对话回答内容
+                      chatConversationId:
+                        type: string
+                        description: 会话id
+                      chatQuestionExt:
+                        type: string
+                        description: 提问扩展信息
+                      conversationId:
+                        type: string
+                        description: 会话id
+                      id:
+                        type: integer
+                        format: int64
+                        description: id
+              example:
+                msg: ''
+                code: 0
+                data:
+                  conversationId: ''
+                  chatConversationId: ''
+                  chatAnswer: ''
+                  chatQuestionExt: ''
+                  id: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/chat/v1/journal/getById:
+    post:
+      operationId: apiChatV1JournalGetById
+      summary: 通过id查询会话详情记录
+      tags:
+      - Dreamer
+      x-source-documentation: https://dev.3vjia.com/document?apiId=752849221425709153
+      x-documentation-category: 梦想家
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  description: ID
+              required:
+              - id
+            example:
+              id: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      averageTime:
+                        type: integer
+                        format: int32
+                        description: 平均生产时间
+                      chatAnswer:
+                        type: string
+                        description: 回答
+                      chatAnswerUrl:
+                        type: string
+                        description: 图像的相对路径，多个逗号隔开
+                      chatConversationId:
+                        type: integer
+                        format: int64
+                        description: 会话ID
+                      chatQuestion:
+                        type: string
+                        description: 提问
+                      chatQuestionExt:
+                        type: string
+                        description: 提问扩展信息
+                      chatQuestionUrl:
+                        type: string
+                        description: 图像的相对路径，多个逗号隔开
+                      conversationId:
+                        type: string
+                        description: 对话id，传id可以保持上下文，否则开启新对话
+                      id:
+                        type: integer
+                        format: int64
+                        description: 主键id
+                      queue:
+                        type: integer
+                        format: int32
+                        description: 排队序号
+                      referencesContents:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            action:
+                              type: string
+                              description: 动作（卡片工具执行的脚本）,可以支持json
+                            botId:
+                              type: integer
+                              format: int64
+                              description: 当卡片为工具时，对应的机器人id,当跳转到另外agent的时候（对应的机器人id）
+                            content:
+                              type: string
+                              description: 内容,可以支持json
+                            dialogType:
+                              type: integer
+                              format: int32
+                              description: 生图工具：1:文生图，2:毛坯全屋设计; 3:旧房全屋改造，4:家具背景替换,5:房屋换家具,6:全屋换材质,7:图像消除,8:精装房软装添加,9:重绘
+                            emptyRoom:
+                              type: integer
+                              format: int32
+                              description: 毛胚图生图 可选参数 是否清除空间杂物，0为否 1为是
+                            iconUrl:
+                              type: string
+                              description: 图标
+                            imgCount:
+                              type: integer
+                              format: int32
+                              description: 图片数量
+                            similar:
+                              type: integer
+                              format: int32
+                              description: 指定风格改图的相似度,0:低,1:中,2:高
+                            status:
+                              type: integer
+                              format: int32
+                              description: 生效的状态(轮询组件使用：1、排队中，2、渲染中，3、渲染成功，4、渲染失败;户型搜索卡片：0 正常，1：禁用
+                            title:
+                              type: string
+                              description: 标题
+                            toolType:
+                              type: integer
+                              format: int32
+                              description: 梦想家业务字段 生图工具类型
+                            type:
+                              type: integer
+                              format: int32
+                              description: 告诉前端需要处理的类型：0:文本,1:按钮,2:链接,3:图片,4:跳转工具,5:生图轮询组件,6:前端直接回调一次回调接口,7:加载上传图片组件,8:户型搜索工具,9:户型图识别工具,10:素材检索工具，11：AI布局卡片,12:灵感广场卡片，100:跳转到另一agent
+                            url:
+                              type: string
+                              description: 回调接口
+                        description: 关联结果dto
+                      remark:
+                        type: string
+                        description: 基本描述
+                      taskId:
+                        type: string
+                        description: 任务Id，比如图片生成异步任务id
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务渲染状态，1、排队中，2、渲染中，3、渲染成功，4、渲染失败
+                      type:
+                        type: integer
+                        format: int32
+                        description: 对话类型：0：普通文字chat,1:普通文生图,2:空间填充，3:家具背景替换,4:材质替换
+                    required:
+                    - id
+              example:
+                msg: ''
+                code: 0
+                data:
+                  referencesContents:
+                  - similar: 0
+                    imgCount: 0
+                    title: ''
+                    type: 0
+                    toolType: 0
+                    content: ''
+                    url: ''
+                    dialogType: 0
+                    emptyRoom: 0
+                    action: ''
+                    botId: 0
+                    iconUrl: ''
+                    status: 0
+                  conversationId: ''
+                  chatQuestionUrl: ''
+                  remark: ''
+                  chatConversationId: 0
+                  type: 0
+                  chatQuestion: ''
+                  chatAnswer: ''
+                  chatAnswerUrl: ''
+                  averageTime: 0
+                  chatQuestionExt: ''
+                  id: 0
+                  queue: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/publicServiceApi/getAssetAppDetailByPage:
+    post:
+      operationId: apiV1PublicServiceApiGetAssetAppDetailByPage
+      summary: 分页查询资产应用详情接口
+      tags:
+      - Dreamer
+      x-source-documentation: https://dev.3vjia.com/document?apiId=619599213860380741
+      x-documentation-category: 梦想家
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: integer
+                  format: int64
+                  description: 目录id
+                categoryLibId:
+                  type: integer
+                  format: int64
+                  description: 目录库id
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                sort:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      ascending:
+                        type: boolean
+                        description: 字段排序规则
+                      normalized:
+                        type: boolean
+                        description: 是否已经规范化，即字段名与数据库字段已经一致，false的时候会将驼峰转下划线
+                      property:
+                        type: string
+                        description: 根据哪个字段进行排序
+                  description: 排序定义
+              required:
+              - categoryLibId
+              - current
+              - size
+            example:
+              categoryLibId: 0
+              sort:
+              - normalized: false
+                ascending: false
+                property: ''
+              current: 0
+              size: 0
+              categoryId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            assetItemIdList:
+                              type: array
+                              items: {}
+                              description: 单资产id列表
+                            assetProjectId:
+                              type: integer
+                              format: int64
+                              description: 资产集合id
+                            assetProjectName:
+                              type: string
+                              description: 资产集合名称
+                            assetProjectObjectId:
+                              type: string
+                              description: 资产集合类型id：方案id，展厅id
+                            categoryAndTagInfoList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    format: int64
+                                    description: id
+                                  name:
+                                    type: string
+                                    description: 名称
+                                  type:
+                                    type: integer
+                                    format: int32
+                                    description: 类型：1 为目录 2 为标签
+                              description: 对外接口返回数据
+                            categoryLibName:
+                              type: string
+                              description: 目录库名
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            creatorId:
+                              type: string
+                              description: 创建人
+                            id:
+                              type: integer
+                              format: int64
+                              description: 主键id
+                            imagePath:
+                              type: string
+                              description: 封面
+                            modifierId:
+                              type: string
+                              description: 更新人
+                            modifyTime:
+                              type: string
+                              format: date-time
+                              description: 更新时间
+                            projectType:
+                              type: integer
+                              format: int32
+                              description: 项目类型：方案1，展厅2
+                            quoteXml:
+                              type: string
+                              description: 方案所对应的报价xml
+                            sortNum:
+                              type: integer
+                              format: int32
+                              description: 排序值
+                            status:
+                              type: integer
+                              format: int32
+                              description: 状态,1上架，0未上架
+                            tenantId:
+                              type: string
+                              description: 租户
+                            uploadUsername:
+                              type: string
+                              description: 上传者
+                          required:
+                          - createTime
+                          - creatorId
+                          - modifierId
+                          - modifyTime
+                        description: 对外接口返回数据
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - quoteXml: ''
+                    imagePath: ''
+                    creatorId: ''
+                    modifierId: ''
+                    projectType: 0
+                    uploadUsername: ''
+                    modifyTime: ''
+                    assetProjectId: 0
+                    assetProjectObjectId: ''
+                    createTime: ''
+                    tenantId: ''
+                    categoryAndTagInfoList:
+                    - type: 0
+                      name: ''
+                      id: 0
+                    sortNum: 0
+                    id: 0
+                    assetItemIdList: []
+                    assetProjectName: ''
+                    categoryLibName: ''
+                    status: 0
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

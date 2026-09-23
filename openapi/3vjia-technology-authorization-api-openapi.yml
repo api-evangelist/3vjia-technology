@@ -1,0 +1,109 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Authorization API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Authorization
+  description: 登录授权
+paths:
+  /common/api/joinAuth/authorize:
+    post:
+      operationId: commonApiJoinAuthAuthorize
+      summary: 获取授权登录授权码
+      tags:
+      - Authorization
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454639980770304080
+      x-documentation-category: 登录授权
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enterpriseUserId:
+                  type: string
+                  description: 企业用户ID
+                svjUserId:
+                  type: string
+                  description: 三维家用户ID，不指定默认为管理员账号
+                tokenExpiresIn:
+                  type: integer
+                  format: int32
+                  description: Token过期时间（单位：秒）
+                bizExtParams:
+                  type: string
+                  description: 业务扩展参数
+              required:
+              - enterpriseUserId
+            example:
+              svjUserId: ''
+              bizExtParams: ''
+              enterpriseUserId: ''
+              tokenExpiresIn: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        description: 临时授权code，十分钟内有效
+                      tokenExpiresIn:
+                        type: integer
+                        format: int32
+                        description: token过期时间(非code过期时间)
+              example:
+                msg: ''
+                code: 0
+                data:
+                  code: ''
+                  tokenExpiresIn: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

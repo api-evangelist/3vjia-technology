@@ -1,0 +1,2484 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Accounts API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Accounts
+  description: 账号模块
+paths:
+  /api/shop/deleteDeptAndShopRelation:
+    post:
+      operationId: apiShopDeleteDeptAndShopRelation
+      summary: 批量解除门店绑定部门接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=475005267981971499
+      x-documentation-category: 账号模块 / 门店管理
+      description: 批量解除门店绑定部门
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 三维家部门ID，deptId和outDeptId两个至少传一个，用于查找部门，传入deptId后将忽略outDeptId
+                  examples:
+                  - '20171234'
+                outDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，deptId和outDeptId两个至少传一个，用于查找部门，不传deptId时outDeptId有效
+                  examples:
+                  - '456789'
+                outShopIdList:
+                  type: array
+                  items: {}
+                  description: 门店对应的企业系统门店ID列表，shopIdList和outShopIdList两个至少传一个，用于查找门店，不传shopIdList时outShopIdList有效
+                  examples:
+                  - '["20171234","20171235"]'
+                shopIdList:
+                  type: array
+                  items: {}
+                  description: 三维家门店ID列表，shopIdList和outShopIdList两个至少传一个，用于查找门店，传入shopIdList后将忽略outShopIdList
+                  examples:
+                  - '["456789","456780"]'
+            example:
+              deptId: '20171234'
+              outShopIdList: []
+              shopIdList: []
+              outDeptId: '456789'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/accountbinding/bindAccount:
+    post:
+      operationId: apiV1AccountbindingBindAccount
+      summary: 账号绑定接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454653867632689213
+      x-documentation-category: 账号模块 / 单点登录
+      description: 企业系统账号绑定三维家账号，回收站内的三维家账号无法绑定
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserId:
+                  type: string
+                  description: 企业系统的用户ID，用于绑定或解绑三维家账号
+                  examples:
+                  - '123456'
+                userName:
+                  type: string
+                  description: 要绑定或解绑的三维家账号
+                  examples:
+                  - 3vj13800000000
+              required:
+              - outUserId
+              - userName
+            example:
+              outUserId: '123456'
+              userName: 3vj13800000000
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      outUserId:
+                        type: string
+                        description: 企业系统的用户ID，与入参一致
+                        examples:
+                        - '123456'
+                      userId:
+                        type: string
+                        description: 绑定的三维家用户ID
+                        examples:
+                        - '1000123456'
+                      userName:
+                        type: string
+                        description: 绑定的三维家账号，与入参一致
+                        examples:
+                        - 3vj13800000000
+              example:
+                msg: ''
+                code: 0
+                data:
+                  outUserId: '123456'
+                  userName: 3vj13800000000
+                  userId: '1000123456'
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/accountbinding/getAccountBindingRelation:
+    post:
+      operationId: apiV1AccountbindingGetAccountBindingRelation
+      summary: 获取账号绑定关系接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454749021953654841
+      x-documentation-category: 账号模块 / 单点登录
+      description: 获取企业账号和三维家账号账号之间的绑定关系，当不需要过滤条件时，入参请传一个空字典，而非不传
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserId:
+                  type: string
+                  description: 企业系统中绑定过三维家账号的用户ID
+                userName:
+                  type: string
+                  description: 三维家用户账号
+            example:
+              outUserId: ''
+              userName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      createTime:
+                        type: string
+                        description: 绑定时间，格式yyyy-MM-ddHH:mm:ss
+                      outUserId:
+                        type: string
+                        description: 企业系统的用户ID
+                      userId:
+                        type: string
+                        description: 三维家用户ID
+                      userName:
+                        type: string
+                        description: 三维家账号
+              example:
+                msg: ''
+                code: 0
+                data:
+                - outUserId: ''
+                  userName: ''
+                  userId: ''
+                  createTime: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/accountbinding/getCurrentAppBindingRelationPage:
+    post:
+      operationId: apiV1AccountbindingGetCurrentAppBindingRelationPage
+      summary: 分页获取账号绑定关系列表接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=617418915324252243
+      x-documentation-category: 账号模块 / 单点登录
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                  examples:
+                  - '1'
+                  default: '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 每页条数，最大支持500条
+                  examples:
+                  - '10'
+                  default: '50'
+            example:
+              pageSize: 10
+              pageIndex: 1
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                        description: 页码
+                      pageSize:
+                        type: integer
+                        format: int32
+                        description: 每页条数
+                      recordCount:
+                        type: integer
+                        format: int32
+                        description: 记录总数
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            appId:
+                              type: string
+                            createTime:
+                              type: string
+                              description: 绑定时间，格式yyyy-MM-ddHH:mm:ss
+                            outUserId:
+                              type: string
+                              description: 企业系统的用户ID
+                            userId:
+                              type: string
+                              description: 三维家用户ID
+                            userName:
+                              type: string
+                              description: 三维家账号
+                        description: 结果列表
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - outUserId: ''
+                    userName: ''
+                    userId: ''
+                    createTime: ''
+                    appId: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/accountbinding/unBindAccount:
+    post:
+      operationId: apiV1AccountbindingUnBindAccount
+      summary: 账号解绑接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454656043478220888
+      x-documentation-category: 账号模块 / 单点登录
+      description: 企业系统账号解绑三维家账号
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserId:
+                  type: string
+                  description: 企业系统的用户ID，用于绑定或解绑三维家账号
+                  examples:
+                  - '123456'
+                userName:
+                  type: string
+                  description: 要绑定或解绑的三维家账号
+                  examples:
+                  - FC68EF65199AD915B91433373FD64BF0
+            example:
+              outUserId: '123456'
+              userName: FC68EF65199AD915B91433373FD64BF0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/department/createDept:
+    post:
+      operationId: apiV1DepartmentCreateDept
+      summary: 添加部门接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673567347347494
+      x-documentation-category: 账号模块 / 部门管理
+      description: 添加部门
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerCode:
+                  type: string
+                  description: 部门对应客户部门编码
+                deptName:
+                  type: string
+                  description: 部门名称
+                deptType:
+                  type: integer
+                  format: int32
+                  description: 经销商类型默认值0=普通部门、1=经销商
+                outDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，用于做绑定
+                outParentId:
+                  type: string
+                  description: 上级部门对应企业系统的部门ID，parentId为空时此值有效
+                parentId:
+                  type: string
+                  description: 上级部门的ID，三维家的部门ID，传入此值时，将忽略outParentId
+                shortName:
+                  type: string
+                  description: 部门简称
+            example:
+              deptName: ''
+              customerCode: ''
+              deptType: 0
+              parentId: ''
+              outParentId: ''
+              outDeptId: ''
+              shortName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      customerCode:
+                        type: string
+                        description: 部门对应客户部门编码
+                      deptId:
+                        type: string
+                        description: 创建成功后产生的部门ID
+                      deptName:
+                        type: string
+                        description: 部门名称，与入参一致
+                      outDeptId:
+                        type: string
+                        description: 企业系统的部门ID，与入参的outDeptId一致
+              example:
+                msg: ''
+                code: 0
+                data:
+                  deptName: ''
+                  deptId: ''
+                  customerCode: ''
+                  outDeptId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/department/deleteDept:
+    post:
+      operationId: apiV1DepartmentDeleteDept
+      summary: 删除部门接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673473520762923
+      x-documentation-category: 账号模块 / 部门管理
+      description: 删除部门，部门下存在账号、子部门时不允许删除
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 三维家部门ID，deptId和outDeptId两个至少传一个，用于查找要删除的部门，传入deptId后将忽略outDeptId
+                  examples:
+                  - '20171234'
+                outDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，deptId和outDeptId两个至少传一个，用于查找要删除的部门，不传deptId时outDeptId有效
+                  examples:
+                  - '456789'
+            example:
+              deptId: '20171234'
+              outDeptId: '456789'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: 成功
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/department/getDept:
+    post:
+      operationId: apiV1DepartmentGetDept
+      summary: 获取部门信息接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673473520762917
+      x-documentation-category: 账号模块 / 部门管理
+      description: 获取单个部门信息
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 三维家部门ID，deptId和outDeptId两个至少传一个，用于查找要删除的部门，传入deptId后将忽略outDeptId
+                  examples:
+                  - '20171234'
+                outDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，deptId和outDeptId两个至少传一个，用于查找要删除的部门，不传deptId时outDeptId有效
+                  examples:
+                  - '456789'
+            example:
+              deptId: '20171234'
+              outDeptId: '456789'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      createDate:
+                        type: string
+                        description: 创建时间，格式yyyy-MM-ddHH:mm:ss
+                      customerCode:
+                        type: string
+                        description: 部门对应客户部门编码
+                      deptId:
+                        type: string
+                        description: 部门ID
+                      deptName:
+                        type: string
+                        description: 部门名称
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                          organName:
+                            type: string
+                            description: 企业名称
+                        description: 部门所属机构信息
+                      outDeptId:
+                        type: string
+                        description: 部门绑定的企业系统部门ID，要绑定过才有值
+                      parentDept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                          deptId:
+                            type: string
+                            description: 部门ID
+                          deptName:
+                            type: string
+                            description: 部门名称
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                        description: 上级部门信息
+                      shortName:
+                        type: string
+                        description: 部门简称
+              example:
+                msg: ''
+                code: 0
+                data:
+                  organ:
+                    organName: ''
+                    organId: ''
+                  deptName: ''
+                  deptId: ''
+                  customerCode: ''
+                  parentDept:
+                    deptName: ''
+                    storeType: 0
+                    deptId: ''
+                    customerCode: ''
+                    outDeptId: ''
+                  outDeptId: ''
+                  shortName: ''
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/department/getDeptListByPage:
+    post:
+      operationId: apiV1DepartmentGetDeptListByPage
+      summary: 获取部门列表接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673567347347496
+      x-documentation-category: 账号模块 / 部门管理
+      description: 分页获取部门列表，当不需要过滤时，入参请传空字典，而非不传
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptName:
+                  type: string
+                  description: 部门名称，精确搜索
+                  examples:
+                  - 测试部门
+                likeDeptName:
+                  type: string
+                  description: 部门名称，模糊搜索
+                  examples:
+                  - 测试
+                outParentId:
+                  type: string
+                  description: 上级部门对应企业系统的部门ID，parentId为空时此值有效，要用上级部门过滤时传入
+                  examples:
+                  - '123456'
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码，最小值为1，默认值为1
+                  examples:
+                  - '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 分页大小，最小值1，最大值500，默认值50
+                  examples:
+                  - '50'
+                parentId:
+                  type: string
+                  description: 上级部门的ID，三维家的部门ID，传入此值时，将忽略outParentId，要用上级部门过滤时传入
+                  examples:
+                  - '20171234'
+            example:
+              deptName: 测试部门
+              pageSize: 50
+              parentId: '20171234'
+              outParentId: '123456'
+              pageIndex: 1
+              likeDeptName: 测试
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      pageSize:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      recordCount:
+                        type: integer
+                        format: int64
+                        description: 总数
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 创建时间，格式yyyy-MM-ddHH:mm:ss
+                            customerCode:
+                              type: string
+                              description: 部门对应客户部门编码
+                            deptId:
+                              type: string
+                              description: 部门ID
+                            deptName:
+                              type: string
+                              description: 部门名称
+                            outDeptId:
+                              type: string
+                              description: 部门绑定的企业系统部门ID，要绑定过才有值
+                            parentId:
+                              type: string
+                              description: 父级部门Id
+                            shortName:
+                              type: string
+                              description: 部门简称
+                        description: 部门信息结构,列表用,V2
+                      totalPage:
+                        type: integer
+                        format: int64
+                        description: 总页数
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  totalPage: 0
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - deptName: ''
+                    deptId: ''
+                    customerCode: ''
+                    parentId: ''
+                    outDeptId: ''
+                    shortName: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/department/getDeptTreeList:
+    post:
+      operationId: apiV1DepartmentGetDeptTreeList
+      summary: 获取部门树形列表接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474670883894562902
+      x-documentation-category: 账号模块 / 部门管理
+      description: 获取部门树形列表，不需要参数
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 三维家部门ID
+                  examples:
+                  - '20171234'
+            example:
+              deptId: '20171234'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      children:
+                        type: array
+                        items: {}
+                        description: 树形部门列表返回结果
+                      createDate:
+                        type: string
+                        description: 创建时间，格式yyyy-MM-ddHH:mm:ss
+                      customerCode:
+                        type: string
+                        description: 部门对应客户部门编码
+                      deptId:
+                        type: string
+                        description: 部门ID
+                      deptName:
+                        type: string
+                        description: 部门名称
+                      outDeptId:
+                        type: string
+                        description: 部门绑定的企业系统部门ID，要绑定过才有值
+                      parentId:
+                        type: string
+                        description: 上级部门ID
+                      shortName:
+                        type: string
+                        description: 部门简称
+              example:
+                msg: ''
+                code: 0
+                data:
+                - deptName: ''
+                  deptId: ''
+                  customerCode: ''
+                  parentId: ''
+                  children: []
+                  outDeptId: ''
+                  shortName: ''
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/department/updateDept:
+    post:
+      operationId: apiV1DepartmentUpdateDept
+      summary: 编辑部门接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673567347347498
+      x-documentation-category: 账号模块 / 部门管理
+      description: 编辑部门
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerCode:
+                  type: string
+                  description: 部门对应客户部门编码
+                deptId:
+                  type: string
+                  description: 三维家部门ID，deptId和outDeptId两个至少传一个，用于查找要修改的部门，不作为修改项，传入deptId后将忽略outDeptId
+                deptName:
+                  type: string
+                  description: 部门名称
+                deptType:
+                  type: integer
+                  format: int32
+                  description: 经销商类型0=普通部门、1=经销商
+                newOutDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，要修改部门对应的企业系统部门时传入
+                outDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，deptId和outDeptId两个至少传一个，用于查找要修改的部门，不作为修改项，不传deptId时outDeptId有效
+                outParentId:
+                  type: string
+                  description: 上级部门对应企业系统的部门ID，parentId为空时此值有效，要修改上级部门时传入（不传beTopDept或beTopDept=0时有效）
+                parentId:
+                  type: string
+                  description: 上级部门的ID，三维家的部门ID，传入此值时，将忽略outParentId，要修改上级部门时传入（不传beTopDept或beTopDept=0时有效）
+                shortName:
+                  type: string
+                  description: 部门简称
+            example:
+              deptName: ''
+              deptId: ''
+              customerCode: ''
+              deptType: 0
+              parentId: ''
+              outParentId: ''
+              newOutDeptId: ''
+              outDeptId: ''
+              shortName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: 成功
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/shop/createDeptAndShopRelation:
+    post:
+      operationId: apiV1ShopCreateDeptAndShopRelation
+      summary: 批量设置门店绑定部门接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=475027993060782090
+      x-documentation-category: 账号模块 / 门店管理
+      description: 批量设置门店绑定部门
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 三维家部门ID，deptId和outDeptId两个至少传一个，用于查找部门，传入deptId后将忽略outDeptId
+                outDeptId:
+                  type: string
+                  description: 部门对应的企业系统部门ID，deptId和outDeptId两个至少传一个，用于查找部门，不传deptId时outDeptId有效
+                outShopIdList:
+                  type: array
+                  items: {}
+                  description: 门店对应的企业系统门店ID列表，shopIdList和outShopIdList两个至少传一个，用于查找门店，不传shopIdList时outShopIdList有效
+                shopIdList:
+                  type: array
+                  items: {}
+                  description: 三维家门店ID列表，shopIdList和outShopIdList两个至少传一个，用于查找门店，传入shopIdList后将忽略outShopIdList
+            example:
+              deptId: ''
+              outShopIdList: []
+              shopIdList: []
+              outDeptId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: false
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/shop/createShop:
+    post:
+      operationId: apiV1ShopCreateShop
+      summary: 添加门店接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474672016889319480
+      x-documentation-category: 账号模块 / 门店管理
+      description: 添加门店
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  description: 门店地址
+                city:
+                  type: string
+                  description: 市，province有值时此字段才有效，注意这里不要传【市】字，如广州应该传【广州】而非【广州市】
+                contactMan:
+                  type: string
+                  description: 门店联系人
+                customerCode:
+                  type: string
+                  description: 门店编码
+                district:
+                  type: string
+                  description: 县/区，province、city有值时此字段才有效，注意这里不要传【区】【县】字，如天河应该传【天河】而非【天河区】
+                outShopId:
+                  type: string
+                  description: 门店应的企业系统门店ID，用于做绑定
+                province:
+                  type: string
+                  description: 省，注意这里不要传【省】字，如广东应该传【广东】而非【广东省】
+                relateDeptIdList:
+                  type: array
+                  items: {}
+                  description: 此门店所关联的三维家部门ID，relateDeptIdList和relateOutDeptIdList至少传一个，传入relateDeptIdList时将忽略relateOutDeptIdList
+                relateOutDeptIdList:
+                  type: array
+                  items: {}
+                  description: 此门店所关联的企业系统部门ID（需要已做绑定），relateDeptIdList和relateOutDeptIdList至少传一个，relateDeptIdList为空时relateOutDeptIdList有效
+                shopName:
+                  type: string
+                  description: 门店名称
+                storeType:
+                  type: integer
+                  format: int32
+                  description: 门店类型:0=直营店，1=加盟店
+                tel:
+                  type: string
+                  description: 门店联系方式
+            example:
+              storeType: 0
+              address: ''
+              city: ''
+              outShopId: ''
+              customerCode: ''
+              shopName: ''
+              relateOutDeptIdList: []
+              contactMan: ''
+              relateDeptIdList: []
+              province: ''
+              district: ''
+              tel: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      outShopId:
+                        type: string
+                        description: 企业系统的门店ID，与入参的outShopId一致
+                      shopId:
+                        type: string
+                        description: 创建成功后产生的门店ID
+                      shopName:
+                        type: string
+                        description: 门店名称，与入参一致
+              example:
+                msg: ''
+                code: 0
+                data:
+                  outShopId: ''
+                  shopName: ''
+                  shopId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/shop/deleteShop:
+    post:
+      operationId: apiV1ShopDeleteShop
+      summary: 删除门店接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673473520762925
+      x-documentation-category: 账号模块 / 门店管理
+      description: 删除门店
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outShopId:
+                  type: string
+                  description: 门店对应的企业系统门店ID，shopId和outShopId两个至少传一个，用于查找要删除的门店，不传shopId时outShopId有效
+                  examples:
+                  - '456789'
+                shopId:
+                  type: string
+                  description: 三维家门店ID，shopId和outShopId两个至少传一个，用于查找要删除的门店，传入shopId后将忽略outShopId
+                  examples:
+                  - '20171234'
+            example:
+              outShopId: '456789'
+              shopId: '20171234'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: 成功
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/shop/getShop:
+    post:
+      operationId: apiV1ShopGetShop
+      summary: 获取门店信息接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474670751249698875
+      x-documentation-category: 账号模块 / 门店管理
+      description: 获取单个门店信息
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outShopId:
+                  type: string
+                  description: 门店对应的企业系统门店ID，shopId和outShopId两个至少传一个，用于查找要删除的门店，不传shopId时outShopId有效
+                  examples:
+                  - '456789'
+                shopId:
+                  type: string
+                  description: 三维家门店ID，shopId和outShopId两个至少传一个，用于查找要删除的门店，传入shopId后将忽略outShopId
+                  examples:
+                  - '20171234'
+            example:
+              outShopId: '456789'
+              shopId: '20171234'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                        description: 门店地址
+                      city:
+                        type: string
+                        description: 市
+                      contactMan:
+                        type: string
+                        description: 门店联系人
+                      createDate:
+                        type: string
+                        description: 创建时间，格式yyyy-MM-ddHH:mm:ss
+                      customerCode:
+                        type: string
+                        description: 门店编码
+                      deptList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            customerCode:
+                              type: string
+                              description: 部门对应客户部门编码
+                            deptId:
+                              type: string
+                              description: 部门ID
+                            deptName:
+                              type: string
+                              description: 部门名称
+                            outDeptId:
+                              type: string
+                              description: 部门所绑定企业系统部门ID，绑定过才有值
+                            storeType:
+                              type: integer
+                              format: int32
+                              description: 类型0=门店，1=部门
+                        description: 上级部门信息
+                      district:
+                        type: string
+                        description: 区
+                      extParam:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            fieldName:
+                              type: string
+                              description: 扩展字段名称
+                            fieldValue:
+                              type: string
+                              description: 扩展字段值
+                        description: 门店信息结构，V2
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                          organName:
+                            type: string
+                            description: 企业名称
+                        description: 部门所属机构信息
+                      outShopId:
+                        type: string
+                        description: 门店绑定的企业系统门店ID，要绑定过才有值
+                      province:
+                        type: string
+                        description: 省
+                      shopId:
+                        type: string
+                        description: 门店ID
+                      shopName:
+                        type: string
+                        description: 门店名称
+                      shopNameShort:
+                        type: string
+                        description: 门店简称
+                      storeType:
+                        type: string
+                        description: 门店类型
+                      tel:
+                        type: string
+                        description: 门店联系方式
+                      virtualDeptId:
+                        type: string
+                        description: 虚拟部门ID，兼容旧业务
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  organ:
+                    organName: ''
+                    organId: ''
+                  storeType: ''
+                  address: ''
+                  city: ''
+                  extParam:
+                  - fieldName: ''
+                    fieldValue: ''
+                  outShopId: ''
+                  customerCode: ''
+                  shopName: ''
+                  contactMan: ''
+                  virtualDeptId: ''
+                  deptList:
+                  - deptName: ''
+                    storeType: 0
+                    deptId: ''
+                    customerCode: ''
+                    outDeptId: ''
+                  province: ''
+                  district: ''
+                  shopNameShort: ''
+                  tel: ''
+                  shopId: ''
+                  createDate: ''
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/shop/getShopListByPage:
+    post:
+      operationId: apiV1ShopGetShopListByPage
+      summary: 获取门店列表接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474672236729569288
+      x-documentation-category: 账号模块 / 门店管理
+      description: 分页获取门店列表，当不需要过滤时，入参请传空字典，而非不传
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 门店所关联的三维家部门ID，传入deptId时将忽略outDeptId
+                  examples:
+                  - '20172012'
+                likeShopName:
+                  type: string
+                  description: 门店名称，模糊查询
+                  examples:
+                  - 测试
+                outDeptId:
+                  type: string
+                  description: 门店所关联的企业系统部门ID（需要已做绑定），deptId为空时outDeptId有效
+                  examples:
+                  - '123456'
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码，最小值为1，默认值为1
+                  examples:
+                  - '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 分页大小，最小值1，最大值500，默认值50
+                  examples:
+                  - '50'
+                storeType:
+                  type: integer
+                  format: int32
+                  description: 门店类型:0=直营店，1=加盟店
+                  examples:
+                  - '0'
+            example:
+              storeType: 0
+              deptId: '20172012'
+              pageSize: 50
+              likeShopName: 测试
+              pageIndex: 1
+              outDeptId: '123456'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      pageSize:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      recordCount:
+                        type: integer
+                        format: int64
+                        description: 总数
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            address:
+                              type: string
+                              description: 门店地址
+                            city:
+                              type: string
+                              description: 市
+                            createDate:
+                              type: string
+                              description: 创建时间，格式yyyy-MM-ddHH:mm:ss
+                            customerCode:
+                              type: string
+                              description: 门店编码
+                            deptList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  customerCode:
+                                    type: string
+                                    description: 部门对应客户部门编码
+                                  deptId:
+                                    type: string
+                                    description: 部门ID
+                                  deptName:
+                                    type: string
+                                    description: 部门名称
+                                  outDeptId:
+                                    type: string
+                                    description: 部门绑定的企业系统部门ID，要绑定过才有值
+                              description: 部门基本信息结构，V2
+                            district:
+                              type: string
+                              description: 区
+                            outShopId:
+                              type: string
+                              description: 门店绑定的企业系统门店ID，要绑定过才有值
+                            province:
+                              type: string
+                              description: 省
+                            shopId:
+                              type: string
+                              description: 门店ID
+                            shopName:
+                              type: string
+                              description: 门店名称
+                            storeType:
+                              type: integer
+                              format: int32
+                              description: 门店类型:0=直营店，1=加盟店
+                            virtualDeptId:
+                              type: string
+                              description: 虚拟部门ID，兼容旧业务
+                        description: 门店信息结构，列表用，V2
+                      totalPage:
+                        type: integer
+                        format: int64
+                        description: 总页数
+              example:
+                msg: ''
+                code: 0
+                data:
+                  totalPage: 0
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - storeType: 0
+                    address: ''
+                    city: ''
+                    outShopId: ''
+                    customerCode: ''
+                    shopName: ''
+                    virtualDeptId: ''
+                    deptList:
+                    - deptName: ''
+                      deptId: ''
+                      customerCode: ''
+                      outDeptId: ''
+                    province: ''
+                    district: ''
+                    shopId: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/shop/updateShop:
+    post:
+      operationId: apiV1ShopUpdateShop
+      summary: 编辑门店接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474673473520762921
+      x-documentation-category: 账号模块 / 门店管理
+      description: 编辑门店
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  description: 门店地址
+                city:
+                  type: string
+                  description: 市，province有值时此字段才有效，注意这里不要传【市】字，如广州应该传【广州】而非【广州市】
+                contactMan:
+                  type: string
+                  description: 门店联系人
+                customerCode:
+                  type: string
+                  description: 门店编码
+                district:
+                  type: string
+                  description: 县/区，province、city有值时此字段才有效，注意这里不要传【区】【县】字，如天河应该传【天河】而非【天河区】
+                newOutShopId:
+                  type: string
+                  description: 门店对应的企业系统门店ID，要修改门店对应的企业系统门店时传入
+                outShopId:
+                  type: string
+                  description: 门店对应的企业系统门店ID，shopId和outShopId两个至少传一个，用于查找要修改的门店，不作为修改项，不传shopId时outShopId有效
+                province:
+                  type: string
+                  description: 省，注意这里不要传【省】字，如广东应该传【广东】而非【广东省】
+                shopId:
+                  type: string
+                  description: 三维家门店ID，shopId和outShopId两个至少传一个，用于查找要修改的门店，不作为修改项，传入shopId后将忽略outShopId
+                shopName:
+                  type: string
+                  description: 门店名称
+                storeType:
+                  type: integer
+                  format: int32
+                  description: 门店类型:0=直营店，1=加盟店
+                tel:
+                  type: string
+                  description: 门店联系方式
+            example:
+              newOutShopId: ''
+              storeType: 0
+              address: ''
+              city: ''
+              outShopId: ''
+              customerCode: ''
+              shopName: ''
+              contactMan: ''
+              province: ''
+              district: ''
+              tel: ''
+              shopId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: 成功
+                code: 0
+                data: true
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/create:
+    post:
+      operationId: apiV1UserCreate
+      summary: 添加账号接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454656043478220890
+      x-documentation-category: 账号模块 / 账号管理
+      description: 添加三维家账号，并绑定企业用户
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 账号所属三维家部门ID，关联部门传该字段
+                  examples:
+                  - '123456'
+                extendRoleList:
+                  type: array
+                  items: {}
+                  description: 账号所拥有的额外角色列表，角色需在三维家CRM后台管理中创建
+                  examples:
+                  - '["123456","456789"]'
+                mobile:
+                  type: string
+                  description: 用户手机号码，若传此值，需要保证此值符合手机号码格式，且此手机号没有被任何一个企业注册过三维家
+                  examples:
+                  - '13800000000'
+                name:
+                  type: string
+                  description: 用户姓名
+                  examples:
+                  - 测试人员
+                nickName:
+                  type: string
+                  description: 用户昵称
+                  examples:
+                  - 测试人员
+                note:
+                  type: string
+                  description: 备注，不超过256个字符
+                  examples:
+                  - 备注
+                outUserId:
+                  type: string
+                  description: 账号在企业系统里的用户ID，此值将和三维家用户ID做绑定关系，用于单点登录等场景
+                  examples:
+                  - A123456
+                password:
+                  type: string
+                  description: 账号密码，密码必须由6-20位字母、数字和符号的组合，至少需要包含两种
+                  examples:
+                  - abc123456
+                selfIntro:
+                  type: string
+                  description: 自我介绍，不能超过2000个字符
+                  examples:
+                  - 自我介绍
+                sex:
+                  type: string
+                  description: 性别，0=男，1=女，默认0
+                  examples:
+                  - '0'
+                shopId:
+                  type: string
+                  description: 账号所属三维家门店ID，关联门店传该字段
+                  examples:
+                  - '123456'
+                userName:
+                  type: string
+                  description: 要新增的三维家用户账号，需要由4-20个数字、字母组成（数字+字母，两者都需要有），账号名需要全网唯一，若传入的账号被其他企业注册过，会注册失败，建议使用机构的字母简称+手机号码
+                  examples:
+                  - 3vj123456
+              required:
+              - name
+              - outUserId
+              - password
+              - userName
+            example:
+              note: 备注
+              nickName: 测试人员
+              sex: '0'
+              deptId: '123456'
+              mobile: '13800000000'
+              outUserId: A123456
+              userName: 3vj123456
+              extendRoleList: []
+              password: abc123456
+              name: 测试人员
+              shopId: '123456'
+              selfIntro: 自我介绍
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      outUserId:
+                        type: string
+                        description: 企业用户ID，和三维家用户ID绑定
+                        examples:
+                        - A123456
+                      userId:
+                        type: string
+                        description: 创建成功后的三维家用户ID
+                        examples:
+                        - 3vj123456
+                      userName:
+                        type: string
+                        description: 创建成功后的三维家账号
+                        examples:
+                        - 3vj123456
+              example:
+                msg: ''
+                code: 0
+                data:
+                  outUserId: A123456
+                  userName: 3vj123456
+                  userId: 3vj123456
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/deleteBatch:
+    post:
+      operationId: apiV1UserDeleteBatch
+      summary: 删除账号接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454657671153385525
+      x-documentation-category: 账号模块 / 账号管理
+      description: 批量删除三维家用户，支持按三维家用户ID、三维家账号、企业用户ID进行删除，不会删除用户的绑定关系
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserIds:
+                  type: array
+                  items: {}
+                  description: 要删除的用户的企业用户ID列表，最多只能10个用户，userIds、userNames、outUserIds三个参数至少传1个，outUserIds优先级最低
+                  examples:
+                  - '["A123456","B123456"]'
+                userIds:
+                  type: array
+                  items: {}
+                  description: 要删除的用户的三维家用户ID列表，最多只能10个用户，userIds、userNames、outUserIds三个参数至少传1个，userIds优先级最高
+                  examples:
+                  - '["1000123456","1000456789"]'
+                userNames:
+                  type: array
+                  items: {}
+                  description: 要删除的用户的三维家用户账号列表，最多只能10个用户，userIds、userNames、outUserIds三个参数至少传1个，userNames优先级第二
+                  examples:
+                  - '["3vj123456","3vj456789"]'
+            example:
+              outUserIds: []
+              userIds: []
+              userNames: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/get:
+    post:
+      operationId: apiV1UserGet
+      summary: 获取账号信息接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454659385306710071
+      x-documentation-category: 账号模块 / 账号管理
+      description: 获取三维家账号的基本信息，支持按三维家用户ID、三维家账号、企业用户ID获取，回收站内的账号无法获取
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserId:
+                  type: string
+                  description: 企业账号绑定时使用的企业用户ID，userId、userName、outUserId至少传一个，outUserId优先级第三
+                  examples:
+                  - '123456'
+                userId:
+                  type: string
+                  description: 三维家用户ID，userId、userName、outUserId至少传一个，userId优先级最高
+                  examples:
+                  - '1000122456'
+                userName:
+                  type: string
+                  description: 三维家账号，userId、userName、outUserId至少传一个，userName优先级第二
+                  examples:
+                  - 3vj123456
+            example:
+              outUserId: '123456'
+              userName: 3vj123456
+              userId: '1000122456'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      createTime:
+                        type: string
+                        description: 账号创建时间，格式yyyy-MM-ddHH:mm:ss
+                        examples:
+                        - '2020-05-06 08:25:25'
+                      deptInfo:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                          deptId:
+                            type: string
+                            description: 部门ID
+                            examples:
+                            - 00013678
+                          deptName:
+                            type: string
+                            description: 部门名称
+                            examples:
+                            - 运营管理部
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                            examples:
+                            - '123456'
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                        description: 上级部门信息
+                      employeeStatus:
+                        type: integer
+                        format: int32
+                        description: 员工状态，0：未启用，1：已启用，2：未注册，3：离职
+                        examples:
+                        - '1'
+                      mobile:
+                        type: string
+                        description: 手机号码，需要设计师维护过才会有
+                        examples:
+                        - '13800000000'
+                      modifyTime:
+                        type: string
+                        description: 账号最后修改时间，格式yyyy-MM-ddHH:mm:ss
+                        examples:
+                        - '2020-05-06 08:25:25'
+                      name:
+                        type: string
+                        description: 姓名
+                        examples:
+                        - 丽丽
+                      nickName:
+                        type: string
+                        description: 昵称
+                        examples:
+                        - 丽丽
+                      organInfo:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                            examples:
+                            - C00000000
+                          organName:
+                            type: string
+                            description: 企业名称
+                            examples:
+                            - XXX科技
+                        description: 部门所属机构信息
+                      outUserId:
+                        type: string
+                        description: 账号在当前AppId下所绑定的企业用户ID，有绑定才有
+                        examples:
+                        - '12345678'
+                      sex:
+                        type: string
+                        description: 性别，0-男，1-女
+                        examples:
+                        - '0'
+                      shopInfo:
+                        type: object
+                        properties:
+                          outShopId:
+                            type: string
+                            description: 门店所绑定企业系统门店ID，绑定过才有值
+                            examples:
+                            - '123456'
+                          shopId:
+                            type: string
+                            description: 门店ID
+                            examples:
+                            - 00013678
+                          shopName:
+                            type: string
+                            description: 门店名称
+                            examples:
+                            - 天河店
+                        description: 账号所属的门店信息，只包含基本信息
+                      status:
+                        type: integer
+                        format: int32
+                        description: 账号状态，1-正常2-锁定3-注销
+                        examples:
+                        - '1'
+                      userId:
+                        type: string
+                        description: 三维家用户ID
+                        examples:
+                        - '1100151410'
+                      username:
+                        type: string
+                        description: 三维家账号
+                        examples:
+                        - 3vj123456
+              example:
+                msg: ''
+                code: 0
+                data:
+                  shopInfo:
+                    outShopId: '123456'
+                    shopName: 天河店
+                    shopId: 00013678
+                  nickName: 丽丽
+                  sex: '0'
+                  mobile: '13800000000'
+                  outUserId: '12345678'
+                  employeeStatus: 1
+                  userId: '1100151410'
+                  modifyTime: '2020-05-06 08:25:25'
+                  createTime: '2020-05-06 08:25:25'
+                  organInfo:
+                    organName: XXX科技
+                    organId: C00000000
+                  name: 丽丽
+                  deptInfo:
+                    deptName: 运营管理部
+                    storeType: 0
+                    deptId: 00013678
+                    customerCode: ''
+                    outDeptId: '123456'
+                  status: 1
+                  username: 3vj123456
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/listByPage:
+    post:
+      operationId: apiV1UserListByPage
+      summary: 获取账号列表接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454659385306710073
+      x-documentation-category: 账号模块 / 账号管理
+      description: 分页获取三维家账号列表，当不需要过滤时，入参请传空字典，而非不传
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createBeginTime:
+                  type: string
+                  description: 账号创建时间-开始时间，格式yyyy-MM-ddHH:mm:ss
+                  examples:
+                  - '2019-12-01 01:01:00'
+                createEndTime:
+                  type: string
+                  description: 账号创建时间-结束时间，格式yyyy-MM-ddHH:mm:ss
+                  examples:
+                  - '2019-12-02 01:01:00'
+                deptId:
+                  type: string
+                  description: 账号所在三维家部门ID，传入此字段时，将忽略outDeptId字段
+                  examples:
+                  - '1234567'
+                likeName:
+                  type: string
+                  description: 用户真实姓名(模糊查询)
+                  examples:
+                  - 张三
+                likeNickname:
+                  type: string
+                  description: 用户昵称，模糊查询
+                  examples:
+                  - 张三
+                mobile:
+                  type: string
+                  description: 用户手机号
+                  examples:
+                  - '18390006000'
+                modifyBeginTime:
+                  type: string
+                  description: 账号最后修改时间-开始时间，格式yyyy-MM-ddHH:mm:ss
+                  examples:
+                  - '2019-12-02 01:01:00'
+                modifyEndTime:
+                  type: string
+                  description: 账号最后修改时间-结束时间，格式yyyy-MM-ddHH:mm:ss
+                  examples:
+                  - '2019-12-02 01:01:00'
+                nickname:
+                  type: string
+                  description: 用户昵称，精确查询
+                  examples:
+                  - 张三
+                outDeptId:
+                  type: string
+                  description: 账号所在三维家部门所绑定的的企业系统部门ID，deptId不传时，此字段有效
+                  examples:
+                  - A123456
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码，最小值为1，默认值为1
+                  examples:
+                  - '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 分页大小，最小值1，最大值500，默认值50
+                  examples:
+                  - '50'
+                status:
+                  type: integer
+                  format: int32
+                  description: 员工状态，0：已禁用，1：已启用
+                  examples:
+                  - '1'
+                userName:
+                  type: string
+                  description: 用户账号
+                  examples:
+                  - zhangsan
+            example:
+              createBeginTime: '2019-12-01 01:01:00'
+              likeNickname: 张三
+              deptId: '1234567'
+              mobile: '18390006000'
+              pageSize: 50
+              modifyEndTime: '2019-12-02 01:01:00'
+              modifyBeginTime: '2019-12-02 01:01:00'
+              userName: zhangsan
+              likeName: 张三
+              pageIndex: 1
+              createEndTime: '2019-12-02 01:01:00'
+              nickname: 张三
+              outDeptId: A123456
+              status: 1
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                        examples:
+                        - '2'
+                      pageSize:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                        examples:
+                        - '50'
+                      recordCount:
+                        type: integer
+                        format: int64
+                        description: 总数
+                        examples:
+                        - '500'
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime:
+                              type: string
+                              description: 账号创建时间，格式yyyy-MM-ddHH:mm:ss
+                              examples:
+                              - '2019-10-02 12:12:13'
+                            employeeStatus:
+                              type: integer
+                              format: int32
+                              description: 员工状态，0：未启用，1：已启用，2：未注册，3：离职
+                              examples:
+                              - '1'
+                            mobile:
+                              type: string
+                              description: 手机号码，需要设计师维护过才会有
+                              examples:
+                              - '13800000000'
+                            modifyTime:
+                              type: string
+                              description: 账号最后修改时间，格式yyyy-MM-ddHH:mm:ss
+                              examples:
+                              - '2019-10-02 12:12:13'
+                            name:
+                              type: string
+                              description: 姓名
+                              examples:
+                              - 丽丽
+                            nickName:
+                              type: string
+                              description: 昵称
+                              examples:
+                              - 丽丽
+                            outUserId:
+                              type: string
+                              description: 账号在当前AppId下所绑定的企业用户ID，有绑定才有
+                              examples:
+                              - '123456789'
+                            sex:
+                              type: string
+                              description: 性别：男，女
+                              examples:
+                              - 男
+                            status:
+                              type: integer
+                              format: int32
+                              description: 账号状态，1-活动2-锁定
+                              examples:
+                              - '1'
+                            userId:
+                              type: string
+                              description: 三维家用户ID
+                              examples:
+                              - '1100151410'
+                            username:
+                              type: string
+                              description: 三维家账号
+                              examples:
+                              - 3vj123456
+                        description: 分页记录
+                      totalPage:
+                        type: integer
+                        format: int64
+                        description: 总页数
+                        examples:
+                        - '10'
+              example:
+                msg: ''
+                code: 0
+                data:
+                  totalPage: 10
+                  recordCount: 500
+                  pageSize: 50
+                  result:
+                  - nickName: 丽丽
+                    sex: 男
+                    mobile: '13800000000'
+                    outUserId: '123456789'
+                    employeeStatus: 1
+                    userId: '1100151410'
+                    modifyTime: '2019-10-02 12:12:13'
+                    createTime: '2019-10-02 12:12:13'
+                    name: 丽丽
+                    status: 1
+                    username: 3vj123456
+                  pageIndex: 2
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/modifyUserStatus:
+    post:
+      operationId: apiV1UserModifyUserStatus
+      summary: 修改用户状态接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454662700002246694
+      x-documentation-category: 账号模块 / 账号管理
+      description: 修改用户的状态，锁定/解锁
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserId:
+                  type: string
+                  description: 企业账号绑定时使用的企业用户ID，userId、userName、outUserId至少传一个，outUserId优先级第三
+                  examples:
+                  - '123456'
+                status:
+                  type: integer
+                  format: int32
+                  description: 员工状态0：已禁用，1：已启用
+                  examples:
+                  - '1'
+                userId:
+                  type: string
+                  description: 三维家用户ID，userId、userName、outUserId至少传一个，userId优先级最高
+                  examples:
+                  - '1000122456'
+                userName:
+                  type: string
+                  description: 三维家账号，userId、userName、outUserId至少传一个，userName优先级第二
+                  examples:
+                  - 3vj123456
+            example:
+              outUserId: '123456'
+              userName: 3vj123456
+              userId: '1000122456'
+              status: 1
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/recoverBatch:
+    post:
+      operationId: apiV1UserRecoverBatch
+      summary: 恢复账号接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454661186751889441
+      x-documentation-category: 账号模块 / 账号管理
+      description: 批量恢复三维家用户，支持按三维家用户ID、三维家账号、企业用户ID进行恢复
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userIds:
+                  type: array
+                  items: {}
+                  description: 要恢复的用户的三维家用户ID列表，最多只能10个用户，userIds、userNames参数至少传1个，userIds优先级最高
+                  examples:
+                  - '["1000123456","1000456789"]'
+                userNames:
+                  type: array
+                  items: {}
+                  description: 要恢复的用户的三维家用户账号列表，最多只能10个用户，userIds、userNames参数至少传1个，userNames优先级第二
+                  examples:
+                  - '["3vj123456","3vj456789"]'
+            example:
+              userIds: []
+              userNames: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/update:
+    post:
+      operationId: apiV1UserUpdate
+      summary: 编辑账号接口
+      tags:
+      - Accounts
+      x-source-documentation: https://dev.3vjia.com/document?apiId=454661186751889443
+      x-documentation-category: 账号模块 / 账号管理
+      description: 修改三维家用户的基本信息，回收站内的账号无法修改
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 账号所属三维家部门ID，关联部门传该字段
+                mobile:
+                  type: string
+                  description: 用户手机号码，若传此值，需要保证此值符合手机号码格式，且此手机号没有被任何一个企业注册过三维家
+                name:
+                  type: string
+                  description: 姓名
+                nickName:
+                  type: string
+                  description: 昵称，长度必须为2-20个字符
+                note:
+                  type: string
+                  description: 备注，不超过256个字符
+                outUserId:
+                  type: string
+                  description: 企业用户ID（绑定过对应三维家账号），userId、username、outUserId三个字段至少传1个，用于查找对应用户（不作为更新字段），优先级userId最高，username第二，outUserId最低
+                  examples:
+                  - a123456
+                selfIntro:
+                  type: string
+                  description: 自我介绍，不能超过2000个字符
+                sex:
+                  type: string
+                  description: 性别，0=男，1=女
+                shopId:
+                  type: string
+                  description: 账号所属三维家门店ID，关联门店传该字段
+                userId:
+                  type: string
+                  description: 三维家用户ID，userId、userName、outUserId三个字段至少传1个，用于查找对应用户（不作为更新字段），优先级userId最高，username第二，outUserId最低
+                  examples:
+                  - '123456'
+                userName:
+                  type: string
+                  description: 三维家账号，userId、userName、outUserId三个字段至少传1个，用于查找对应用户（不作为更新字段），优先级userId最高，username第二，outUserId最低
+                  examples:
+                  - 3vj123456
+            example:
+              note: ''
+              nickName: ''
+              sex: ''
+              deptId: ''
+              mobile: ''
+              outUserId: a123456
+              userName: 3vj123456
+              userId: '123456'
+              name: ''
+              shopId: ''
+              selfIntro: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

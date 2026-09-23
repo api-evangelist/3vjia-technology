@@ -1,0 +1,164 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform CAD API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: CAD
+  description: CAD模块
+paths:
+  /web/export_archive/list:
+    post:
+      operationId: webExportarchiveList
+      summary: 列表查询导出存档
+      tags:
+      - CAD
+      x-source-documentation: https://dev.3vjia.com/document?apiId=821806566599704659
+      x-documentation-category: CAD模块
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                archiveName:
+                  type: string
+                  description: 存档名称
+                fileType:
+                  type: string
+                  description: 文件类型
+                orderNumber:
+                  type: string
+                  description: 订单号
+                schemeId:
+                  type: string
+                  description: 方案id
+                version:
+                  type: string
+                  description: 版本号
+            example:
+              orderNumber: ''
+              archiveName: ''
+              schemeId: ''
+              version: ''
+              fileType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      archiveId:
+                        type: string
+                        description: 存档id
+                      archiveName:
+                        type: string
+                        description: 存档名称
+                      attachmentType:
+                        type: string
+                        description: 附件类型
+                      created:
+                        type: integer
+                        format: int64
+                        description: 创建时间
+                      designId:
+                        type: string
+                        description: 方案id
+                      drawingNo:
+                        type: string
+                        description: 图纸编号
+                      fileType:
+                        type: string
+                        description: 文件类型
+                      level:
+                        type: integer
+                        format: int32
+                        description: 层级
+                      resources:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            pageConfigIds:
+                              type: array
+                              items: {}
+                              description: 页面配置id列表
+                            resourceId:
+                              type: string
+                              description: 资源id
+                            resourceName:
+                              type: string
+                              description: 资源名称
+                            resourceUrl:
+                              type: string
+                              description: 资源url
+                            type:
+                              type: integer
+                              format: int32
+                              description: 类型
+                        description: 文件列表
+              example:
+                msg: ''
+                code: 0
+                data:
+                - attachmentType: ''
+                  level: 0
+                  archiveName: ''
+                  created: 0
+                  resources:
+                  - resourceId: ''
+                    resourceName: ''
+                    type: 0
+                    resourceUrl: ''
+                    pageConfigIds: []
+                  archiveId: ''
+                  drawingNo: ''
+                  designId: ''
+                  fileType: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

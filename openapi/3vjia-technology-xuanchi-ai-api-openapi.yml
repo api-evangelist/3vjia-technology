@@ -1,0 +1,3973 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Xuanchi AI API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Xuanchi AI
+  description: 玄尺AI
+paths:
+  /api/render/aiCreationFeeCalculation:
+    post:
+      operationId: apiRenderAiCreationFeeCalculation
+      summary: 消耗创点数量计算
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723926385059577893
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                singleCount:
+                  type: integer
+                  format: int32
+                  description: 单次作品数量（如：张、秒、次）, 默认1
+                  examples:
+                  - '5'
+                modelVersion:
+                  type: string
+                  description: 模型版本
+                bizType:
+                  type: integer
+                  format: int32
+                  description: 业务类型：文生图-9；图片裂变-10；图生视频-13；线稿出图-20；毛坯设计2-30；旧房改造2-31；
+                  examples:
+                  - '13'
+              required:
+              - singleCount
+              - bizType
+            example:
+              bizType: 13
+              modelVersion: ''
+              singleCount: 5
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        description: 消费点数
+                        examples:
+                        - '30'
+                      rightsType:
+                        type: string
+                        description: 权益类型
+                        examples:
+                        - InspirationCreativePoint
+                      canUse:
+                        type: boolean
+                        description: 是否可以使用
+                        examples:
+                        - 'true'
+                      unusableReason:
+                        type: string
+                        description: 不可用原因
+                        examples:
+                        - ' '
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  rightsType: InspirationCreativePoint
+                  consumeQuantity: 30
+                  canUse: true
+                  unusableReason: ' '
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/aiRoomDesign:
+    post:
+      operationId: apiRenderAiRoomDesign
+      summary: AI空间设计
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=853284256691142751
+      x-documentation-category: 玄尺AI / AI设计
+      description: AI 空间设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items: {}
+                  description: 空间设计图片列表,原始图放第一张，产品图放后面
+              required:
+              - images
+            example:
+              images: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/backgroundPaint:
+    post:
+      operationId: apiRenderBackgroundPaint
+      summary: 背景图重绘
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=726032261073490012
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: 提示词
+                  examples:
+                  - 现代风格
+                initImage:
+                  type: string
+                  description: 原图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                maskImage:
+                  type: string
+                  description: 遮罩图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数，默认1
+                  examples:
+                  - '1'
+              required:
+              - initImage
+              - maskImage
+            example:
+              initImage: https://xxx.com/xxx.jpg
+              batchCount: 1
+              prompt: 现代风格
+              maskImage: https://xxx.com/xxx.jpg
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/bricksChange:
+    post:
+      operationId: apiRenderBricksChange
+      summary: 产品替换-换砖
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725393727069241376
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateId:
+                  type: integer
+                  format: int64
+                  description: 渲染模板配置ID。见文档：https://help.3vjia.com/doc/open_doc/456823276459593731/723925629921284207
+                  examples:
+                  - '649971879238631495'
+                extraParams:
+                  type: object
+                  description: '扩展信息。分辨率：aspectRatio。示例：{"aspectRatio": "1536x1024"}'
+                sourceImageUrl:
+                  type: string
+                  description: 原图片
+                replaceTarget:
+                  type: string
+                  description: 区域
+                  examples:
+                  - 地板
+                  default: 地板
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: 产品图片
+                    required:
+                    - imageUrl
+                  description: 产品信息列表
+                prompt:
+                  type: string
+                  description: 提示语
+                modelVersion:
+                  type: string
+                  default: i_o_2
+              required:
+              - extraParams
+              - sourceImageUrl
+              - products
+            example:
+              modelVersion: ''
+              extraParams: ''
+              templateId: 649971879238631495
+              products:
+              - imageUrl: ''
+              replaceTarget: 地板
+              sourceImageUrl: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/changeMaterial:
+    post:
+      operationId: apiRenderChangeMaterial
+      summary: 产品替换-换材质
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725378201261588550
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extraParams:
+                  type: object
+                  description: '扩展信息，分辨率：aspectRatio。示例：{     "aspectRatio": "1536x1024"   }'
+                  examples:
+                  - '{     "aspectRatio": "1536x1024"   }'
+                sourceImageUrl:
+                  type: string
+                  description: 原图片
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: 材质图片
+                        examples:
+                        - https://xxx.com/xxx.jpg
+                      selectedLabels:
+                        type: array
+                        items: {}
+                        description: 替换的目标标签。如：地砖
+                        examples:
+                        - 地砖
+                    required:
+                    - imageUrl
+                    - selectedLabels
+                prompt:
+                  type: string
+                  description: 提示词
+                  default: ' '
+              required:
+              - extraParams
+              - sourceImageUrl
+            example:
+              extraParams: ''
+              products:
+              - imageUrl: https://xxx.com/xxx.jpg
+                selectedLabels: []
+              sourceImageUrl: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/checkProductWhiteBg:
+    post:
+      operationId: apiRenderCheckProductWhiteBg
+      summary: 商品白底图合格检测
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=827234429176025105
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageUrl:
+                  type: string
+                  description: 商品白底图URL
+              required:
+              - imageUrl
+            example:
+              imageUrl: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      result:
+                        type: string
+                        description: 检测结果
+                      reason:
+                        type: array
+                        items: {}
+                        description: 原因列表
+              example:
+                msg: ''
+                code: 0
+                data:
+                  reason: []
+                  result: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/comfyCommon:
+    post:
+      operationId: apiRenderComfyCommon
+      summary: 空间填充3.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=791370289819828290
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量,默认是1张
+                  default: '1'
+                initImage:
+                  type: string
+                  description: 初始图片
+                prompt:
+                  type: string
+                  description: 提示词
+                extImageUrls:
+                  type: array
+                  items: {}
+                  description: 扩展图片，当前任务支持传递1张风格参考图
+              required:
+              - initImage
+            example:
+              initImage: ''
+              batchCount: 0
+              extImageUrls: []
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/comfyTextureChangeV2:
+    post:
+      operationId: apiRenderComfyTextureChangeV2
+      summary: 产品替换-换墙涂料2.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725383989417889891
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extraParams:
+                  type: object
+                  description: '扩展信息。分辨率：aspectRatio。示例：{     "aspectRatio": "1536x1024"   }'
+                sourceImageUrl:
+                  type: string
+                  description: 原图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                prompt:
+                  type: string
+                  description: 提示词
+              required:
+              - extraParams
+            example:
+              extraParams: ''
+              products:
+              - imageUrl: ''
+              sourceImageUrl: https://xxx.com/xxx.jpg
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/comfyTextureChangeV3:
+    post:
+      operationId: apiRenderComfyTextureChangeV3
+      summary: 换墙涂料3.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=791009915224346764
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 初始图片
+                  examples:
+                  - https://3vj-innovation.3vjia.com/demo/tree31_2.png
+                styleImage:
+                  type: string
+                  description: 涂料图
+                  examples:
+                  - https://3vj-innovation.3vjia.com/demo/tree_p.png
+                reduce:
+                  type: integer
+                  format: int32
+                  description: 值：0/1，是否缩小纹理，适用于粗糙纹理和无缝纹理，默认是0，即不缩小纹理；
+                  examples:
+                  - '0'
+            example:
+              reduce: 0
+              initImage: https://3vj-innovation.3vjia.com/demo/tree31_2.png
+              styleImage: https://3vj-innovation.3vjia.com/demo/tree_p.png
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/comfyTextureChangeV4:
+    post:
+      operationId: apiRenderComfyTextureChangeV4
+      summary: 换墙涂料4.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=801812575007424611
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 初始图片
+                  examples:
+                  - https://3vj-innovation.3vjia.com/demo/tree31_2.png
+                styleImage:
+                  type: string
+                  description: 场景图
+                  examples:
+                  - https://3vj-innovation.3vjia.com/demo/tree_p.png
+                expand:
+                  type: integer
+                  format: int32
+                  description: 值：0/1，是否扩大纹理，（细腻纹理和非无缝纹理选择expand=1)，默认是0，即不扩大纹理
+                  examples:
+                  - '0'
+                light:
+                  type: integer
+                  format: int32
+                  description: 值：0/1，是否提亮环境，（需要提升图片亮度选择light=1)，默认是0，即不提亮
+                  examples:
+                  - '0'
+                clean:
+                  type: integer
+                  format: int32
+                  description: 值：0/1，是否去除漆病污点，（不处理墙面选择clean=0)，默认是1，即处理墙面漆病
+                  examples:
+                  - '0'
+            example:
+              initImage: https://3vj-innovation.3vjia.com/demo/tree31_2.png
+              styleImage: https://3vj-innovation.3vjia.com/demo/tree_p.png
+              clean: 0
+              expand: 0
+              light: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/countertopChange:
+    post:
+      operationId: apiRenderCountertopChange
+      summary: 产品替换-换台面
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725397578988011578
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extraParams:
+                  type: object
+                  description: '扩展信息。分辨率：aspectRatio。示例：{"aspectRatio": "1536x1024"}'
+                sourceImageUrl:
+                  type: string
+                  description: 原图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: 产品图片
+                        examples:
+                        - https://xxx.com/xxx.jpg
+                    required:
+                    - imageUrl
+                  description: 产品列表信息
+                prompt:
+                  type: string
+                  description: 提示词
+              required:
+              - extraParams
+              - sourceImageUrl
+              - products
+            example:
+              extraParams: ''
+              products:
+              - imageUrl: https://xxx.com/xxx.jpg
+              sourceImageUrl: https://xxx.com/xxx.jpg
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/doorChange:
+    post:
+      operationId: apiRenderDoorChange
+      summary: 产品替换-换门
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725396320654868527
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                changeType:
+                  type: string
+                  description: 替换类型：change_door_material 替换材质；change_door 替换造型和材质；默认：change_door
+                  examples:
+                  - change_door
+                  default: change_door
+                extraParams:
+                  type: object
+                  description: '扩展信息。分辨率：aspectRatio。示例：{"aspectRatio": "1536x1024"}'
+                sourceImageUrl:
+                  type: string
+                  description: 原图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                replaceTarget:
+                  type: string
+                  description: 替换目标
+                  examples:
+                  - 衣柜
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: 产品图片
+                        examples:
+                        - https://xxx.com/xxx.jpg
+                    required:
+                    - imageUrl
+                  description: 产品信息列表
+                prompt:
+                  type: string
+                  description: 提示语
+              required:
+              - extraParams
+              - sourceImageUrl
+              - replaceTarget
+              - products
+            example:
+              changeType: change_door
+              extraParams: ''
+              products:
+              - imageUrl: https://xxx.com/xxx.jpg
+              replaceTarget: 衣柜
+              sourceImageUrl: https://xxx.com/xxx.jpg
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/entitySegment:
+    post:
+      operationId: apiRenderEntitySegment
+      summary: 物体切割
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725398837321154658
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageUrls:
+                  type: array
+                  items: {}
+                  description: 图片URL列表
+                  examples:
+                  - '["https://xxx.com/xxx.jpg"]'
+                maxEntity:
+                  type: integer
+                  format: int32
+                  description: 最大实体数量，默认100
+                  examples:
+                  - '100'
+              required:
+              - imageUrls
+            example:
+              maxEntity: 100
+              imageUrls: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态：1标识正在排队，2表示正在渲染，3表示出图成功正常返回了，4表示出图失败了
+                        examples:
+                        - '3'
+                      resultImages:
+                        type: array
+                        items: {}
+                        description: 结果图片地址
+                        examples:
+                        - '["https://xxx.com/xxx.jpg"]'
+                      taskInfo:
+                        type: string
+                        description: 任务返回信息
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskInfo: ''
+                  taskStatus: 3
+                  resultImages: []
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/entitySegmentCoordinate:
+    post:
+      operationId: apiRenderEntitySegmentCoordinate
+      summary: 图像分割(坐标)
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=727580911910146204
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conf:
+                  type: number
+                  format: double
+                  description: 置信度阈值(0-1)
+                imgUrl:
+                  type: string
+                  description: 图片的完整地址
+                iou:
+                  type: number
+                  format: double
+                  description: IoU阈值(0-1)
+                modelSize:
+                  type: string
+                  description: model_size,可以选：large,small,sam2
+                points:
+                  type: string
+                  description: '点坐标列表 JSON字符串, 例如: [[150,150]]'
+                prompt:
+                  type: string
+                  description: 提示词
+            example:
+              conf: 0
+              modelSize: ''
+              iou: 0
+              points: ''
+              imgUrl: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/floorplan3DView:
+    post:
+      operationId: apiRenderFloorplan3DView
+      summary: 户型3D视角出图
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=791410051880468575
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量,默认为1
+                  default: '1'
+                initImage:
+                  type: string
+                  description: 初始图片
+                styleImage:
+                  type: string
+                  description: 风格图或场景图
+                prompt:
+                  type: string
+                  description: 提示词
+            example:
+              initImage: ''
+              styleImage: ''
+              batchCount: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/getRenderTaskById:
+    post:
+      operationId: apiRenderGetRenderTaskById
+      summary: AI任务状态查询
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723926385059577870
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: 任务ID
+                  examples:
+                  - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              required:
+              - taskId
+            example:
+              taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态：1标识正在排队，2表示正在渲染，3表示出图成功正常返回了，4表示出图失败了
+                        examples:
+                        - '3'
+                      resultImages:
+                        type: array
+                        items: {}
+                        description: 结果图片地址
+                        examples:
+                        - '["https://3vj-innovation.3vjia.com/aigc/20250620/f942fc9e-b7d3-47fe-a877-79552a4d5371.png"]'
+                      taskInfo:
+                        type: string
+                        description: 任务返回信息
+                        examples:
+                        - ' '
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskInfo: ' '
+                  taskStatus: 3
+                  resultImages: []
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/imageEdit:
+    post:
+      operationId: apiRenderImageEdit
+      summary: 图片编辑
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=822430704813097065
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: 用于生成图像的提示词 ，中英文均可输入
+                images:
+                  type: array
+                  items: {}
+                  description: 待编辑图片列表
+                aspectRatio:
+                  type: string
+                  description: 长宽比例。"1:1","1:4","1:8","2:3","3:2","3:4","4:1","4:3","4:5","5:4","8:1","9:16","16:9","21:9"
+              required:
+              - prompt
+            example:
+              images: []
+              aspectRatio: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/imageFragment:
+    post:
+      operationId: apiRenderImageFragment
+      summary: 图片裂变
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284232
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 初始图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                prompt:
+                  type: string
+                  description: 提示词
+                  examples:
+                  - 现代风格
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数, 默认1
+                  examples:
+                  - '4'
+                similarStr:
+                  type: number
+                  format: float
+                  description: 相似度
+                  examples:
+                  - '0.5'
+              required:
+              - initImage
+            example:
+              initImage: https://xxx.com/xxx.jpg
+              batchCount: 4
+              similarStr: 0.5
+              prompt: 现代风格
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/imageToVideo:
+    post:
+      operationId: apiRenderImageToVideo
+      summary: 图生视频
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284209
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstFrameImageUrl:
+                  type: string
+                  description: 首帧图片地址
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                lastFrameImageUrl:
+                  type: string
+                  description: 尾帧图片地址
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                prompt:
+                  type: string
+                  description: 用于生成视频的提示词 ，中英文均可输入
+                  examples:
+                  - 现代风格
+                width:
+                  type: integer
+                  format: int32
+                  description: 分辨率宽，仅支持 1280:768/768。默认：1280
+                  examples:
+                  - '1280'
+                height:
+                  type: integer
+                  format: int32
+                  description: 分辨率高，仅支持 1280:768/768。默认：768
+                  examples:
+                  - '768'
+                videoLength:
+                  type: integer
+                  format: int32
+                  description: 视频长度(秒),默认5秒
+                  examples:
+                  - '5'
+                seed:
+                  type: integer
+                  format: int64
+                  description: 种子
+                  examples:
+                  - '10'
+                templateId:
+                  type: integer
+                  format: int64
+                  description: 渲染模板配置ID。见文档：https://help.3vjia.com/doc/open_doc/456823276459593731/723925629921284207
+                  examples:
+                  - '123456'
+            example:
+              videoLength: 5
+              seed: 10
+              templateId: 123456
+              lastFrameImageUrl: https://xxx.com/xxx.jpg
+              width: 1280
+              firstFrameImageUrl: https://xxx.com/xxx.jpg
+              prompt: 现代风格
+              height: 768
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/imageWhiteBackground:
+    post:
+      operationId: apiRenderImageWhiteBackground
+      summary: 图片白底图
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=862395040079695934
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items: {}
+                  description: 待编辑图片列表
+            example:
+              images: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/imgExtractObjects:
+    post:
+      operationId: apiRenderImgExtractObjects
+      summary: 物体识别
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725398334004674627
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgUrl:
+                  type: string
+                  description: 图片URL
+                  examples:
+                  - https://xxx.com/xxx.jpg
+              required:
+              - imgUrl
+            example:
+              imgUrl: https://xxx.com/xxx.jpg
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      objectList:
+                        type: array
+                        items: {}
+                        description: 识别后标签列表
+                        examples:
+                        - '["沙发"]'
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  objectList: []
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/imgPromptToImgsV2:
+    post:
+      operationId: apiRenderImgPromptToImgsV2
+      summary: 电商套图生成
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=827236275026300931
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: 图片URL
+                userPrompt:
+                  type: string
+                  description: 用户补充提示词
+                count:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                groupId:
+                  type: integer
+                  format: int64
+              required:
+              - url
+            example:
+              userPrompt: ''
+              groupId: 0
+              count: 0
+              url: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: 输入图片url
+                      images:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            info:
+                              type: string
+                              description: 生成信息
+                            taskId:
+                              type: string
+                              description: 任务ID
+                            seed:
+                              type: integer
+                              format: int64
+                              description: 随机种子
+                        description: 电商套图生成图片项
+              example:
+                msg: ''
+                code: 0
+                data:
+                  images:
+                  - seed: 0
+                    taskId: ''
+                    info: ''
+                  url: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/listRenderTemplate:
+    post:
+      operationId: apiRenderListRenderTemplate
+      summary: 模板配置列表
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284207
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bizType:
+                  type: integer
+                  format: int32
+                  description: 业务类型：13-视频；25-铺砖；
+                  examples:
+                  - '13'
+                templateOwner:
+                  type: integer
+                  format: int32
+                  description: 模板归属：1-系统模板，2-用户模板。默认：1
+              required:
+              - bizType
+            example:
+              bizType: 13
+              templateOwner: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                        description: 模板标题
+                        examples:
+                        - 拉升效果
+                      bizType:
+                        type: integer
+                        format: int32
+                        description: 业务类型：图生视频-13；
+                        examples:
+                        - '13'
+                      imageUrl:
+                        type: string
+                        description: 模板预览图片URL
+                        examples:
+                        - https://xxx.com/xxx.jpg
+                      videoUrl:
+                        type: string
+                        description: 模板预览视频URL
+                        examples:
+                        - https://xxx.com/xxx.mp4
+                      id:
+                        type: integer
+                        format: int64
+                        description: ID
+                        examples:
+                        - '23232444'
+              example:
+                msg: 成功
+                code: 0
+                data:
+                - bizType: 13
+                  title: 拉升效果
+                  videoUrl: https://xxx.com/xxx.mp4
+                  imageUrl: https://xxx.com/xxx.jpg
+                  id: 23232444
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/oldBuildingReconstructionV2:
+    post:
+      operationId: apiRenderOldBuildingReconstructionV2
+      summary: 旧房改造2.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284205
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 毛坯图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                prompt:
+                  type: string
+                  description: 提示词，如：“客厅，现代风格，大面积窗户，城市景观，高楼背景，木质地板，浅色家具”
+                  examples:
+                  - 现代风格
+                referenceImage:
+                  type: string
+                  description: 参考图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                height:
+                  type: integer
+                  format: int32
+                  description: 分辨率-高
+                  examples:
+                  - '1024'
+                width:
+                  type: integer
+                  format: int32
+                  description: 分辨率-宽
+                  examples:
+                  - '1024'
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 生成的图片数，默认1张
+                  examples:
+                  - '2'
+              required:
+              - initImage
+              - prompt
+            example:
+              initImage: https://xxx.com/xxx.jpg
+              batchCount: 2
+              referenceImage: https://xxx.com/xxx.jpg
+              width: 1024
+              prompt: 现代风格
+              height: 1024
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/oldBuildingReconstructionV2.1:
+    post:
+      operationId: apiRenderOldBuildingReconstructionV21
+      summary: 旧房改造2.1
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=791408793547329638
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量,默认为1
+                  default: '1'
+                initImage:
+                  type: string
+                  description: 初始图片
+                styleImage:
+                  type: string
+                  description: 风格图
+                prompt:
+                  type: string
+                  description: 提示词
+            example:
+              initImage: ''
+              styleImage: ''
+              batchCount: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/paintDefectDetection:
+    post:
+      operationId: apiRenderPaintDefectDetection
+      summary: 油漆缺陷检测
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=817074914153611313
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageUrl:
+                  type: string
+                  description: 图片地址
+                area:
+                  type: string
+                  description: 空间区域
+              required:
+              - imageUrl
+            example:
+              area: ''
+              imageUrl: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        description: 请求是否成功
+                      requestId:
+                        type: string
+                        description: 请求ID
+                      primaryDefect:
+                        type: string
+                        description: 主漆病。如果无漆病，则该字段值为：正常
+                      secondaryDefects:
+                        type: array
+                        items: {}
+                        description: 伴随漆病。伴随漆病不一定存在
+                      causeAnalysis:
+                        type: string
+                        description: 成因分析
+                      solution:
+                        type: string
+                        description: 解决方案
+                      errorMsg:
+                        type: string
+                        description: 异常信息，success=false时返回
+                      recommendedPlan:
+                        type: string
+                        description: 推荐方案
+              example:
+                msg: ''
+                code: 0
+                data:
+                  causeAnalysis: ''
+                  secondaryDefects: []
+                  errorMsg: ''
+                  solution: ''
+                  success: false
+                  requestId: ''
+                  recommendedPlan: ''
+                  primaryDefect: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/picToText:
+    post:
+      operationId: apiRenderPicToText
+      summary: 图转文
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=816692897092091966
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgUrls:
+                  type: array
+                  items: {}
+                  description: 图片地址列表
+              required:
+              - imgUrls
+            example:
+              imgUrls: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      text:
+                        type: string
+                        description: 生成的文本内容
+              example:
+                msg: ''
+                code: 0
+                data:
+                  text: ''
+                  taskId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/productAdd:
+    post:
+      operationId: apiRenderProductAdd
+      summary: 添加产品
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725385247734255743
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extraParams:
+                  type: object
+                  description: '扩展信息。分辨率：aspectRatio。示例：{     "aspectRatio": "1536x1024"   }'
+                sourceImageUrl:
+                  type: string
+                  description: 原图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                replaceTarget:
+                  type: string
+                  description: 替换目标
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: 产品图片
+                        examples:
+                        - https://xxx.com/xxx.jpg
+                      extractLabels:
+                        type: array
+                        items: {}
+                        description: 扩展标签
+                        examples:
+                        - 沙发
+                      selectedLabels:
+                        type: array
+                        items: {}
+                        description: 选择标签
+                        examples:
+                        - 沙发
+                    required:
+                    - imageUrl
+                    - selectedLabels
+                  description: 产品信息列表
+                prompt:
+                  type: string
+                  description: 提示词
+              required:
+              - sourceImageUrl
+              - products
+            example:
+              extraParams: ''
+              products:
+              - imageUrl: https://xxx.com/xxx.jpg
+                extractLabels: []
+                selectedLabels: []
+              replaceTarget: ''
+              sourceImageUrl: https://xxx.com/xxx.jpg
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/productReplaceV1:
+    post:
+      operationId: apiRenderProductReplaceV1
+      summary: 产品替换1.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725361255010943019
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 初始图片URL
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                productImageUrl:
+                  type: string
+                  description: 产品图片URL
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                maskImageUrl:
+                  type: string
+                  description: 遮罩图片URL
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                prompt:
+                  type: string
+                  description: 提示词
+              required:
+              - initImage
+              - productImageUrl
+              - maskImageUrl
+            example:
+              productImageUrl: https://xxx.com/xxx.jpg
+              initImage: https://xxx.com/xxx.jpg
+              maskImageUrl: https://xxx.com/xxx.jpg
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/productReplaceV2:
+    post:
+      operationId: apiRenderProductReplaceV2
+      summary: 产品替换2.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725363605071089720
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extraParams:
+                  type: object
+                  description: 扩展信息
+                  examples:
+                  - '{     "aspectRatio": "1536x1024"   }'
+                sourceImageUrl:
+                  type: string
+                  description: 原图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        description: 产品图片
+                        examples:
+                        - https://xxx.com/xxx.jpg
+                      extractLabels:
+                        type: array
+                        items: {}
+                        description: 扩展标签列表
+                        examples:
+                        - '["沙发"]'
+                      selectedLabels:
+                        type: array
+                        items: {}
+                        description: 选择标签列表
+                        examples:
+                        - '["沙发"]'
+                    required:
+                    - selectedLabels
+                  description: 产品信息列表
+                prompt:
+                  type: string
+                  description: 提示词
+              required:
+              - extraParams
+              - sourceImageUrl
+              - products
+            example:
+              extraParams: ''
+              products:
+              - imageUrl: https://xxx.com/xxx.jpg
+                extractLabels: []
+                selectedLabels: []
+              sourceImageUrl: https://xxx.com/xxx.jpg
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/roughDesignV2:
+    post:
+      operationId: apiRenderRoughDesignV2
+      summary: 毛坯出图2.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284202
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 毛坯图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                prompt:
+                  type: string
+                  description: 提示词，如：“客厅，现代风格，大面积窗户，城市景观，高楼背景，木质地板，浅色家具”
+                  examples:
+                  - 现代风格
+                referenceImage:
+                  type: string
+                  description: 参考图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                height:
+                  type: integer
+                  format: int32
+                  description: 分辨率-高
+                  examples:
+                  - '1024'
+                width:
+                  type: integer
+                  format: int32
+                  description: 分辨率-宽
+                  examples:
+                  - '1024'
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 生成的图片数，默认1张
+                  examples:
+                  - '1'
+              required:
+              - initImage
+              - prompt
+            example:
+              initImage: https://xxx.com/xxx.jpg
+              batchCount: 1
+              referenceImage: https://xxx.com/xxx.jpg
+              width: 1024
+              prompt: 现代风格
+              height: 1024
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/roughDesignV2.1:
+    post:
+      operationId: apiRenderRoughDesignV21
+      summary: 毛坯出图2.1
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=791407283727913071
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量,默认为1
+                  default: '1'
+                initImage:
+                  type: string
+                  description: 初始图片
+                styleImage:
+                  type: string
+                  description: 风格图
+                prompt:
+                  type: string
+                  description: 提示词
+            example:
+              initImage: ''
+              styleImage: ''
+              batchCount: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/sketchToImage:
+    post:
+      operationId: apiRenderSketchToImage
+      summary: 线稿出图
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284200
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 原始图片URL
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                referenceImage:
+                  type: string
+                  description: 参考图片URL
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                prompt:
+                  type: string
+                  description: 风格描述
+                  examples:
+                  - 现代风格
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                  examples:
+                  - '2'
+              required:
+              - initImage
+              - referenceImage
+            example:
+              initImage: https://xxx.com/xxx.jpg
+              batchCount: 2
+              referenceImage: https://xxx.com/xxx.jpg
+              prompt: 现代风格
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-47e6f4331416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-47e6f4331416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/softDecorationLayoutV2.1:
+    post:
+      operationId: apiRenderSoftDecorationLayoutV21
+      summary: 新房软装2.1
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=791409548547211368
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量,默认为1
+                  default: '1'
+                initImage:
+                  type: string
+                  description: 初始图片
+                styleImage:
+                  type: string
+                  description: 风格图
+                prompt:
+                  type: string
+                  description: 提示词
+            example:
+              initImage: ''
+              styleImage: ''
+              batchCount: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/textToImage:
+    post:
+      operationId: apiRenderTextToImage
+      summary: 文生图
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=723925629921284198
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: 用于生成图像的提示词 ，中英文均可输入
+                  examples:
+                  - 敞亮，现代风格的客厅
+                width:
+                  type: integer
+                  format: int32
+                  description: 分辨率宽，默认：1024
+                  examples:
+                  - '1024'
+                height:
+                  type: integer
+                  format: int32
+                  description: 分辨率高，默认：1024
+                  examples:
+                  - '1024'
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数, 默认1
+                  examples:
+                  - '2'
+                aspectRatio:
+                  type: string
+                  description: 长宽比例，如：1:1
+                  examples:
+                  - '1:1'
+                modelVersion:
+                  type: string
+                  description: 模型版本(1.1-模型1；1.4-模型2)
+                  examples:
+                  - '1.1'
+              required:
+              - prompt
+              - modelVersion
+            example:
+              modelVersion: '1.1'
+              aspectRatio: '1:1'
+              batchCount: 2
+              width: 1024
+              prompt: 敞亮，现代风格的客厅
+              height: 1024
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-57e6f4e41216
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-57e6f4e41216
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/render/textureChange:
+    post:
+      operationId: apiRenderTextureChange
+      summary: 换墙涂料1.0
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=725381567941328900
+      x-documentation-category: 玄尺AI / AI设计
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImage:
+                  type: string
+                  description: 初始图片
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                styleImage:
+                  type: string
+                  description: 场景图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                maskImage:
+                  type: string
+                  description: 遮罩图
+                  examples:
+                  - https://xxx.com/xxx.jpg
+                light:
+                  type: integer
+                  format: int32
+                  description: 是否光照保留,0-否，1-是。默认：1
+                  examples:
+                  - '1'
+              required:
+              - initImage
+              - styleImage
+              - maskImage
+            example:
+              initImage: https://xxx.com/xxx.jpg
+              styleImage: https://xxx.com/xxx.jpg
+              light: 1
+              maskImage: https://xxx.com/xxx.jpg
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                        examples:
+                        - 任务已发送至队列中
+                      taskId:
+                        type: string
+                        description: 任务ID
+                        examples:
+                        - 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  taskId: 0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416
+                  info: 任务已发送至队列中
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/roleList:
+    post:
+      operationId: apiUserInfoRoleList
+      summary: 慧引流角色列表
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704254008587599945
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                name:
+                  type: string
+                  description: 角色名称
+            example:
+              hylTenantId: 0
+              name: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      roleId:
+                        type: integer
+                        format: int64
+                        description: 角色id
+                      name:
+                        type: string
+                        description: 角色名称
+                      admin:
+                        type: boolean
+                        description: 是否超管
+                      createTime:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+              example:
+                msg: ''
+                code: 0
+                data:
+                - roleId: 0
+                  admin: false
+                  createTime: ''
+                  name: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/teamCreate:
+    post:
+      operationId: apiUserInfoTeamCreate
+      summary: 慧引流团队创建
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704398208725565567
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                name:
+                  type: string
+                  description: 名称
+                remark:
+                  type: string
+                  description: 备注
+              required:
+              - name
+            example:
+              remark: ''
+              hylTenantId: 0
+              name: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      teamId:
+                        type: integer
+                        format: int64
+                        description: 团队id
+              example:
+                msg: ''
+                code: 0
+                data:
+                  teamId: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/teamGet:
+    post:
+      operationId: apiUserInfoTeamGet
+      summary: 慧引流团队获取
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704398605234094126
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                teamId:
+                  type: integer
+                  format: int64
+                  description: 团队ID
+              required:
+              - teamId
+            example:
+              hylTenantId: 0
+              teamId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      teamId:
+                        type: integer
+                        format: int64
+                        description: 团队id
+                      name:
+                        type: string
+                        description: 团队名称
+                      remark:
+                        type: string
+                        description: 团队备注
+                      createTime:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+              example:
+                msg: ''
+                code: 0
+                data:
+                  remark: ''
+                  createTime: ''
+                  teamId: 0
+                  name: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/teamList:
+    post:
+      operationId: apiUserInfoTeamList
+      summary: 慧引流团队列表
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704254008587599943
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                name:
+                  type: string
+                  description: 团队名称
+            example:
+              hylTenantId: 0
+              name: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      teamId:
+                        type: integer
+                        format: int64
+                        description: 团队id
+                      name:
+                        type: string
+                        description: 团队名称
+                      createTime:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      remark:
+                        type: string
+                        description: 团队备注
+              example:
+                msg: ''
+                code: 0
+                data:
+                - remark: ''
+                  createTime: ''
+                  teamId: 0
+                  name: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/teamRemove:
+    post:
+      operationId: apiUserInfoTeamRemove
+      summary: 慧引流团队删除
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704399970379386905
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                teamId:
+                  type: integer
+                  format: int64
+                  description: 团队ID
+              required:
+              - teamId
+            example:
+              hylTenantId: 0
+              teamId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/teamUpdate:
+    post:
+      operationId: apiUserInfoTeamUpdate
+      summary: 慧引流团队修改
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704399970379386903
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                teamId:
+                  type: integer
+                  format: int64
+                  description: 团队ID
+                name:
+                  type: string
+                  description: 名称
+                remark:
+                  type: string
+                  description: 备注
+              required:
+              - teamId
+            example:
+              remark: ''
+              hylTenantId: 0
+              teamId: 0
+              name: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/userCreate:
+    post:
+      operationId: apiUserInfoUserCreate
+      summary: 慧引流用户创建
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704254008587599941
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                userId:
+                  type: string
+                  description: 用户ID
+                userNickname:
+                  type: string
+                  description: 用户昵称
+                name:
+                  type: string
+                  description: 姓名
+                remark:
+                  type: string
+                  description: 备注
+                roleIds:
+                  type: array
+                  items: {}
+                teamIds:
+                  type: array
+                  items: {}
+              required:
+              - userId
+              - userNickname
+              - roleIds
+              - teamIds
+            example:
+              userNickname: ''
+              remark: ''
+              userId: ''
+              teamIds: []
+              roleIds: []
+              hylTenantId: 0
+              name: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      userId:
+                        type: integer
+                        format: int64
+                        description: 慧引流用户id
+              example:
+                msg: ''
+                code: 0
+                data:
+                  userId: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/userGet:
+    post:
+      operationId: apiUserInfoUserGet
+      summary: 慧引流用户获取
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704253756946137109
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                userId:
+                  type: string
+                  description: 用户ID
+                hylUserId:
+                  type: integer
+                  format: int64
+                  description: 慧引流用户ID
+            example:
+              userId: ''
+              hylUserId: 0
+              hylTenantId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      userId:
+                        type: integer
+                        format: int64
+                        description: 用户id
+                      mobile:
+                        type: string
+                        description: 手机号
+                      nickname:
+                        type: string
+                        description: 昵称
+                      name:
+                        type: string
+                        description: 姓名
+                      remark:
+                        type: string
+                        description: 备注
+                      state:
+                        type: integer
+                        format: int32
+                        description: 状态：0-禁用，1-启用
+                      roleList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            roleId:
+                              type: integer
+                              format: int64
+                              description: 角色id
+                            name:
+                              type: string
+                              description: 角色名称
+                            admin:
+                              type: boolean
+                              description: 是否超管
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                        description: RoleListResultVo对象
+                      teamList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            teamId:
+                              type: integer
+                              format: int64
+                              description: 团队id
+                            name:
+                              type: string
+                              description: 团队名称
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                        description: TeamListResultVo对象
+                      createTime:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+              example:
+                msg: ''
+                code: 0
+                data:
+                  mobile: ''
+                  remark: ''
+                  roleList:
+                  - roleId: 0
+                    admin: false
+                    createTime: ''
+                    name: ''
+                  userId: 0
+                  createTime: ''
+                  nickname: ''
+                  name: ''
+                  state: 0
+                  teamList:
+                  - createTime: ''
+                    teamId: 0
+                    name: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/userPage:
+    post:
+      operationId: apiUserInfoUserPage
+      summary: 慧引流用户分页查询
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704253756946137107
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sort:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      property:
+                        type: string
+                        description: 根据哪个字段进行排序
+                      ascending:
+                        type: boolean
+                        description: 字段排序规则
+                      normalized:
+                        type: boolean
+                        description: 是否已经规范化，即字段名与数据库字段已经一致，false的时候会将驼峰转下划线
+                    required:
+                    - property
+                    - ascending
+                    - normalized
+                  description: 排序定义
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                userId:
+                  type: string
+                  description: 用户id
+                state:
+                  type: integer
+                  format: int32
+                  description: 状态：0-禁用，1-启用
+                mobile:
+                  type: string
+                  description: 手机号
+                nickname:
+                  type: string
+                  description: 昵称
+                name:
+                  type: string
+                  description: 姓名
+                remark:
+                  type: string
+                  description: 备注
+                roleId:
+                  type: integer
+                  format: int64
+                  description: 角色id
+                teamId:
+                  type: integer
+                  format: int64
+                  description: 团队id
+                hylUserId:
+                  type: integer
+                  format: int64
+                  description: 慧引流用户id
+              required:
+              - current
+              - size
+            example:
+              roleId: 0
+              mobile: ''
+              remark: ''
+              sort:
+              - normalized: false
+                ascending: false
+                property: ''
+              userId: ''
+              hylUserId: 0
+              current: 0
+              size: 0
+              hylTenantId: 0
+              teamId: 0
+              nickname: ''
+              name: ''
+              state: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            userId:
+                              type: integer
+                              format: int64
+                              description: 用户id
+                            mobile:
+                              type: string
+                              description: 手机号
+                            nickname:
+                              type: string
+                              description: 昵称
+                            name:
+                              type: string
+                              description: 姓名
+                            remark:
+                              type: string
+                              description: 备注
+                            state:
+                              type: integer
+                              format: int32
+                              description: 状态：0-禁用，1-启用
+                            roleList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  roleId:
+                                    type: integer
+                                    format: int64
+                                    description: 角色id
+                                  name:
+                                    type: string
+                                    description: 角色名称
+                                  admin:
+                                    type: boolean
+                                    description: 是否超管
+                                  createTime:
+                                    type: string
+                                    format: date-time
+                                    description: 创建时间
+                              description: RoleListResultVo对象
+                            teamList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  teamId:
+                                    type: integer
+                                    format: int64
+                                    description: 团队id
+                                  name:
+                                    type: string
+                                    description: 团队名称
+                                  createTime:
+                                    type: string
+                                    format: date-time
+                                    description: 创建时间
+                              description: TeamListResultVo对象
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                        description: UserTenantListResultVo对象
+                    required:
+                    - total
+                    - current
+                    - size
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - mobile: ''
+                    remark: ''
+                    roleList:
+                    - roleId: 0
+                      admin: false
+                      createTime: ''
+                      name: ''
+                    userId: 0
+                    createTime: ''
+                    nickname: ''
+                    name: ''
+                    state: 0
+                    teamList:
+                    - createTime: ''
+                      teamId: 0
+                      name: ''
+                  total: 0
+                  current: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/userRemove:
+    post:
+      operationId: apiUserInfoUserRemove
+      summary: 慧引流用户移除
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704254008587599939
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                hylUserId:
+                  type: integer
+                  format: int64
+                  description: 慧引流用户ID
+              required:
+              - hylUserId
+            example:
+              hylUserId: 0
+              hylTenantId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userInfo/userUpdate:
+    post:
+      operationId: apiUserInfoUserUpdate
+      summary: 慧引流用户修改
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=704253756946137105
+      x-documentation-category: 玄尺AI / 基础管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylTenantId:
+                  type: integer
+                  format: int64
+                  description: 慧引流租户ID
+                hylUserId:
+                  type: integer
+                  format: int64
+                  description: 慧引流用户ID
+                state:
+                  type: integer
+                  format: int32
+                  description: 状态：0-禁用，1-启用
+                name:
+                  type: string
+                  description: 姓名
+                remark:
+                  type: string
+                  description: 备注
+                roleIds:
+                  type: array
+                  items: {}
+                teamIds:
+                  type: array
+                  items: {}
+              required:
+              - hylUserId
+            example:
+              remark: ''
+              hylUserId: 0
+              teamIds: []
+              roleIds: []
+              hylTenantId: 0
+              name: ''
+              state: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/userLogin/login:
+    post:
+      operationId: apiUserLoginLogin
+      summary: 慧引流登录
+      tags:
+      - Xuanchi AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=699544979588137071
+      x-documentation-category: 玄尺AI / 登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hylUserId:
+                  type: integer
+                  format: int64
+                  description: 慧引流用户ID
+                pageType:
+                  type: integer
+                  format: int32
+                  description: 进入的页面类型，0-AI慧引流，默认值是0
+              required:
+              - hylUserId
+            example:
+              hylUserId: 0
+              pageType: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: 跳转url
+              example:
+                msg: ''
+                code: 0
+                data:
+                  url: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

@@ -1,0 +1,4725 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform DMS API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: DMS
+  description: DMS系统
+paths:
+  /api/v1/dms/customer/createCustomer:
+    post:
+      operationId: apiV1DmsCustomerCreateCustomer
+      summary: 创建客户接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547427056774889540
+      x-documentation-category: DMS系统 / 客户数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelID:
+                  type: string
+                  description: 门店ID
+                consigneeAddr:
+                  type: string
+                  description: 收货人地址
+                consigneeName:
+                  type: string
+                  description: 收货人名称
+                consigneePhone:
+                  type: string
+                  description: 收货人电话
+                customerAddr:
+                  type: string
+                  description: 客户地址
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                remark:
+                  type: string
+                  description: 备注
+            example:
+              consigneeAddr: ''
+              remark: ''
+              customerAddr: ''
+              customerName: ''
+              consigneeName: ''
+              customerPhone: ''
+              consigneePhone: ''
+              channelID: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/customer/deleteCustomer:
+    post:
+      operationId: apiV1DmsCustomerDeleteCustomer
+      summary: 删除客户接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547427056774889543
+      x-documentation-category: DMS系统 / 客户数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items: {}
+                  description: 客户唯一id列表
+              required:
+              - ids
+            example:
+              ids: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/customer/editCustomer:
+    post:
+      operationId: apiV1DmsCustomerEditCustomer
+      summary: 编辑客户接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547427056774889545
+      x-documentation-category: DMS系统 / 客户数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelID:
+                  type: string
+                  description: 门店编码
+                consigneeAddr:
+                  type: string
+                  description: 收货人地址
+                consigneeName:
+                  type: string
+                  description: 收货人名称
+                consigneePhone:
+                  type: string
+                  description: 收货人电话
+                customerAddr:
+                  type: string
+                  description: 客户地址
+                customerID:
+                  type: string
+                  description: 客户编码
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                id:
+                  type: integer
+                  format: int64
+                  description: 客户唯一id
+                remark:
+                  type: string
+                  description: 备注
+              required:
+              - customerName
+              - id
+            example:
+              consigneeAddr: ''
+              remark: ''
+              customerAddr: ''
+              customerName: ''
+              consigneeName: ''
+              customerPhone: ''
+              customerID: ''
+              consigneePhone: ''
+              id: 0
+              channelID: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/customer/getCustomerList:
+    post:
+      operationId: apiV1DmsCustomerGetCustomerList
+      summary: 查询客户列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547428398327218179
+      x-documentation-category: DMS系统 / 客户数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerIDs:
+                  type: array
+                  items: {}
+                  description: 客户编码数组
+                channelCode:
+                  type: string
+                  description: 门店编码
+                customerID:
+                  type: string
+                  description: 客户编码
+                customerName:
+                  type: string
+                  description: 客户姓名
+                customerPhone:
+                  type: string
+                  description: 客户手机号
+                id:
+                  type: integer
+                  format: int64
+                  description: 客户唯一id
+                ids:
+                  type: array
+                  items: {}
+                  description: 客户唯一id数组
+            example:
+              customerName: ''
+              customerPhone: ''
+              customerID: ''
+              ids: []
+              customerIDs: []
+              id: 0
+              channelCode: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consigneeAddr:
+                        type: string
+                        description: 收货人地址
+                      consigneeName:
+                        type: string
+                        description: 收货人名称
+                      consigneePhone:
+                        type: string
+                        description: 收货人电话
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建日期
+                      createUserName:
+                        type: string
+                        description: 创建用户名称
+                      customerAddr:
+                        type: string
+                        description: 客户地址
+                      customerID:
+                        type: string
+                        description: 客户编码
+                      customerName:
+                        type: string
+                        description: 客户名称
+                      customerPhone:
+                        type: string
+                        description: 客户电话
+                      modifyDate:
+                        type: string
+                        format: date-time
+                        description: 最后修改时间
+                      modifyUserName:
+                        type: string
+                        description: 最后修改用户名称
+                      channelID:
+                        type: string
+                        description: 门店编码
+                      createUserCode:
+                        type: string
+                        description: 创建用户编码
+                      id:
+                        type: integer
+                        format: int64
+                        description: 客户唯一id
+                      modifyUserCode:
+                        type: string
+                        description: 最后修改用户编码
+                      remark:
+                        type: string
+                        description: 备注
+                    required:
+                    - createDate
+                    - createUserName
+                    - customerID
+                    - customerName
+                    - modifyDate
+                    - modifyUserName
+                    - id
+              example:
+                msg: ''
+                code: 0
+                data:
+                - consigneeAddr: ''
+                  modifyDate: ''
+                  createUserCode: ''
+                  createUserName: ''
+                  remark: ''
+                  customerAddr: ''
+                  customerName: ''
+                  modifyUserCode: ''
+                  consigneeName: ''
+                  modifyUserName: ''
+                  customerPhone: ''
+                  customerID: ''
+                  consigneePhone: ''
+                  id: 0
+                  channelID: ''
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/customer/getCustomerPage:
+    post:
+      operationId: apiV1DmsCustomerGetCustomerPage
+      summary: 分页获取客户数据接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547425365350498337
+      x-documentation-category: DMS系统 / 客户数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除
+                  examples:
+                  - '0'
+                beginDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-开始时间
+                channelCode:
+                  type: string
+                  description: 门店编码
+                createUserCode:
+                  type: string
+                  description: 创建人编码
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  examples:
+                  - '1'
+                customerMatch:
+                  type: string
+                  description: 客户模糊匹配 [客户名称,客户电话]
+                endDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-结束时间
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  examples:
+                  - '10'
+              required:
+              - current
+              - size
+            example:
+              endDate: ''
+              beginModifyDate: ''
+              isDelete: 0
+              createUserCode: ''
+              pageSize: 0
+              customerName: ''
+              beginDate: ''
+              customerPhone: ''
+              current: 1
+              customerMatch: ''
+              size: 10
+              pageIndex: 0
+              endModifyDate: ''
+              channelID: ''
+              channelCode: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            channelID:
+                              type: string
+                              description: 门店编码
+                            channelName:
+                              type: string
+                              description: 门店名称
+                            consigneeAddr:
+                              type: string
+                              description: 收货人地址
+                            consigneeName:
+                              type: string
+                              description: 收货人名称
+                            consigneePhone:
+                              type: string
+                              description: 收货人电话
+                            createDate:
+                              type: string
+                              format: date-time
+                              description: 创建日期
+                            createUserName:
+                              type: string
+                              description: 创建用户名称
+                            customerAddr:
+                              type: string
+                              description: 客户地址
+                            customerID:
+                              type: string
+                              description: 客户编码
+                            customerName:
+                              type: string
+                              description: 客户名称
+                            customerPhone:
+                              type: string
+                              description: 客户电话
+                            id:
+                              type: integer
+                              format: int64
+                              description: 唯一id
+                            modifyDate:
+                              type: string
+                              format: date-time
+                              description: 最后修改时间
+                            modifyUserName:
+                              type: string
+                              description: 最后修改用户名称
+                          required:
+                          - customerID
+                          - id
+                        description: 客户信息
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - consigneeAddr: ''
+                    modifyDate: ''
+                    createUserName: ''
+                    customerAddr: ''
+                    customerName: ''
+                    consigneeName: ''
+                    modifyUserName: ''
+                    customerPhone: ''
+                    customerID: ''
+                    consigneePhone: ''
+                    channelName: ''
+                    id: 0
+                    channelID: ''
+                    createDate: ''
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/createProduceOrder:
+    post:
+      operationId: apiV1DmsOrderCreateProduceOrder2
+      summary: 创建生产单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547478474080776292
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                diyOrderNo:
+                  type: string
+                  description: 自定义订单号
+                orderDesc:
+                  type: string
+                  description: 订单备注
+                orderName:
+                  type: string
+                  description: 订单名称
+                orderRoom:
+                  type: integer
+                  format: int32
+                  description: 所属空间 0-未填写 1-主卧 2-客卧 3-厨房 4-客厅 5-餐厅 6-主卫 7-次卫 8-阳台
+                  examples:
+                  - '0'
+                  default: '0'
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                urgent:
+                  type: integer
+                  format: int32
+                  description: 加急等级 0-普通 1-加急
+                  examples:
+                  - '0'
+                  default: '0'
+                orderState:
+                  type: integer
+                  format: int32
+                  description: 订单状态
+                orderType:
+                  type: integer
+                  format: int32
+                  description: 订单类型
+                patchReason:
+                  type: integer
+                  format: int32
+                  description: 补单原因
+              required:
+              - orderName
+              - saleBillNo
+            example:
+              orderRoom: 0
+              orderType: 0
+              patchReason: 0
+              diyOrderNo: ''
+              orderState: 0
+              saleBillNo: ''
+              urgent: 0
+              orderDesc: ''
+              orderName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      diyOrderNo:
+                        type: string
+                        description: 自定义订单号
+                      orderDesc:
+                        type: string
+                        description: 订单备注
+                      orderName:
+                        type: string
+                        description: 订单名称
+                      orderNo:
+                        type: string
+                        description: 生产订单号
+                      orderRoom:
+                        type: integer
+                        format: int32
+                        description: 所属空间 0未填写 1主卧 2客卧 3厨房 4客厅 5餐厅 6主卫 7次卫 8阳台
+                      orderState:
+                        type: integer
+                        format: int32
+                        description: 生产单状态 0-已创建 1-已分配 2-已拆单 3-生产中 9-已包装 4-已入库 5-已发货 6-已安装 7-已完成 8-已关闭
+                      orderType:
+                        type: integer
+                        format: int32
+                        description: 订单类型 0生产订单 1生产补单
+                      patchReason:
+                        type: integer
+                        format: int32
+                        description: 补单原因 0未填写 1设计错误 2审核错误 3生产错误 4运输损坏 5安装损坏 6客户新增
+                      saleBillNo:
+                        type: string
+                        description: 销售单号
+                      submitDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      breakUserName:
+                        type: string
+                        description: 拆单人员
+                      channelID:
+                        type: string
+                        description: 门店编码
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      mainMaterial:
+                        type: string
+                        description: 材质颜色
+                      urgent:
+                        type: integer
+                        format: int32
+                        description: 订单标签
+                      id:
+                        type: integer
+                        format: int64
+                        description: 生产单唯一id
+                    required:
+                    - orderName
+                    - orderNo
+                    - orderRoom
+                    - orderState
+                    - orderType
+                    - patchReason
+                    - saleBillNo
+                    - submitDate
+                    - channelID
+                    - id
+              example:
+                msg: ''
+                code: 0
+                data:
+                  mainMaterial: ''
+                  orderRoom: 0
+                  orderType: 0
+                  orderNo: ''
+                  patchReason: 0
+                  submitDate: ''
+                  diyOrderNo: ''
+                  orderState: 0
+                  saleBillNo: ''
+                  breakUserName: ''
+                  id: 0
+                  urgent: 0
+                  orderDesc: ''
+                  channelID: ''
+                  orderName: ''
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/deleteProduceOrder:
+    post:
+      operationId: apiV1DmsOrderDeleteProduceOrder
+      summary: 删除生产单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547479887989043268
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items: {}
+                  description: 生产单唯一id数组
+              required:
+              - ids
+            example:
+              ids: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/editProduceOrder:
+    post:
+      operationId: apiV1DmsOrderEditProduceOrder
+      summary: 编辑生产单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547479887989043266
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                diyOrderNo:
+                  type: string
+                  description: 自定义订单号
+                orderDesc:
+                  type: string
+                  description: 订单备注
+                orderName:
+                  type: string
+                  description: 订单名称
+                orderNo:
+                  type: string
+                  description: 生产单号
+                orderRoom:
+                  type: integer
+                  format: int32
+                  description: 所属空间 0-未填写 1-主卧 2-客卧 3-厨房 4-客厅 5-餐厅 6-主卫 7-次卫 8-阳台
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                urgent:
+                  type: integer
+                  format: int32
+                  description: 加急等级 0-普通 1-加急
+              required:
+              - orderName
+              - orderNo
+              - saleBillNo
+            example:
+              orderRoom: 0
+              orderNo: ''
+              diyOrderNo: ''
+              saleBillNo: ''
+              urgent: 0
+              orderDesc: ''
+              orderName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getBreakFileList:
+    post:
+      operationId: apiV1DmsOrderGetBreakFileList
+      summary: 查询拆单文件接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547481265901789238
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderNo:
+                  type: string
+                  description: 生产单号
+              required:
+              - orderNo
+            example:
+              orderNo: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      fileName:
+                        type: string
+                        description: 文件名称
+                      fileType:
+                        type: integer
+                        format: int32
+                        description: 文件类型 2-拆单附件
+                      fileUrl:
+                        type: string
+                        description: 文件Url
+                      picName:
+                        type: string
+                        description: 图片名称
+                      picUrl:
+                        type: string
+                        description: 图片Url
+                    required:
+                    - fileName
+                    - fileType
+                    - fileUrl
+              example:
+                msg: ''
+                code: 0
+                data:
+                - fileName: ''
+                  picName: ''
+                  picUrl: ''
+                  fileUrl: ''
+                  fileType: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getBreakFileMaterial:
+    post:
+      operationId: apiV1DmsOrderGetBreakFileMaterial
+      summary: 查询拆单物料接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547480471601274953
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderNo:
+                  type: string
+                  description: 生产单号
+                id:
+                  type: integer
+                  format: int64
+                  description: 唯一id
+            example:
+              orderNo: ''
+              id: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      actualLength:
+                        type: number
+                        format: double
+                        description: '开料尺寸长: 扣减了两边封边的尺寸'
+                      actualWidth:
+                        type: number
+                        format: double
+                        description: '开料尺寸宽: 扣减了两边封边的尺寸'
+                      basicMaterial:
+                        type: string
+                        description: 基材
+                      cabinetName:
+                        type: string
+                        description: 柜体名称
+                      cabinetNo:
+                        type: string
+                        description: 柜体编号
+                      cabinetPanelNo:
+                        type: string
+                        description: 柜子板件序号
+                      cabinetUid:
+                        type: string
+                        description: 柜体uid
+                      craftMark:
+                        type: string
+                        description: 工艺备注
+                      doorDirection:
+                        type: string
+                        description: 开门方向
+                      grain:
+                        type: string
+                        description: 板件纹理
+                      id:
+                        type: string
+                        description: 物料id
+                      isAccurate:
+                        type: string
+                        description: 是否异型
+                      length:
+                        type: number
+                        format: double
+                        description: 板件原始长
+                      materialColor:
+                        type: string
+                        description: 主材颜色
+                      materialName:
+                        type: string
+                        description: 物料名称
+                      materialNo:
+                        type: string
+                        description: 物料编号
+                      materialType:
+                        type: integer
+                        format: int32
+                        description: 物料类型 0板件 1门板 4五金
+                      num:
+                        type: number
+                        format: double
+                        description: 数量
+                      produceOrderNo:
+                        type: string
+                        description: 生产单号
+                      style:
+                        type: string
+                        description: 五金规格
+                      subType:
+                        type: string
+                        description: 2级子属性
+                      thickness:
+                        type: number
+                        format: double
+                        description: 厚
+                      type:
+                        type: string
+                        description: 类型
+                      uid:
+                        type: string
+                        description: 物料uid
+                      unit:
+                        type: string
+                        description: 单位
+                      width:
+                        type: number
+                        format: double
+                        description: 板件原始宽
+                    required:
+                    - cabinetName
+                    - cabinetNo
+                    - cabinetUid
+                    - id
+                    - materialName
+                    - materialType
+                    - num
+                    - produceOrderNo
+                    - uid
+              example:
+                msg: ''
+                code: 0
+                data:
+                - craftMark: ''
+                  thickness: 0
+                  materialNo: ''
+                  num: 0
+                  materialColor: ''
+                  type: ''
+                  basicMaterial: ''
+                  produceOrderNo: ''
+                  uid: ''
+                  doorDirection: ''
+                  isAccurate: ''
+                  grain: ''
+                  id: ''
+                  actualLength: 0
+                  cabinetName: ''
+                  actualWidth: 0
+                  materialType: 0
+                  cabinetUid: ''
+                  length: 0
+                  cabinetPanelNo: ''
+                  cabinetNo: ''
+                  materialName: ''
+                  unit: ''
+                  width: 0
+                  style: ''
+                  subType: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getMetalPage:
+    post:
+      operationId: apiV1DmsOrderGetMetalPage
+      summary: 分页查询五金列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547482025343442960
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isPack:
+                  type: boolean
+                  description: 是否打包
+                  examples:
+                  - 'true'
+                orderNo:
+                  type: string
+                  description: 生产单号
+                category:
+                  type: string
+                  description: 板件分类
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                idOrPartName:
+                  type: string
+                  description: 板件id或者板件名称
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+              required:
+              - orderNo
+              - current
+              - size
+            example:
+              orderNo: ''
+              isPack: true
+              current: 0
+              size: 0
+              category: ''
+              idOrPartName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            cabinetName:
+                              type: string
+                              description: 柜子名称
+                            category:
+                              type: string
+                              description: 分类
+                            craftMark:
+                              type: string
+                              description: 生产备注
+                            id:
+                              type: string
+                              description: id
+                            isPack:
+                              type: boolean
+                              description: 是否包装
+                            num:
+                              type: number
+                              format: double
+                              description: 数量
+                            packID:
+                              type: string
+                              description: 包装ID
+                            packNo:
+                              type: string
+                              description: 包装条码
+                            packSeq:
+                              type: string
+                              description: 包装序号
+                            packType:
+                              type: integer
+                              format: int32
+                              description: 包装类型 0板件 1五金
+                            partHeight:
+                              type: number
+                              format: double
+                              description: 高
+                            partLength:
+                              type: number
+                              format: double
+                              description: 长
+                            partName:
+                              type: string
+                              description: 五金名称
+                            partNumber:
+                              type: string
+                              description: 五金料号
+                            partWidth:
+                              type: number
+                              format: double
+                              description: 宽
+                            seq:
+                              type: integer
+                              format: int32
+                              description: 序号
+                            style:
+                              type: string
+                              description: 规格
+                            subType:
+                              type: string
+                              description: 五金子类
+                            unit:
+                              type: string
+                              description: 单位
+                          required:
+                          - id
+                          - isPack
+                          - num
+                          - packType
+                          - partName
+                          - seq
+                        description: 五金数据
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - cabinetName: ''
+                    packSeq: ''
+                    partLength: 0
+                    craftMark: ''
+                    isPack: false
+                    partWidth: 0
+                    num: 0
+                    packType: 0
+                    partName: ''
+                    packID: ''
+                    unit: ''
+                    partNumber: ''
+                    style: ''
+                    subType: ''
+                    id: ''
+                    category: ''
+                    packNo: ''
+                    seq: 0
+                    partHeight: 0
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getPackagePage:
+    post:
+      operationId: apiV1DmsOrderGetPackagePage
+      summary: 分页查询包装列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547482710155845634
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deliveryNo:
+                  type: string
+                  description: 发货单号
+                orderNo:
+                  type: string
+                  description: 生产单号
+                packNo:
+                  type: string
+                  description: 包装编号
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                packStates:
+                  type: array
+                  items: {}
+                  description: 包装状态数组
+                packType:
+                  type: integer
+                  format: int32
+                  description: 包类型
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+              required:
+              - current
+              - size
+            example:
+              orderNo: ''
+              deliveryNo: ''
+              packType: 0
+              packStates: []
+              current: 0
+              size: 0
+              packNo: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            deliveryDate:
+                              type: string
+                              format: date-time
+                              description: 出库时间
+                            deliveryID:
+                              type: string
+                              description: 发货ID
+                            deliveryNo:
+                              type: string
+                              description: 出库单号
+                            deliveryUserName:
+                              type: string
+                              description: 出库人员名称
+                            isDelete:
+                              type: boolean
+                              description: 是否删除
+                            modifyDate:
+                              type: string
+                              format: date-time
+                              description: 最后更新时间
+                            packDate:
+                              type: string
+                              format: date-time
+                              description: 打包时间
+                            packID:
+                              type: string
+                              description: 包装ID
+                            packNo:
+                              type: string
+                              description: 包装条码
+                            packQty:
+                              type: integer
+                              format: int32
+                              description: 部件数量
+                            packSeq:
+                              type: string
+                              description: 包装序号
+                            packState:
+                              type: integer
+                              format: int32
+                              description: 包装状态 0已包装 1已入库 2已出库 3已发货
+                            packStateDesc:
+                              type: string
+                              description: 包装状态描述
+                            packType:
+                              type: integer
+                              format: int32
+                              description: 包装类型 0板件 1五金
+                            packTypeDesc:
+                              type: string
+                              description: 包装类型描述
+                            packUserName:
+                              type: string
+                              description: 打包人员名称
+                            storeArea:
+                              type: string
+                              description: 入库仓位
+                            storeDate:
+                              type: string
+                              format: date-time
+                              description: 入库时间
+                            storeUserName:
+                              type: string
+                              description: 打包人员名称
+                          required:
+                          - isDelete
+                          - modifyDate
+                          - packID
+                          - packNo
+                          - packQty
+                          - packSeq
+                          - packState
+                          - packStateDesc
+                          - packType
+                          - packTypeDesc
+                          - packUserName
+                        description: 包装数据
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - packTypeDesc: ''
+                    packSeq: ''
+                    modifyDate: ''
+                    isDelete: false
+                    deliveryNo: ''
+                    packType: 0
+                    packID: ''
+                    packState: 0
+                    deliveryID: ''
+                    deliveryUserName: ''
+                    packDate: ''
+                    packStateDesc: ''
+                    packQty: 0
+                    packUserName: ''
+                    storeUserName: ''
+                    deliveryDate: ''
+                    storeDate: ''
+                    packNo: ''
+                    storeArea: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getPanelPage:
+    post:
+      operationId: apiV1DmsOrderGetPanelPage
+      summary: 分页查询板件列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547482710155845632
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: 板件分类
+                idOrPartName:
+                  type: string
+                  description: 板件id或名称
+                isPack:
+                  type: boolean
+                  description: 是否打包
+                orderNo:
+                  type: string
+                  description: 生产单号
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+              required:
+              - orderNo
+              - current
+              - size
+            example:
+              orderNo: ''
+              isPack: false
+              current: 0
+              size: 0
+              category: ''
+              idOrPartName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            actualLength:
+                              type: number
+                              format: double
+                              description: 成型长
+                            actualWidth:
+                              type: number
+                              format: double
+                              description: 成型宽
+                            basicMaterial:
+                              type: string
+                              description: 基材
+                            cabinetName:
+                              type: string
+                              description: 柜体名称
+                            category:
+                              type: string
+                              description: 分类
+                            id:
+                              type: string
+                              description: id
+                            isPack:
+                              type: boolean
+                              description: 是否包装
+                            material:
+                              type: string
+                              description: 颜色
+                            packID:
+                              type: string
+                              description: 包装ID
+                            packNo:
+                              type: string
+                              description: 包装条码
+                            packSeq:
+                              type: string
+                              description: 包装序号
+                            packType:
+                              type: integer
+                              format: int32
+                              description: 包装类型 0板件 1五金
+                            partLength:
+                              type: number
+                              format: double
+                              description: 长
+                            partName:
+                              type: string
+                              description: 板件名称
+                            partNumber:
+                              type: string
+                              description: 板件料号
+                            partWidth:
+                              type: number
+                              format: double
+                              description: 宽
+                            seq:
+                              type: integer
+                              format: int32
+                              description: 序号
+                            thickness:
+                              type: number
+                              format: double
+                              description: 厚
+                          required:
+                          - isPack
+                          - packType
+                          - partName
+                          - seq
+                        description: 板件数据
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - actualLength: 0
+                    cabinetName: ''
+                    packSeq: ''
+                    partLength: 0
+                    isPack: false
+                    actualWidth: 0
+                    partWidth: 0
+                    thickness: 0
+                    packType: 0
+                    basicMaterial: ''
+                    partName: ''
+                    packID: ''
+                    material: ''
+                    partNumber: ''
+                    id: ''
+                    category: ''
+                    packNo: ''
+                    seq: 0
+                  total: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getProduceOrderList:
+    post:
+      operationId: apiV1DmsOrderGetProduceOrderList
+      summary: 查询生产单列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547479887989043272
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchNo:
+                  type: string
+                  description: 批次号匹配
+                beginDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-开始时间
+                  examples:
+                  - '2025-01-01 00:00:00'
+                breakUserCode:
+                  type: string
+                  description: 拆单人编码
+                channelCode:
+                  type: string
+                  description: 门店编码
+                createUserCode:
+                  type: string
+                  description: 创建人编码
+                customerName:
+                  type: string
+                  description: 客户名称匹配
+                customerPhone:
+                  type: string
+                  description: 客户电话匹配
+                diyOrderNo:
+                  type: string
+                  description: 自定义单号
+                endDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-结束时间
+                  examples:
+                  - '2025-02-01 00:00:00'
+                id:
+                  type: integer
+                  format: int64
+                  description: 生产单唯一id
+                ids:
+                  type: array
+                  items: {}
+                  description: 生产单唯一id数组
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除
+                orderName:
+                  type: string
+                  description: 生产单名称
+                orderNo:
+                  type: string
+                  description: 生产单号
+                orderNoMatch:
+                  type: string
+                  description: 生产单号匹配
+                orderNos:
+                  type: array
+                  items: {}
+                  description: 生产单号数组
+                orderStates:
+                  type: array
+                  items: {}
+                  description: 生产单状态数组
+                orderType:
+                  type: integer
+                  format: int32
+                  description: 订单分类
+                patchReasons:
+                  type: array
+                  items: {}
+                  description: 补单原因数组
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                sourceOrderNo:
+                  type: string
+                  description: 原订单号
+                submitBeginDate:
+                  type: string
+                  format: date-time
+                  description: 提交时间-开始时间
+                submitEndDate:
+                  type: string
+                  format: date-time
+                  description: 提交时间-结束时间
+            example:
+              orderType: 0
+              batchNo: ''
+              orderNo: ''
+              endDate: '2025-02-01 00:00:00'
+              isDelete: 0
+              createUserCode: ''
+              breakUserCode: ''
+              submitEndDate: ''
+              customerName: ''
+              diyOrderNo: ''
+              beginDate: '2025-01-01 00:00:00'
+              customerPhone: ''
+              orderNos: []
+              saleBillNo: ''
+              ids: []
+              orderNoMatch: ''
+              orderStates: []
+              submitBeginDate: ''
+              patchReasons: []
+              id: 0
+              sourceOrderNo: ''
+              channelCode: ''
+              orderName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      batchNo:
+                        type: string
+                        description: 批次编号
+                      breakUserName:
+                        type: string
+                        description: 拆单人员
+                      channelID:
+                        type: string
+                        description: 门店编码
+                      channelSalesMan:
+                        type: string
+                        description: 门店业务员
+                      consigneeAddr:
+                        type: string
+                        description: 收货人地址
+                      consigneeName:
+                        type: string
+                        description: 收货人名称
+                      consigneePhone:
+                        type: string
+                        description: 收货人电话
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      customerAddr:
+                        type: string
+                        description: 客户地址
+                      customerID:
+                        type: string
+                        description: 客户编码
+                      customerName:
+                        type: string
+                        description: 客户名称
+                      customerPhone:
+                        type: string
+                        description: 客户电话
+                      diyOrderNo:
+                        type: string
+                        description: 自定义单号
+                      id:
+                        type: integer
+                        format: int64
+                        description: 生产单唯一id
+                      mainMaterial:
+                        type: string
+                        description: 材质颜色
+                      modifyDate:
+                        type: string
+                        format: date-time
+                        description: 修改时间
+                      orderArea:
+                        type: number
+                        format: bigdecimal
+                        description: 拆单面积
+                      orderDesc:
+                        type: string
+                        description: 订单备注
+                      orderName:
+                        type: string
+                        description: 订单名称
+                      orderNo:
+                        type: string
+                        description: 生产单号
+                      orderRoom:
+                        type: integer
+                        format: int32
+                        description: 订单空间
+                      orderState:
+                        type: integer
+                        format: int32
+                        description: 订单状态
+                      orderType:
+                        type: integer
+                        format: int32
+                        description: 订单类型
+                      patchReason:
+                        type: integer
+                        format: int32
+                        description: 补单原因
+                      saleBillName:
+                        type: string
+                        description: 销售单名称
+                      saleBillNo:
+                        type: string
+                        description: 销售单号
+                      sourceOrderNo:
+                        type: string
+                        description: 原订单号
+                      submitDate:
+                        type: string
+                        format: date-time
+                        description: 提交时间
+                      urgent:
+                        type: integer
+                        format: int32
+                        description: 加急等级
+                    required:
+                    - channelID
+                    - id
+                    - orderName
+                    - orderNo
+                    - orderState
+                    - orderType
+                    - saleBillNo
+              example:
+                msg: ''
+                code: 0
+                data:
+                - mainMaterial: ''
+                  orderType: 0
+                  patchReason: 0
+                  channelSalesMan: ''
+                  submitDate: ''
+                  customerAddr: ''
+                  diyOrderNo: ''
+                  orderState: 0
+                  consigneeName: ''
+                  customerPhone: ''
+                  saleBillNo: ''
+                  saleBillName: ''
+                  consigneePhone: ''
+                  id: 0
+                  orderArea: 0
+                  urgent: 0
+                  orderDesc: ''
+                  createDate: ''
+                  orderName: ''
+                  orderRoom: 0
+                  batchNo: ''
+                  orderNo: ''
+                  consigneeAddr: ''
+                  modifyDate: ''
+                  customerName: ''
+                  breakUserName: ''
+                  customerID: ''
+                  sourceOrderNo: ''
+                  channelID: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/getProduceOrderPage:
+    post:
+      operationId: apiV1DmsOrderGetProduceOrderPage
+      summary: 分页查询生产单接口【旧】
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547480471601274951
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                orderNo:
+                  type: string
+                  description: 生产单号
+                orderState:
+                  type: integer
+                  format: int32
+                  description: 生产单状态 0-已创建 1-已分配 2-已拆单 3-生产中 9-已包装 4-已入库 5-已发货 6-已安装 7-已完成 8-已关闭
+                orderType:
+                  type: integer
+                  format: int32
+                  description: 生产单类型 0-生产单 1-生产补单
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 第几页
+                  examples:
+                  - '1'
+                  default: '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 每页条数
+                  examples:
+                  - '10'
+                  default: '10'
+                saleBillName:
+                  type: string
+                  description: 销售单名称
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                beginDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-开始时间
+                endDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-结束时间
+            example:
+              orderType: 0
+              orderNo: ''
+              endDate: ''
+              pageSize: 10
+              customerName: ''
+              orderState: 0
+              beginDate: ''
+              customerPhone: ''
+              pageIndex: 1
+              saleBillNo: ''
+              saleBillName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            breakUserName:
+                              type: string
+                              description: 拆单员名称
+                            channelID:
+                              type: string
+                              description: 门店编码
+                            channelSalesMan:
+                              type: string
+                              description: 门店业务员
+                            consigneeAddr:
+                              type: string
+                              description: 收货人地址
+                            consigneeName:
+                              type: string
+                              description: 收货人名称
+                            consigneePhone:
+                              type: string
+                              description: 收货人电话
+                            customerAddr:
+                              type: string
+                              description: 客户地址
+                            customerName:
+                              type: string
+                              description: 客户名称
+                            customerPhone:
+                              type: string
+                              description: 客户电话
+                            diyOrderNo:
+                              type: string
+                              description: 自定义单号
+                            modifyDate:
+                              type: string
+                              format: date-time
+                              description: 最后修改时间
+                            orderArea:
+                              type: number
+                              format: bigdecimal
+                              description: 拆单面积
+                            orderDesc:
+                              type: string
+                              description: 订单备注
+                            orderName:
+                              type: string
+                              description: 订单名称
+                            orderNo:
+                              type: string
+                              description: 生产单号
+                            orderRoom:
+                              type: integer
+                              format: int32
+                              description: 所属空间 0-未填写 1-主卧 2-客卧 3-厨房 4-客厅 5-餐厅 6-主卫 7-次卫 8-阳台
+                            orderRoomDesc:
+                              type: string
+                              description: 所属空间描述
+                            orderState:
+                              type: integer
+                              format: int32
+                              description: 订单状态 0-已创建 1-已分配 2-已拆单 3-生产中 9-已包装 4-已入库 5-已发货 6-已安装 7-已完成 8-已关闭
+                            orderStateDesc:
+                              type: string
+                              description: 订单状态描述
+                            orderType:
+                              type: integer
+                              format: int32
+                              description: 订单类型 0常规单 1补单
+                            organID:
+                              type: string
+                              description: 企业编码
+                            patchQty:
+                              type: integer
+                              format: int32
+                              description: 补单次数
+                            patchReason:
+                              type: integer
+                              format: int32
+                              description: 补单原因 0未填写 1设计错误 2审核错误 3生产错误 4运输损坏 5安装损坏 6客户新增
+                            saleBillName:
+                              type: string
+                              description: 销售单名称
+                            saleBillNo:
+                              type: string
+                              description: 销售单号
+                            sourceOrderNo:
+                              type: string
+                              description: 原订单号
+                            submitDate:
+                              type: string
+                              format: date-time
+                              description: 提交时间
+                            urgent:
+                              type: integer
+                              format: int32
+                              description: 订单标签 0常规 1加急 2追加
+                          required:
+                          - channelID
+                          - channelSalesMan
+                          - orderName
+                          - orderNo
+                          - orderRoom
+                          - orderRoomDesc
+                          - orderState
+                          - orderStateDesc
+                          - orderType
+                          - organID
+                          - saleBillName
+                          - saleBillNo
+                        description: 分页获取生产单信息
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  result:
+                  - orderType: 0
+                    patchReason: 0
+                    channelSalesMan: ''
+                    orderRoomDesc: ''
+                    submitDate: ''
+                    customerAddr: ''
+                    diyOrderNo: ''
+                    orderState: 0
+                    consigneeName: ''
+                    customerPhone: ''
+                    saleBillNo: ''
+                    saleBillName: ''
+                    consigneePhone: ''
+                    organID: ''
+                    orderArea: 0
+                    patchQty: 0
+                    urgent: 0
+                    orderDesc: ''
+                    orderName: ''
+                    orderRoom: 0
+                    orderNo: ''
+                    consigneeAddr: ''
+                    modifyDate: ''
+                    customerName: ''
+                    breakUserName: ''
+                    orderStateDesc: ''
+                    sourceOrderNo: ''
+                    channelID: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/pageProduceOrder:
+    post:
+      operationId: apiV1DmsOrderPageProduceOrder
+      summary: 分页查询生产单【新】
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=730385781520220234
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchNo:
+                  type: string
+                  description: 批次号匹配
+                beginDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-开始时间
+                breakUserCode:
+                  type: string
+                  description: 拆单人编码
+                channelCode:
+                  type: string
+                  description: 门店编码
+                createUserCode:
+                  type: string
+                  description: 创建人编码
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                customerName:
+                  type: string
+                  description: 客户名称匹配
+                customerPhone:
+                  type: string
+                  description: 客户电话匹配
+                diyOrderNo:
+                  type: string
+                  description: 自定义单号
+                endDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-结束时间
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除
+                orderMatch:
+                  type: string
+                  description: 生产单匹配 [生产单号,生产单名称,自定义单号,客户名称]
+                orderName:
+                  type: string
+                  description: 生产单名称
+                orderNo:
+                  type: string
+                  description: 生产单号
+                orderNoMatch:
+                  type: string
+                  description: 生产单号匹配
+                orderNos:
+                  type: array
+                  items: {}
+                  description: 生产单号数组
+                orderStates:
+                  type: array
+                  items: {}
+                  description: 生产单状态数组
+                orderType:
+                  type: integer
+                  format: int32
+                  description: 订单类型
+                patchReasons:
+                  type: array
+                  items: {}
+                  description: 补单原因数组
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                saleBillNoMatch:
+                  type: string
+                  description: 销售单号匹配
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                sourceOrderNo:
+                  type: string
+                  description: 原订单号
+                submitBeginDate:
+                  type: string
+                  format: date-time
+                  description: 提交时间-开始时间
+                submitEndDate:
+                  type: string
+                  format: date-time
+                  description: 提交时间-结束时间
+              required:
+              - current
+              - size
+            example:
+              orderType: 0
+              endDate: ''
+              diyOrderNo: ''
+              current: 0
+              customerPhone: ''
+              saleBillNoMatch: ''
+              saleBillNo: ''
+              orderMatch: ''
+              orderNoMatch: ''
+              orderStates: []
+              channelCode: ''
+              orderName: ''
+              batchNo: ''
+              orderNo: ''
+              isDelete: 0
+              createUserCode: ''
+              breakUserCode: ''
+              submitEndDate: ''
+              customerName: ''
+              beginDate: ''
+              size: 0
+              orderNos: []
+              submitBeginDate: ''
+              patchReasons: []
+              sourceOrderNo: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            batchNo:
+                              type: string
+                              description: 批次编号
+                            breakUserName:
+                              type: string
+                              description: 拆单人员
+                            channelID:
+                              type: string
+                              description: 门店编码
+                            channelSalesMan:
+                              type: string
+                              description: 门店业务员
+                            consigneeAddr:
+                              type: string
+                              description: 收货人地址
+                            consigneeName:
+                              type: string
+                              description: 收货人名称
+                            consigneePhone:
+                              type: string
+                              description: 收货人电话
+                            createDate:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            customerAddr:
+                              type: string
+                              description: 客户地址
+                            customerID:
+                              type: string
+                              description: 客户编码
+                            customerName:
+                              type: string
+                              description: 客户名称
+                            customerPhone:
+                              type: string
+                              description: 客户电话
+                            diyOrderNo:
+                              type: string
+                              description: 自定义单号
+                            id:
+                              type: integer
+                              format: int64
+                              description: 生产单唯一id
+                            mainMaterial:
+                              type: string
+                              description: 材质颜色
+                            modifyDate:
+                              type: string
+                              format: date-time
+                              description: 修改时间
+                            orderArea:
+                              type: number
+                              format: bigdecimal
+                              description: 拆单面积
+                            orderDesc:
+                              type: string
+                              description: 订单备注
+                            orderName:
+                              type: string
+                              description: 订单名称
+                            orderNo:
+                              type: string
+                              description: 生产单号
+                            orderRoom:
+                              type: integer
+                              format: int32
+                              description: 订单空间
+                            orderState:
+                              type: integer
+                              format: int32
+                              description: 订单状态
+                            orderType:
+                              type: integer
+                              format: int32
+                              description: 订单类型
+                            patchQty:
+                              type: integer
+                              format: int32
+                              description: 补单次数
+                            patchReason:
+                              type: integer
+                              format: int32
+                              description: 补单原因
+                            saleBillName:
+                              type: string
+                              description: 销售单名称
+                            saleBillNo:
+                              type: string
+                              description: 销售单号
+                            sourceOrderNo:
+                              type: string
+                              description: 原订单号
+                            submitDate:
+                              type: string
+                              format: date-time
+                              description: 提交时间
+                            urgent:
+                              type: integer
+                              format: int32
+                              description: 加急层级
+                          required:
+                          - channelID
+                          - id
+                          - orderName
+                          - orderNo
+                          - orderState
+                          - orderType
+                          - saleBillNo
+                        description: 生产单信息
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - mainMaterial: ''
+                    orderType: 0
+                    patchReason: 0
+                    channelSalesMan: ''
+                    submitDate: ''
+                    customerAddr: ''
+                    diyOrderNo: ''
+                    orderState: 0
+                    consigneeName: ''
+                    customerPhone: ''
+                    saleBillNo: ''
+                    saleBillName: ''
+                    consigneePhone: ''
+                    id: 0
+                    orderArea: 0
+                    patchQty: 0
+                    urgent: 0
+                    orderDesc: ''
+                    createDate: ''
+                    orderName: ''
+                    orderRoom: 0
+                    batchNo: ''
+                    orderNo: ''
+                    consigneeAddr: ''
+                    modifyDate: ''
+                    customerName: ''
+                    breakUserName: ''
+                    customerID: ''
+                    sourceOrderNo: ''
+                    channelID: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/order/updateProduceOrderState:
+    post:
+      operationId: apiV1DmsOrderUpdateProduceOrderState
+      summary: 更新生产单状态接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547479887989043270
+      x-documentation-category: DMS系统 / 生产单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderNo:
+                  type: string
+                  description: 生产单号
+                orderState:
+                  type: integer
+                  format: int32
+                  description: 生产单状态 0-已创建 1-已分配 2-已拆单 3-生产中 9-已包装 4-已入库 5-已发货 6-已安装 7-已完成 8-已关闭
+                  examples:
+                  - '2'
+                ids:
+                  type: array
+                  items: {}
+                  description: 唯一id数组
+                remark:
+                  type: string
+                  description: 备注信息
+              required:
+              - orderState
+            example:
+              orderNo: ''
+              remark: ''
+              orderState: 2
+              ids: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/createSaleBill:
+    post:
+      operationId: apiV1DmsSaleBillCreateSaleBill
+      summary: 创建销售单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547475842985484322
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consigneeAddr:
+                  type: string
+                  description: 收货人地址
+                consigneeName:
+                  type: string
+                  description: 收货人名称
+                consigneePhone:
+                  type: string
+                  description: 收货人电话
+                customerAddr:
+                  type: string
+                  description: 客户地址
+                customerID:
+                  type: string
+                  description: 客户编码
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                fileList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      designerName:
+                        type: string
+                        description: 设计人员
+                      fileName:
+                        type: string
+                        description: 文件名称(带后缀)
+                      fileType:
+                        type: integer
+                        format: int32
+                        description: 文件类型 1设计文件，2拆单文件（拆单文件），3拆单方案
+                        examples:
+                        - '0'
+                        default: '0'
+                      fileUrl:
+                        type: string
+                        description: 文件链接
+                      pictureName:
+                        type: string
+                        description: 图片名称
+                      pictureUrl:
+                        type: string
+                        description: 图片链接
+                    required:
+                    - fileName
+                    - fileType
+                    - fileUrl
+                  description: 销售单附件列表
+                promiseDate:
+                  type: string
+                  format: date-time
+                  description: 承诺时间
+                saleBillName:
+                  type: string
+                  description: 销售单名称
+                saleBillRemark:
+                  type: string
+                  description: 销售单备注
+                saleBillState:
+                  type: integer
+                  format: int32
+                  description: 销售单状态 0-未提交 1-已提交 2-已签收 3-已退回
+                  examples:
+                  - '1'
+                  default: '1'
+                urgent:
+                  type: integer
+                  format: int32
+                  description: 加急等级 0-常规,1-加急,2-追加
+                  examples:
+                  - '0'
+                  default: '0'
+                channelID:
+                  type: string
+                  description: 门店编码
+                channelName:
+                  type: string
+                  description: 门店名称
+                deliverDate:
+                  type: string
+                  format: date-time
+                  description: 工厂发货时间
+                id:
+                  type: integer
+                  format: int64
+                  description: 唯一id
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+              required:
+              - customerAddr
+              - customerName
+              - customerPhone
+            example:
+              promiseDate: ''
+              consigneeAddr: ''
+              saleBillRemark: ''
+              customerAddr: ''
+              customerName: ''
+              consigneeName: ''
+              customerPhone: ''
+              saleBillNo: ''
+              saleBillName: ''
+              saleBillState: 1
+              customerID: ''
+              consigneePhone: ''
+              channelName: ''
+              deliverDate: ''
+              id: 0
+              urgent: 0
+              fileList:
+              - fileName: ''
+                pictureUrl: ''
+                pictureName: ''
+                designerName: ''
+                fileUrl: ''
+                fileType: 0
+              channelID: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      channelName:
+                        type: string
+                        description: 门店名称
+                      consigneeAddr:
+                        type: string
+                        description: 收货人地址
+                      consigneeName:
+                        type: string
+                        description: 收货人名称
+                      consigneePhone:
+                        type: string
+                        description: 收货人电话
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      createUserName:
+                        type: string
+                        description: 创建人员名称
+                      customerAddr:
+                        type: string
+                        description: 客户地址
+                      customerID:
+                        type: string
+                        description: 客户ID
+                      customerName:
+                        type: string
+                        description: 客户名称
+                      customerPhone:
+                        type: string
+                        description: 客户电话
+                      payState:
+                        type: integer
+                        format: int32
+                        description: 收款状态 0-有尾款 1-无尾款 2-未收款
+                      promiseDate:
+                        type: string
+                        format: date-time
+                        description: 承诺时间
+                      receiveDate:
+                        type: string
+                        format: date-time
+                        description: 签收时间
+                      receiveUserName:
+                        type: string
+                        description: 签收人员名称
+                      saleBillName:
+                        type: string
+                        description: 销售单名称
+                      saleBillNo:
+                        type: string
+                        description: 销售单号
+                      saleBillRemark:
+                        type: string
+                        description: 备注
+                      saleBillState:
+                        type: integer
+                        format: int32
+                        description: 销售单状态 0-未提交 1-已提交 2-已签收 3-已退回
+                      urgent:
+                        type: integer
+                        format: int32
+                        description: 销售单标签 0常规 1加急 2追加
+                      channelID:
+                        type: string
+                        description: 门店编码
+                      createUserCode:
+                        type: string
+                        description: 创建用户编码
+                      deliverDate:
+                        type: string
+                        format: date-time
+                        description: 工厂发货时间
+                      id:
+                        type: integer
+                        format: int64
+                        description: 唯一id
+                      isDelete:
+                        type: boolean
+                        description: 是否删除
+                      receiveUserCode:
+                        type: string
+                        description: 签收用户编码
+                    required:
+                    - createDate
+                    - createUserName
+                    - customerID
+                    - payState
+                    - saleBillName
+                    - saleBillNo
+                    - saleBillState
+                    - channelID
+                    - createUserCode
+                    - id
+              example:
+                msg: ''
+                code: 0
+                data:
+                  promiseDate: ''
+                  createUserName: ''
+                  payState: 0
+                  saleBillRemark: ''
+                  customerAddr: ''
+                  consigneeName: ''
+                  customerPhone: ''
+                  receiveUserCode: ''
+                  saleBillNo: ''
+                  saleBillName: ''
+                  saleBillState: 0
+                  consigneePhone: ''
+                  deliverDate: ''
+                  id: 0
+                  urgent: 0
+                  createDate: ''
+                  consigneeAddr: ''
+                  isDelete: false
+                  createUserCode: ''
+                  receiveDate: ''
+                  receiveUserName: ''
+                  customerName: ''
+                  customerID: ''
+                  channelName: ''
+                  channelID: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/deleteSaleBill:
+    post:
+      operationId: apiV1DmsSaleBillDeleteSaleBill
+      summary: 删除销售单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547476847202525219
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                remark:
+                  type: string
+                  description: 备注
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                id:
+                  type: integer
+                  format: int64
+                  description: 唯一id
+                ids:
+                  type: array
+                  items: {}
+                  description: 唯一id数组
+                saleBillNos:
+                  type: array
+                  items: {}
+                  description: 销售单号数组
+            example:
+              remark: ''
+              saleBillNo: ''
+              saleBillNos: []
+              ids: []
+              id: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/editSaleBill:
+    post:
+      operationId: apiV1DmsSaleBillEditSaleBill
+      summary: 编辑销售单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547475842985484324
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelID:
+                  type: string
+                  description: 门店编码
+                consigneeAddr:
+                  type: string
+                  description: 收货人地址
+                consigneeName:
+                  type: string
+                  description: 收货人名称
+                consigneePhone:
+                  type: string
+                  description: 收货人电话
+                customerAddr:
+                  type: string
+                  description: 客户地址
+                customerID:
+                  type: string
+                  description: 客户编码
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                fileList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      designerName:
+                        type: string
+                        description: 设计人员
+                      fileName:
+                        type: string
+                        description: 文件名称(带后缀)
+                      fileType:
+                        type: integer
+                        format: int32
+                        description: 文件类型 1设计文件，2拆单文件（拆单文件），3拆单方案
+                      fileUrl:
+                        type: string
+                        description: 文件链接
+                      pictureName:
+                        type: string
+                        description: 图片名称
+                      pictureUrl:
+                        type: string
+                        description: 图片链接
+                    required:
+                    - fileName
+                    - fileType
+                    - fileUrl
+                  description: 销售单附件列表
+                promiseDate:
+                  type: string
+                  format: date-time
+                  description: 承诺时间
+                saleBillName:
+                  type: string
+                  description: 销售单名称
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                saleBillRemark:
+                  type: string
+                  description: 销售单备注
+                saleBillState:
+                  type: integer
+                  format: int32
+                  description: 销售单状态 0-未提交 1-已提交 2-已签收 3-已退回
+                urgent:
+                  type: integer
+                  format: int32
+                  description: 加急等级 0-普通,1-加急,2-追加
+                channelName:
+                  type: string
+                  description: 门店名称
+                deliverDate:
+                  type: string
+                  format: date-time
+                  description: 工厂发货时间
+                id:
+                  type: integer
+                  format: int64
+                  description: 唯一id
+              required:
+              - customerAddr
+              - customerName
+              - customerPhone
+              - saleBillName
+              - saleBillNo
+            example:
+              promiseDate: ''
+              consigneeAddr: ''
+              saleBillRemark: ''
+              customerAddr: ''
+              customerName: ''
+              consigneeName: ''
+              customerPhone: ''
+              saleBillNo: ''
+              saleBillName: ''
+              saleBillState: 0
+              customerID: ''
+              consigneePhone: ''
+              channelName: ''
+              deliverDate: ''
+              id: 0
+              urgent: 0
+              channelID: ''
+              fileList:
+              - fileName: ''
+                pictureUrl: ''
+                pictureName: ''
+                designerName: ''
+                fileUrl: ''
+                fileType: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/getQuoteItemList:
+    post:
+      operationId: apiV1DmsSaleBillGetQuoteItemList
+      summary: 查询报价的明细数据接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547485107934589000
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isDelete:
+                  type: boolean
+                  description: 是否删除 0-否 1-是
+                  examples:
+                  - '0'
+                  default: '0'
+                materialType:
+                  type: integer
+                  format: int32
+                  description: 物料类型 0-板件 1-门板 2-抽屉 3-拉手 4-五金
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                quoteId:
+                  type: integer
+                  format: int64
+                  description: 报价ID
+                schemeId:
+                  type: integer
+                  format: int64
+                  description: 方案ID
+            example:
+              isDelete: false
+              materialType: 0
+              schemeId: 0
+              quoteId: 0
+              saleBillNo: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      basicMaterial:
+                        type: string
+                        description: 基材颜色
+                      cabinetName:
+                        type: string
+                        description: 柜体名称
+                      cabinetNo:
+                        type: string
+                        description: 柜体编号
+                      isOutSource:
+                        type: boolean
+                        description: 是否外协 0否 1是
+                      length:
+                        type: number
+                        format: double
+                        description: 长
+                      materialColor:
+                        type: string
+                        description: 主材颜色
+                      materialName:
+                        type: string
+                        description: 物料名称
+                      materialNo:
+                        type: string
+                        description: 物料编号
+                      materialType:
+                        type: integer
+                        format: int32
+                        description: 物料类型 0板件 1门板 2抽屉 3拉手 4五金
+                      num:
+                        type: number
+                        format: double
+                        description: 数量
+                      produceOrderNo:
+                        type: string
+                        description: 生产单号
+                      quoteSeq:
+                        type: integer
+                        format: int32
+                        description: 序号
+                      remark:
+                        type: string
+                        description: 备注
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                      size:
+                        type: string
+                        description: 尺寸规格
+                      specPrice:
+                        type: number
+                        format: double
+                        description: 特殊加价
+                      thickness:
+                        type: number
+                        format: double
+                        description: 厚
+                      totalPrice:
+                        type: number
+                        format: double
+                        description: 总价
+                      unit:
+                        type: string
+                        description: 单位
+                      unitPrice:
+                        type: number
+                        format: double
+                        description: 单位价格
+                      width:
+                        type: number
+                        format: double
+                        description: 宽
+                    required:
+                    - basicMaterial
+                    - cabinetName
+                    - isOutSource
+                    - materialName
+                    - materialType
+                    - num
+                    - quoteSeq
+                    - schemeName
+                    - specPrice
+                    - totalPrice
+                    - unitPrice
+              example:
+                msg: ''
+                code: 0
+                data:
+                - unitPrice: 0
+                  cabinetName: ''
+                  isOutSource: false
+                  thickness: 0
+                  totalPrice: 0
+                  materialNo: ''
+                  materialType: 0
+                  num: 0
+                  length: 0
+                  materialColor: ''
+                  schemeName: ''
+                  remark: ''
+                  basicMaterial: ''
+                  specPrice: 0
+                  produceOrderNo: ''
+                  cabinetNo: ''
+                  materialName: ''
+                  unit: ''
+                  size: ''
+                  width: 0
+                  quoteSeq: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/getQuoteSchemeList:
+    post:
+      operationId: apiV1DmsSaleBillGetQuoteSchemeList
+      summary: 查询销售单最新报价接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547484177193361428
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isDelete:
+                  type: boolean
+                  description: 是否删除 0-否 1-是
+                  examples:
+                  - '0'
+                  default: '0'
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                quoteId:
+                  type: integer
+                  format: int64
+                  description: 报价id
+                schemeId:
+                  type: integer
+                  format: int64
+                  description: 方案id
+                schemeIds:
+                  type: array
+                  items: {}
+                  description: 方案id数组
+            example:
+              isDelete: false
+              schemeId: 0
+              quoteID: 0
+              quoteId: 0
+              schemeIDs: []
+              schemeIds: []
+              saleBillNo: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      createUserCode:
+                        type: string
+                        description: 创建人员账号
+                      createUserName:
+                        type: string
+                        description: 创建人员名称
+                      fileName:
+                        type: string
+                        description: 文件名称
+                      isDelete:
+                        type: boolean
+                        description: 是否删除 0否 1是
+                      isMergeMetal:
+                        type: boolean
+                        description: 是否合并五金 0否 1是
+                      materialColor:
+                        type: string
+                        description: 主材颜色
+                      materialFileUrl:
+                        type: string
+                        description: 报价物料文件
+                      modifyDate:
+                        type: string
+                        format: date-time
+                        description: 修改时间
+                      ossKey:
+                        type: string
+                        description: ossKey
+                      produceOrderNo:
+                        type: string
+                        description: 生产单号
+                      quoteName:
+                        type: string
+                        description: 报价名称
+                      quoteType:
+                        type: integer
+                        format: int32
+                        description: 报价类型 0类型报价 1柜体报价 2投影报价
+                      saleBillNo:
+                        type: string
+                        description: 销售单号
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                      totalPrice:
+                        type: number
+                        format: double
+                        description: 总价
+                      quoteId:
+                        type: integer
+                        format: int64
+                        description: 报价ID
+                      quoteSchemeId:
+                        type: integer
+                        format: int64
+                        description: 报价方案ID
+                      schemeId:
+                        type: integer
+                        format: int64
+                        description: 方案编号
+                    required:
+                    - createDate
+                    - createUserCode
+                    - createUserName
+                    - isDelete
+                    - isMergeMetal
+                    - materialFileUrl
+                    - modifyDate
+                    - quoteName
+                    - quoteType
+                    - saleBillNo
+                    - schemeName
+                    - totalPrice
+                    - quoteId
+                    - quoteSchemeId
+                    - schemeId
+              example:
+                msg: ''
+                code: 0
+                data:
+                - fileName: ''
+                  ossKey: ''
+                  isMergeMetal: false
+                  modifyDate: ''
+                  totalPrice: 0
+                  isDelete: false
+                  createUserCode: ''
+                  quoteSchemeId: 0
+                  materialColor: ''
+                  schemeName: ''
+                  createUserName: ''
+                  schemeId: 0
+                  quoteType: 0
+                  produceOrderNo: ''
+                  quoteId: 0
+                  saleBillNo: ''
+                  materialFileUrl: ''
+                  createDate: ''
+                  quoteName: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/getSaleBillFileList:
+    post:
+      operationId: apiV1DmsSaleBillGetSaleBillFileList
+      summary: 查询销售单附件列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547477774470864965
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                fileType:
+                  type: integer
+                  format: int32
+                  description: 文件类型
+                saleBillNos:
+                  type: array
+                  items: {}
+                  description: 销售单号数组
+              required:
+              - saleBillNo
+            example:
+              saleBillNo: ''
+              saleBillNos: []
+              fileType: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      createUserName:
+                        type: string
+                        description: 创建人员名称
+                      designerName:
+                        type: string
+                        description: 设计人员
+                      fileName:
+                        type: string
+                        description: 文件名称
+                      picName:
+                        type: string
+                        description: 图片名称
+                      picOssKey:
+                        type: string
+                        description: picOssKey
+                      createUserCode:
+                        type: string
+                        description: 创建用户编码
+                      fileType:
+                        type: integer
+                        format: int32
+                        description: 文件类型 0默认 1设计方案 2加工信息，3拆单方案
+                      id:
+                        type: integer
+                        format: int64
+                        description: 唯一id
+                      ossKey:
+                        type: string
+                        description: ossKey
+                      saleBillNo:
+                        type: string
+                        description: 销售单号
+                    required:
+                    - createDate
+                    - createUserName
+                    - fileName
+                    - id
+                    - saleBillNo
+              example:
+                msg: ''
+                code: 0
+                data:
+                - fileName: ''
+                  ossKey: ''
+                  createUserCode: ''
+                  createUserName: ''
+                  picName: ''
+                  designerName: ''
+                  saleBillNo: ''
+                  picOssKey: ''
+                  id: 0
+                  fileType: 0
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/getSaleBillNestingPage:
+    post:
+      operationId: apiV1DmsSaleBillGetSaleBillNestingPage
+      summary: 查询销售单大板预排接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547477774470864963
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                beginModifyDate:
+                  type: string
+                  description: 修改时间-开始时间
+                  examples:
+                  - '2021-12-01 00:00:00'
+                endModifyDate:
+                  type: string
+                  description: 修改时间-结束时间
+                  examples:
+                  - '2021-12-01 23:59:59'
+                isDelete:
+                  type: boolean
+                  description: 是否删除
+                  examples:
+                  - 'false'
+                  default: 'false'
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 第几页
+                  examples:
+                  - '1'
+                  default: '1'
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 每页条数
+                  examples:
+                  - '10'
+                  default: '10'
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+            example:
+              beginModifyDate: '2021-12-01 00:00:00'
+              isDelete: false
+              pageSize: 10
+              pageIndex: 1
+              saleBillNo: ''
+              endModifyDate: '2021-12-01 23:59:59'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            color:
+                              type: string
+                            createDate:
+                              type: string
+                              format: date-time
+                            createUserName:
+                              type: string
+                            id:
+                              type: integer
+                              format: int64
+                            isDelete:
+                              type: boolean
+                            material:
+                              type: string
+                            modifyDate:
+                              type: string
+                              format: date-time
+                            num:
+                              type: integer
+                              format: int32
+                            thickness:
+                              type: number
+                              format: double
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  result:
+                  - color: ''
+                    modifyDate: ''
+                    thickness: 0
+                    isDelete: false
+                    num: 0
+                    createUserName: ''
+                    material: ''
+                    id: 0
+                    createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/getSaleBillPage:
+    post:
+      operationId: apiV1DmsSaleBillGetSaleBillPage
+      summary: 分页查询销售单接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547477774470864961
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createUserCode:
+                  type: string
+                  description: 创建用户编码
+                customerID:
+                  type: string
+                  description: 客户编码
+                customerName:
+                  type: string
+                  description: 客户名称
+                customerPhone:
+                  type: string
+                  description: 客户电话
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除
+                  examples:
+                  - '0'
+                  default: '0'
+                saleBillName:
+                  type: string
+                  description: 销售单名称
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                beginDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-开始时间
+                channelCode:
+                  type: string
+                  description: 门店编码
+                customerMatch:
+                  type: string
+                  description: 客户匹配 [客户名称,客户电话]
+                endDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-结束时间
+                orderStates:
+                  type: array
+                  items: {}
+                  description: 生产单状态数组
+                saleBillMatch:
+                  type: string
+                  description: 销售单匹配 [销售单号,销售名称]
+                saleBillNos:
+                  type: array
+                  items: {}
+                  description: 销售单号数组
+                saleBillState:
+                  type: integer
+                  format: int32
+                  description: 销售单状态数组 0-未提交 1-已提交 2-已签收 3-已退回
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  examples:
+                  - '1'
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  examples:
+                  - '10'
+              required:
+              - current
+              - size
+            example:
+              saleBillMatch: ''
+              endDate: ''
+              isDelete: 0
+              createUserCode: ''
+              customerName: ''
+              beginDate: ''
+              customerPhone: ''
+              current: 1
+              customerMatch: ''
+              size: 10
+              saleBillNo: ''
+              saleBillNos: []
+              saleBillName: ''
+              saleBillState: 0
+              customerID: ''
+              orderStates: []
+              channelCode: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            channelID:
+                              type: string
+                              description: 门店编码
+                            channelName:
+                              type: string
+                              description: 门店名称
+                            channelSalesMan:
+                              type: string
+                              description: 业务员名称
+                            consigneeAddr:
+                              type: string
+                              description: 收货人地址
+                            consigneeName:
+                              type: string
+                              description: 收货人名称
+                            consigneePhone:
+                              type: string
+                              description: 收货人电话
+                            createDate:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            createUserCode:
+                              type: string
+                              description: 创建用户编码
+                            createUserName:
+                              type: string
+                              description: 创建用户名称
+                            customerAddr:
+                              type: string
+                              description: 客户地址
+                            customerID:
+                              type: string
+                              description: 客户编码
+                            customerName:
+                              type: string
+                              description: 客户名称
+                            customerPhone:
+                              type: string
+                              description: 客户电话
+                            deliverDate:
+                              type: string
+                              format: date-time
+                              description: 工厂发货时间
+                            id:
+                              type: integer
+                              format: int64
+                              description: 销售单唯一id
+                            isDelete:
+                              type: boolean
+                              description: 是否删除
+                            orderState:
+                              type: integer
+                              format: int32
+                              description: 生产单汇总状态
+                            payState:
+                              type: integer
+                              format: int32
+                              description: 付款状态
+                            promiseDate:
+                              type: string
+                              format: date-time
+                              description: 工厂承诺时间
+                            receiveDate:
+                              type: string
+                              format: date-time
+                              description: 签收时间
+                            receiveUserCode:
+                              type: string
+                              description: 签收用户编码
+                            receiveUserName:
+                              type: string
+                              description: 签收用户名称
+                            saleBillName:
+                              type: string
+                              description: 销售单名称
+                            saleBillNo:
+                              type: string
+                              description: 销售单号
+                            saleBillRemark:
+                              type: string
+                              description: 备注信息
+                            saleBillState:
+                              type: integer
+                              format: int32
+                              description: 销售单状态
+                            salesManID:
+                              type: string
+                              description: 业务员编码
+                            urgent:
+                              type: integer
+                              format: int32
+                              description: 加急等级
+                          required:
+                          - channelID
+                          - channelName
+                          - createDate
+                          - createUserCode
+                          - createUserName
+                          - id
+                          - saleBillName
+                          - saleBillNo
+                          - saleBillState
+                        description: 销售表信息
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - promiseDate: ''
+                    channelSalesMan: ''
+                    createUserName: ''
+                    payState: 0
+                    saleBillRemark: ''
+                    customerAddr: ''
+                    orderState: 0
+                    consigneeName: ''
+                    customerPhone: ''
+                    receiveUserCode: ''
+                    saleBillNo: ''
+                    saleBillName: ''
+                    saleBillState: 0
+                    consigneePhone: ''
+                    deliverDate: ''
+                    id: 0
+                    urgent: 0
+                    createDate: ''
+                    salesManID: ''
+                    consigneeAddr: ''
+                    isDelete: false
+                    createUserCode: ''
+                    receiveDate: ''
+                    receiveUserName: ''
+                    customerName: ''
+                    customerID: ''
+                    channelName: ''
+                    channelID: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/getSchemeList:
+    post:
+      operationId: apiV1DmsSaleBillGetSchemeList
+      summary: 查询销售单设计方案接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547484177193361430
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                produceOrderNo:
+                  type: string
+                  description: 生产单号
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                ids:
+                  type: array
+                  items: {}
+                  description: 方案id数组
+                id:
+                  type: integer
+                  format: int64
+                  description: 唯一id
+              required:
+              - saleBillNo
+            example:
+              produceOrderNo: ''
+              saleBillNo: ''
+              ids: []
+              id: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      breakUserName:
+                        type: string
+                        description: 拆单人员
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      createUserName:
+                        type: string
+                        description: 创建人员名称
+                      designState:
+                        type: integer
+                        format: int32
+                        description: 设计状态 0-设计中,1-已审核,2-已拆单,3-已废弃
+                      designerName:
+                        type: string
+                        description: 门店设计师
+                      materialColor:
+                        type: string
+                        description: 主材颜色
+                      materialPrice:
+                        type: number
+                        format: bigdecimal
+                        description: 板材预算
+                      modifyDate:
+                        type: string
+                        format: date-time
+                        description: 修改时间
+                      modifyUserName:
+                        type: string
+                        description: 修改人员名称
+                      picName:
+                        type: string
+                        description: 图片名称
+                      picOssKey:
+                        type: string
+                        description: 图片链接
+                      produceOrderNo:
+                        type: string
+                        description: 生产单号
+                      saleBillNo:
+                        type: string
+                        description: 销售单号
+                      fileName:
+                        type: string
+                        description: 方案名称
+                      fileOssKey:
+                        type: string
+                        description: 文件链接
+                      id:
+                        type: integer
+                        format: int64
+                        description: 方案ID
+                      nestingStatus:
+                        type: integer
+                        format: int32
+                        description: 排料预算状态 0:未排 1:已排 2:有改
+                      createUserCode:
+                        type: string
+                        description: 创建人员账号
+                      isConfirm:
+                        type: boolean
+                        description: 是否确认
+                      modifyUserCode:
+                        type: string
+                        description: 修改人员账号
+                    required:
+                    - createDate
+                    - createUserName
+                    - designState
+                    - modifyDate
+                    - modifyUserName
+                    - saleBillNo
+                    - fileName
+                    - fileOssKey
+                    - id
+              example:
+                msg: ''
+                code: 0
+                data:
+                - fileName: ''
+                  modifyDate: ''
+                  createUserCode: ''
+                  materialColor: ''
+                  createUserName: ''
+                  picName: ''
+                  fileOssKey: ''
+                  produceOrderNo: ''
+                  modifyUserCode: ''
+                  designerName: ''
+                  materialPrice: 0
+                  modifyUserName: ''
+                  nestingStatus: 0
+                  designState: 0
+                  isConfirm: false
+                  saleBillNo: ''
+                  breakUserName: ''
+                  picOssKey: ''
+                  id: 0
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/saleBill/updateSaleBillState:
+    post:
+      operationId: apiV1DmsSaleBillUpdateSaleBillState
+      summary: 更新销售单状态接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547478474080776290
+      x-documentation-category: DMS系统 / 销售单数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                remark:
+                  type: string
+                  description: 备注
+                id:
+                  type: integer
+                  format: int64
+                  description: 唯一id
+                ids:
+                  type: array
+                  items: {}
+                  description: 唯一id数组
+                saleBillNo:
+                  type: string
+                  description: 销售单号
+                saleBillNos:
+                  type: array
+                  items: {}
+                  description: 销售单号数组
+                saleBillState:
+                  type: integer
+                  format: int32
+                  description: 销售单状态
+                urgentLevel:
+                  type: integer
+                  format: int32
+                  description: 加急等级
+            example:
+              remark: ''
+              list: []
+              urgentLevel: 0
+              saleBillNo: ''
+              saleBillNos: []
+              saleBillState: 0
+              ids: []
+              state: 0
+              id: 0
+              urgent: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/shop/createChannel:
+    post:
+      operationId: apiV1DmsShopCreateChannel
+      summary: 创建门店接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547464257449574431
+      x-documentation-category: DMS系统 / 门店数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelAddr:
+                  type: string
+                  description: 门店地址
+                channelLeader:
+                  type: string
+                  description: 门店负责人
+                channelName:
+                  type: string
+                  description: 门店名称
+                channelPhone:
+                  type: string
+                  description: 门店电话
+                consigneeAddr:
+                  type: string
+                  description: 收货人地址
+                consigneeName:
+                  type: string
+                  description: 收货人姓名
+                consigneePhone:
+                  type: string
+                  description: 收货人电话
+            example:
+              consigneeAddr: ''
+              consigneeName: ''
+              channelLeader: ''
+              consigneePhone: ''
+              channelAddr: ''
+              channelName: ''
+              channelPhone: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/shop/deleteChannel:
+    post:
+      operationId: apiV1DmsShopDeleteChannel
+      summary: 删除门店接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547709064294031363
+      x-documentation-category: DMS系统 / 门店数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items: {}
+                  description: 门店唯一id列表
+              required:
+              - ids
+            example:
+              ids: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/shop/editChannel:
+    post:
+      operationId: apiV1DmsShopEditChannel
+      summary: 编辑门店接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547471741191057489
+      x-documentation-category: DMS系统 / 门店数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelAddr:
+                  type: string
+                  description: 门店地址
+                channelID:
+                  type: string
+                  description: 门店编码
+                channelLeader:
+                  type: string
+                  description: 门店负责人
+                channelName:
+                  type: string
+                  description: 门店名称
+                channelPhone:
+                  type: string
+                  description: 门店电话
+                consigneeAddr:
+                  type: string
+                  description: 收货人地址
+                consigneeName:
+                  type: string
+                  description: 收货人姓名
+                consigneePhone:
+                  type: string
+                  description: 收货人电话
+                id:
+                  type: integer
+                  format: int64
+                  description: 门店唯一id
+              required:
+              - id
+            example:
+              consigneeAddr: ''
+              consigneeName: ''
+              channelLeader: ''
+              consigneePhone: ''
+              channelAddr: ''
+              channelName: ''
+              channelPhone: ''
+              id: 0
+              channelID: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/shop/getChannelList:
+    post:
+      operationId: apiV1DmsShopGetChannelList
+      summary: 查询门店列表接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547473753068662832
+      x-documentation-category: DMS系统 / 门店数据
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelId:
+                  type: string
+                  description: 门店编码
+                channelIds:
+                  type: array
+                  items: {}
+                  description: 门店编码数组
+                channelName:
+                  type: string
+                  description: 门店名称
+                id:
+                  type: integer
+                  format: int64
+                  description: 门店唯一id
+                ids:
+                  type: array
+                  items: {}
+                  description: 门店唯一id数组
+            example:
+              ids: []
+              channelName: ''
+              id: 0
+              channelIds: []
+              channelId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      channelAddr:
+                        type: string
+                        description: 门店地址
+                      channelID:
+                        type: string
+                        description: 门店编码
+                      channelLeader:
+                        type: string
+                        description: 门店负责人
+                      channelName:
+                        type: string
+                        description: 门店名称
+                      channelPhone:
+                        type: string
+                        description: 门店电话
+                      consigneeAddr:
+                        type: string
+                        description: 收货人地址
+                      consigneeName:
+                        type: string
+                        description: 收货人姓名
+                      consigneePhone:
+                        type: string
+                        description: 收货人电话
+                      createDate:
+                        type: string
+                        format: date-time
+                        description: 创建时间
+                      id:
+                        type: integer
+                        format: int64
+                        description: 门店唯一id
+                      modifyDate:
+                        type: string
+                        format: date-time
+                        description: 最后修改时间
+                      modifyUserCode:
+                        type: string
+                        description: 最后修改用户账号
+                      modifyUserName:
+                        type: string
+                        description: 最后修改用户名称
+                    required:
+                    - channelID
+                    - id
+              example:
+                msg: ''
+                code: 0
+                data:
+                - consigneeAddr: ''
+                  modifyDate: ''
+                  modifyUserCode: ''
+                  consigneeName: ''
+                  modifyUserName: ''
+                  channelLeader: ''
+                  consigneePhone: ''
+                  channelAddr: ''
+                  channelName: ''
+                  channelPhone: ''
+                  id: 0
+                  channelID: ''
+                  createDate: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/dms/shop/getChannelPage:
+    post:
+      operationId: apiV1DmsShopGetChannelPage
+      summary: 分页查询门店接口
+      tags:
+      - DMS
+      x-source-documentation: https://dev.3vjia.com/document?apiId=547473753068662830
+      x-documentation-category: DMS系统 / 门店数据
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                beginDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-开始时间
+                channelAddr:
+                  type: string
+                  description: 门店地址
+                channelId:
+                  type: string
+                  description: 门店编码
+                channelIds:
+                  type: array
+                  items: {}
+                  description: 门店编码数组
+                channelLeader:
+                  type: string
+                  description: 门店负责人
+                channelName:
+                  type: string
+                  description: 门店名称
+                channelPhone:
+                  type: string
+                  description: 门店电话
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  examples:
+                  - '1'
+                endDate:
+                  type: string
+                  format: date-time
+                  description: 创建时间-结束时间
+                id:
+                  type: integer
+                  format: int64
+                  description: 门店ID
+                ids:
+                  type: array
+                  items: {}
+                  description: 门店ID数组
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除
+                  examples:
+                  - '0'
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  examples:
+                  - '10'
+              required:
+              - current
+              - size
+            example:
+              endDate: ''
+              isDelete: 0
+              beginDate: ''
+              current: 1
+              size: 10
+              channelLeader: ''
+              ids: []
+              channelAddr: ''
+              channelName: ''
+              channelPhone: ''
+              id: 0
+              channelIds: []
+              channelId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            channelAddr:
+                              type: string
+                              description: 门店地址
+                            channelID:
+                              type: string
+                              description: 门店编码
+                            channelLeader:
+                              type: string
+                              description: 门店负责人
+                            channelName:
+                              type: string
+                              description: 门店名称
+                            channelPhone:
+                              type: string
+                              description: 门店电话
+                            consigneeAddr:
+                              type: string
+                              description: 收货人地址
+                            consigneeName:
+                              type: string
+                              description: 收货人姓名
+                            consigneePhone:
+                              type: string
+                              description: 收货人电话
+                            createDate:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            id:
+                              type: integer
+                              format: int64
+                              description: 门店唯一id
+                            isDelete:
+                              type: boolean
+                              description: 是否删除
+                            modifyDate:
+                              type: string
+                              format: date-time
+                              description: 最后修改时间
+                            modifyUserCode:
+                              type: string
+                              description: 最后修改用户账号
+                            modifyUserName:
+                              type: string
+                              description: 最后修改用户名称
+                          required:
+                          - channelID
+                          - id
+                        description: 门店
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - consigneeAddr: ''
+                    modifyDate: ''
+                    isDelete: false
+                    modifyUserCode: ''
+                    consigneeName: ''
+                    modifyUserName: ''
+                    channelLeader: ''
+                    consigneePhone: ''
+                    channelAddr: ''
+                    channelName: ''
+                    channelPhone: ''
+                    id: 0
+                    channelID: ''
+                    createDate: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

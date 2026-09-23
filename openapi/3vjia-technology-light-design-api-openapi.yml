@@ -1,0 +1,5201 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Light Design API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Light Design
+  description: 轻设计
+paths:
+  /api/aiDrawImageResult/listByPage:
+    post:
+      operationId: apiAiDrawImageResultListByPage
+      summary: 分页查询AI出图结果
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=832299125029617719
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createUser:
+                  type: string
+                  description: 创建人ID
+                drawImageId:
+                  type: string
+                  description: 绘图任务ID
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \nID"
+                imageResult:
+                  type: string
+                  description: 图片结果url
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除1是0否
+                layoutId:
+                  type: string
+                  description: 户型ID
+                layoutSchemeId:
+                  type: string
+                  description: 方案ID
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                roomId:
+                  type: string
+                  description: 房间ID
+                roomName:
+                  type: string
+                  description: 房间名称
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateUser:
+                  type: string
+                  description: 更新人ID
+                aiModel:
+                  type: integer
+                  format: int32
+                  description: 出图模式0效果图1全景
+                layoutName:
+                  type: string
+                  description: 方案名称
+                viewAngleName:
+                  type: string
+                  description: 视角名称
+            example:
+              drawImageId: ''
+              layoutSchemeId: ''
+              isDelete: 0
+              orderBy: ''
+              pageSize: 0
+              updateUser: ''
+              layoutId: ''
+              roomId: ''
+              roomName: ''
+              layoutName: ''
+              createDateStart: ''
+              pageIndex: 0
+              updateDateStart: ''
+              updateDateEnd: ''
+              ids: []
+              imageResult: ''
+              createUser: ''
+              aiModel: 0
+              viewAngleName: ''
+              createDateEnd: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            aiModel:
+                              type: integer
+                              format: int32
+                              description: 0效果图1全景图
+                            createUser:
+                              type: string
+                              description: 创建人
+                            id:
+                              type: string
+                              description: 图片ID
+                            imageResult:
+                              type: string
+                              description: 图片url
+                            layoutId:
+                              type: string
+                              description: 户型ID
+                            layoutSchemeId:
+                              type: string
+                              description: 布局方案ID
+                            roomId:
+                              type: string
+                              description: 房间ID
+                            roomName:
+                              type: string
+                              description: 房间名称
+                            viewAngleName:
+                              type: string
+                              description: 视角名称
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            layoutName:
+                              type: string
+                              description: 布局方案名称
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            drawImageId:
+                              type: string
+                              description: 绘图任务ID
+                        description: AI出图结果类
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - drawImageId: ''
+                    updateDate: ''
+                    layoutSchemeId: ''
+                    layoutId: ''
+                    roomId: ''
+                    roomName: ''
+                    layoutName: ''
+                    imageResult: ''
+                    createUser: ''
+                    aiModel: 0
+                    id: ''
+                    viewAngleName: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/kgmaterial/pageKgMagerial:
+    post:
+      operationId: apiKgmaterialPageKgMagerial
+      summary: 分页获取规则或系列关联的图谱素材
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=844215383568322627
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                applySpace:
+                  type: string
+                  description: 空间名称
+                isPlatform:
+                  type: integer
+                  format: int32
+                  description: 是否查询平台套系对应模型位数据1是0否默认0
+                keyword:
+                  type: string
+                  description: 素材ID或素材名称搜索关键字
+                lengthMax:
+                  type: integer
+                  format: int32
+                  description: 素材长度最大值
+                lengthMin:
+                  type: integer
+                  format: int32
+                  description: 素材长度最小值
+                materialId:
+                  type: string
+                  description: 素材id
+                materialName:
+                  type: string
+                  description: 素材名称
+                modelLoc:
+                  type: string
+                  description: 模型位(新版图谱中文名)
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                ruleId:
+                  type: string
+                  description: 规则ID
+                seriesId:
+                  type: string
+                  description: 规则/系列ID
+                status:
+                  type: integer
+                  format: int32
+                  description: 素材状态-1入库失败1入库中2入库成功
+            example:
+              lengthMax: 0
+              isPlatform: 0
+              orderBy: ''
+              pageSize: 0
+              materialId: ''
+              modelLoc: ''
+              seriesId: ''
+              applySpace: ''
+              materialName: ''
+              lengthMin: 0
+              pageIndex: 0
+              keyword: ''
+              ruleId: ''
+              status: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            applySpace:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n应用空间"
+                            brushStyleList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  styleCode:
+                                    type: string
+                                    description: 风格刷唯一标识(固定传值)code全屋风格刷:styleBrushId厨房风格刷:kitchenBrushId背景墙风格刷:wallBrushId
+                                  styleId:
+                                    type: string
+                                    description: 风格刷ID
+                                  styleImage:
+                                    type: string
+                                    description: 封面图
+                                  styleName:
+                                    type: string
+                                    description: 风格名称
+                                  styleType:
+                                    type: string
+                                    description: 风格类别
+                                  xmlDataUrl:
+                                    type: string
+                                    description: 风格刷对应数据URL
+                              description: '*风格刷参数'
+                            category:
+                              type: string
+                              description: 素材分类
+                            circleShare:
+                              type: integer
+                              format: int32
+                              description: 设计圈共享0否1是默认0
+                            color:
+                              type: string
+                              description: 素材颜色
+                            createTime:
+                              type: string
+                              description: 创建时间
+                            customStyleIds:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n所属规则/系列Ids"
+                            groupName:
+                              type: string
+                              description: 素材组名称
+                            groupType:
+                              type: integer
+                              format: int32
+                              description: 素材组类型：1地板瓷砖、2墙体涂料、3模型、4墙体瓷砖、、6模型组合
+                            height:
+                              type: number
+                              format: double
+                              description: 高
+                            id:
+                              type: integer
+                              format: int32
+                              description: 主键id
+                            imagePath:
+                              type: string
+                              description: 素材图片路径
+                            is3d:
+                              type: integer
+                              format: int32
+                              description: 3D启用1是0否默认0
+                            isDirect:
+                              type: integer
+                              format: int32
+                              description: 是否直接归属系列
+                            isValid:
+                              type: integer
+                              format: int32
+                              description: 禁用标识[0禁用1启用]默认1
+                            kgId:
+                              type: string
+                              description: 图谱入库id
+                            kgMaterialType:
+                              type: string
+                              description: 图谱模型分类名称
+                            kgStatus:
+                              type: integer
+                              format: int32
+                              description: 图谱入库状态：-1入库失败0未提交入库1入库中2入库成功
+                            length:
+                              type: number
+                              format: double
+                              description: 长
+                            lengthMax:
+                              type: integer
+                              format: int32
+                              description: 素材长度最大值
+                            lengthMin:
+                              type: integer
+                              format: int32
+                              description: 素材长度最小值
+                            materialGroupId:
+                              type: string
+                              description: 素材组id
+                            materialId:
+                              type: string
+                              description: 素材id
+                            materialName:
+                              type: string
+                              description: 素材名称
+                            materialSource:
+                              type: string
+                              description: 素材来源本机构/素材广场
+                            materialStyle:
+                              type: string
+                              description: 素材风格
+                            materialType:
+                              type: integer
+                              format: int32
+                              description: 素材类型(1硬装、2软装、3定制)
+                            modelFlag:
+                              type: string
+                              description: 模型类型标记
+                            modelLoc:
+                              type: string
+                              description: 模型位(新版图谱中文名)
+                            modellocId:
+                              type: string
+                              description: 模型位置id
+                            modellocName:
+                              type: string
+                              description: 模型位置名称
+                            msg:
+                              type: string
+                              description: msg
+                            recommended:
+                              type: boolean
+                              description: 是否推荐素材
+                            ruleId:
+                              type: integer
+                              format: int32
+                              description: 设计规则id/系列ID
+                            schemeType:
+                              type: string
+                              description: 方案种类cupboard:橱柜wardrobe:衣柜systemCabinet:系统柜
+                            score:
+                              type: number
+                              format: float
+                              description: 多模态分数
+                            seedSchemeIds:
+                              type: string
+                              description: 种子方案ids
+                            seriesKgId:
+                              type: string
+                              description: 系列kgId
+                            spaceId:
+                              type: string
+                              description: 空间id
+                            spaceName:
+                              type: string
+                              description: 空间名称
+                            status:
+                              type: string
+                              description: 素材状态-1入库失败1入库中2入库成功
+                            texture:
+                              type: string
+                              description: 素材材质
+                            topViewImage:
+                              type: string
+                              description: 素材顶视图
+                            traceId:
+                              type: string
+                              description: traceId
+                            typeOnRelation:
+                              type: string
+                              description: 素材边上的type
+                            width:
+                              type: number
+                              format: double
+                              description: 宽
+                            wireframeImage:
+                              type: string
+                              description: 线框图
+                        description: This is List Type
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - msg: ''
+                    groupType: 0
+                    color: ''
+                    schemeType: ''
+                    imagePath: ''
+                    is3d: 0
+                    modelLoc: ''
+                    spaceName: ''
+                    applySpace: []
+                    spaceId: ''
+                    materialStyle: ''
+                    seedSchemeIds: ''
+                    modelFlag: ''
+                    typeOnRelation: ''
+                    materialGroupId: ''
+                    customStyleIds: []
+                    brushStyleList:
+                    - xmlDataUrl: ''
+                      styleImage: ''
+                      styleName: ''
+                      styleCode: ''
+                      styleType: ''
+                      styleId: ''
+                    id: 0
+                    kgStatus: 0
+                    ruleId: 0
+                    materialSource: ''
+                    modellocId: ''
+                    traceId: ''
+                    wireframeImage: ''
+                    kgMaterialType: ''
+                    topViewImage: ''
+                    kgId: ''
+                    texture: ''
+                    isValid: 0
+                    lengthMax: 0
+                    materialType: 0
+                    materialId: ''
+                    seriesKgId: ''
+                    recommended: false
+                    materialName: ''
+                    groupName: ''
+                    circleShare: 0
+                    createTime: ''
+                    lengthMin: 0
+                    category: ''
+                    modellocName: ''
+                    isDirect: 0
+                    status: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/layoutCabinetCustomMaterial/listByPage:
+    post:
+      operationId: apiLayoutCabinetCustomMaterialListByPage
+      summary: 分页查询套系素材自定义替换关联
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=843157642473017444
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryCode:
+                  type: string
+                  description: 分类编码
+                categoryId:
+                  type: string
+                  description: 关联分类目录ID(按照分类关联)
+                categoryName:
+                  type: string
+                  description: 分类名称
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createUser:
+                  type: string
+                  description: 创建人
+                height:
+                  type: number
+                  format: double
+                  description: 替换素材高
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \nID"
+                imagePath:
+                  type: string
+                  description: 替换素材主图
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除标识
+                length:
+                  type: number
+                  format: double
+                  description: 替换素材长
+                materialId:
+                  type: string
+                  description: 原素材ID(套系中录入的素材)
+                materialName:
+                  type: string
+                  description: 替换素材名称
+                materialNameLike:
+                  type: string
+                  description: 替换素材名称模糊匹配
+                modelFlag:
+                  type: integer
+                  format: int32
+                  description: 替换素材分类
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                replaceMaterialId:
+                  type: string
+                  description: 替换素材ID
+                replaceModel:
+                  type: string
+                  description: 素材替换类型category|material
+                replaceType:
+                  type: string
+                  description: 替换类别doorBoard门板|chartlet贴图|electric电器|category分类(则根据categoryId获取分类树)
+                tenantId:
+                  type: string
+                  description: 租户
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateUser:
+                  type: string
+                  description: 更新人
+                width:
+                  type: number
+                  format: double
+                  description: 替换素材宽
+            example:
+              replaceMaterialId: ''
+              imagePath: ''
+              isDelete: 0
+              orderBy: ''
+              pageSize: 0
+              updateUser: ''
+              replaceType: ''
+              categoryCode: ''
+              materialId: ''
+              categoryName: ''
+              replaceModel: ''
+              materialName: ''
+              modelFlag: 0
+              createDateStart: ''
+              pageIndex: 0
+              updateDateStart: ''
+              tenantId: ''
+              updateDateEnd: ''
+              ids: []
+              createUser: ''
+              createDateEnd: ''
+              categoryId: ''
+              materialNameLike: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            categoryCode:
+                              type: string
+                              description: 分类编码
+                            categoryId:
+                              type: string
+                              description: 关联分类目录ID(按照分类关联)
+                            categoryName:
+                              type: string
+                              description: 分类名称
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人
+                            glbList:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n替换素材glb列表"
+                            height:
+                              type: number
+                              format: double
+                              description: 替换素材高
+                            id:
+                              type: string
+                              description: ID
+                            imagePath:
+                              type: string
+                              description: 替换素材主图
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 删除标识
+                            leftValue:
+                              type: integer
+                              format: int32
+                              description: 是否有子分类1是0否
+                            length:
+                              type: number
+                              format: double
+                              description: 替换素材长
+                            materialId:
+                              type: string
+                              description: 原素材ID
+                            materialName:
+                              type: string
+                              description: 替换素材素材名称
+                            modelFlag:
+                              type: integer
+                              format: int32
+                              description: 替换素材素材分类
+                            replaceMaterialId:
+                              type: string
+                              description: 替换素材ID
+                            replaceModel:
+                              type: string
+                              description: 素材替换类型category|material
+                            replaceType:
+                              type: string
+                              description: 替换类别doorBoard门板|chartlet贴图|electric电器
+                            tenantId:
+                              type: string
+                              description: 租户
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人
+                            width:
+                              type: number
+                              format: double
+                              description: 替换素材宽
+                        description: AI搭柜自定素材配置结果类
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - replaceMaterialId: ''
+                    updateDate: ''
+                    imagePath: ''
+                    isDelete: 0
+                    leftValue: 0
+                    updateUser: ''
+                    replaceType: ''
+                    categoryCode: ''
+                    materialId: ''
+                    categoryName: ''
+                    glbList: []
+                    replaceModel: ''
+                    materialName: ''
+                    modelFlag: 0
+                    tenantId: ''
+                    createUser: ''
+                    id: ''
+                    categoryId: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/layoutCabinetCustomMaterial/listCategoryByMaterialIds:
+    post:
+      operationId: apiLayoutCabinetCustomMaterialListCategoryByMaterialIds
+      summary: 根据素材ID和替换素材ID列表查询去重后的分类
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=850694997635403859
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                materialIdList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n原素材ID列表"
+                replaceMaterialIdList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n替换素材ID列表"
+                tenantId:
+                  type: string
+                  description: 租户ID
+            example:
+              tenantId: ''
+              replaceMaterialIdList: []
+              materialIdList: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      categoryId:
+                        type: string
+                        description: 分类ID
+                      categoryName:
+                        type: string
+                        description: 分类名称
+              example:
+                msg: ''
+                code: 0
+                data:
+                - categoryName: ''
+                  categoryId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/layoutScheme/adminListByPage:
+    post:
+      operationId: apiLayoutSchemeAdminListByPage
+      summary: 管理员分页查询企业下布局方案
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=873248254035398683
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                area:
+                  type: number
+                  format: float
+                  description: 方案面积
+                areaMax:
+                  type: number
+                  format: float
+                  description: 面积范围
+                areaMin:
+                  type: number
+                  format: float
+                  description: 面积范围
+                belongType:
+                  type: integer
+                  format: int32
+                  description: 归属1企业2门店3特定样板数据4个库
+                budget:
+                  type: string
+                  description: 装修预算
+                city:
+                  type: string
+                  description: 市代码
+                cntactMan:
+                  type: string
+                  description: 客户名称
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createTimeRange:
+                  type: integer
+                  format: int32
+                  description: 创建时间范围最近1个月
+                createTimeRange3:
+                  type: integer
+                  format: int32
+                  description: 创建时间范围最近3个月
+                createTimeRange6:
+                  type: integer
+                  format: int32
+                  description: 创建时间范围最近6个月
+                createUser:
+                  type: string
+                  description: 创建人ID
+                createUserList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n创建人IDs"
+                designerAccount:
+                  type: string
+                  description: 设计师账号
+                designerId:
+                  type: string
+                  description: 从业者(分享人)账号ID
+                designerName:
+                  type: string
+                  description: 设计师名称
+                designerOpenId:
+                  type: string
+                  description: 从业者(分享人)openId
+                district:
+                  type: string
+                  description: 区代码
+                folderId:
+                  type: string
+                  description: 文件夹id
+                funcRequire:
+                  type: string
+                  description: 功能需求
+                houseMold:
+                  type: string
+                  description: 房屋类型
+                houseType:
+                  type: string
+                  description: 户型
+                id:
+                  type: string
+                  description: 主键ID
+                idLike:
+                  type: string
+                  description: 主键id模糊查詢
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n主键IDs"
+                industId:
+                  type: string
+                  description: 行业应用id
+                installType:
+                  type: string
+                  description: 安装类型前装/后装/通用
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除0否1是
+                isSample:
+                  type: integer
+                  format: int32
+                  description: 样板间1是0否
+                keyWord:
+                  type: string
+                  description: 搜索关键词
+                layoutSchemeName:
+                  type: string
+                  description: 方案名称
+                layoutSchemeNameLike:
+                  type: string
+                  description: 方案名称模糊匹配
+                manager:
+                  type: integer
+                  format: int32
+                  description: 管理页标识1是默认否
+                mobile:
+                  type: string
+                  description: 联想电话
+                notInFolder:
+                  type: integer
+                  format: int32
+                  description: 是否查询不在文件夹内的方案1是0否
+                orderBy:
+                  type: string
+                  description: 排序
+                orientation:
+                  type: string
+                  description: 户型朝向正东/正西/正南/正北/东南/西南/西北/东北
+                outerSchemeId:
+                  type: string
+                  description: 外部方案ID
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                populate:
+                  type: string
+                  description: 居住人口
+                projectAddr:
+                  type: string
+                  description: 项目地址
+                projectId:
+                  type: string
+                  description: 项目id
+                projectType:
+                  type: string
+                  description: 项目类型2c_new、b_to_c_repeat、2c_repeat、2b_project、null
+                province:
+                  type: string
+                  description: 省代码
+                recover:
+                  type: string
+                  description: 恢复版本
+                roomName:
+                  type: string
+                  description: 空间名
+                roomNameList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n空间名称列表"
+                ruleId:
+                  type: string
+                  description: 套系ID
+                schemeType:
+                  type: string
+                  description: 方案类型seller|designer
+                scoreData:
+                  type: string
+                  description: 评分数据链接
+                share2me:
+                  type: integer
+                  format: int32
+                  description: 共享给我的1是0否
+                shared:
+                  type: integer
+                  format: int32
+                  description: 仅显示我分享的1是0否
+                shelveStatus:
+                  type: integer
+                  format: int32
+                  description: 上架状态0否1是
+                showPersonal:
+                  type: integer
+                  format: int32
+                  description: 是否在AI轻设计小程序个人主页显示
+                source:
+                  type: string
+                  description: 数据来源
+                sourceList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n数据来源列表"
+                svjSchemeId:
+                  type: string
+                  description: 3D方案ID
+                templateId:
+                  type: string
+                  description: 布局模板ID
+                tenantId:
+                  type: string
+                  description: 租户ID
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateTimeRange:
+                  type: integer
+                  format: int32
+                  description: 更新时间范围最近1个月
+                updateTimeRange3:
+                  type: integer
+                  format: int32
+                  description: 更新时间范围最近3个月
+                updateTimeRange6:
+                  type: integer
+                  format: int32
+                  description: 更新时间范围最近6个月
+                updateUser:
+                  type: string
+                  description: 更新人ID
+                userId:
+                  type: string
+                  description: 当前用户ID
+            example:
+              idLike: ''
+              isSample: 0
+              layoutSchemeNameLike: ''
+              scoreData: ''
+              schemeType: ''
+              projectType: ''
+              roomNameList: []
+              pageSize: 0
+              createTimeRange3: 0
+              source: ''
+              templateId: ''
+              designerAccount: ''
+              province: ''
+              createDateStart: ''
+              svjSchemeId: ''
+              updateDateEnd: ''
+              id: ''
+              ruleId: ''
+              budget: ''
+              designerId: ''
+              share2me: 0
+              cntactMan: ''
+              folderId: ''
+              roomName: ''
+              createUserList: []
+              funcRequire: ''
+              installType: ''
+              createTimeRange6: 0
+              district: ''
+              designerOpenId: ''
+              ids: []
+              projectId: ''
+              shared: 0
+              houseMold: ''
+              city: ''
+              industId: ''
+              orderBy: ''
+              createTimeRange: 0
+              updateDateStart: ''
+              projectAddr: ''
+              createDateEnd: ''
+              shelveStatus: 0
+              belongType: 0
+              notInFolder: 0
+              orientation: ''
+              outerSchemeId: ''
+              recover: ''
+              manager: 0
+              sourceList: []
+              isDelete: 0
+              houseType: ''
+              mobile: ''
+              updateUser: ''
+              updateTimeRange: 0
+              updateTimeRange6: 0
+              userId: ''
+              updateTimeRange3: 0
+              designerName: ''
+              keyWord: ''
+              populate: ''
+              pageIndex: 0
+              layoutSchemeName: ''
+              tenantId: ''
+              createUser: ''
+              showPersonal: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            address:
+                              type: string
+                              description: 地址
+                            area:
+                              type: number
+                              format: float
+                              description: 方案面积(户型面积)
+                            belongType:
+                              type: integer
+                              format: int32
+                              description: 归属1企业2门店
+                            budget:
+                              type: string
+                              description: 装修预算
+                            city:
+                              type: string
+                              description: 市代码
+                            cityName:
+                              type: string
+                              description: 市名称
+                            cntactMan:
+                              type: string
+                              description: 客户名称
+                            contentUrl:
+                              type: string
+                              description: 方案内容URL
+                            coverImage:
+                              type: string
+                              description: 布局方案封面图
+                            cpqRespId:
+                              type: string
+                              description: CPQ下单返回ID
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人ID
+                            createUserName:
+                              type: string
+                              description: 创建人名称
+                            createUserNickName:
+                              type: string
+                              description: 创建人昵称
+                            custInfoId:
+                              type: string
+                              description: 客户信息关联ID
+                            customerInfo:
+                              type: object
+                              properties:
+                                address:
+                                  type: string
+                                  description: 地址详情
+                                areaCode:
+                                  type: string
+                                  description: 区代码
+                                buildingName:
+                                  type: string
+                                  description: 楼盘名称
+                                city:
+                                  type: string
+                                  description: 市名称
+                                cityCode:
+                                  type: string
+                                  description: 市代码
+                                clientId:
+                                  type: string
+                                  description: 客户端ID
+                                cntactMan:
+                                  type: string
+                                  description: 联系人
+                                district:
+                                  type: string
+                                  description: 区名称
+                                email:
+                                  type: string
+                                  description: email
+                                hwCustomerId:
+                                  type: string
+                                  description: 华为潜客ID
+                                industId:
+                                  type: string
+                                  description: 行业应用id
+                                mobile:
+                                  type: string
+                                  description: 联系电话
+                                note:
+                                  type: string
+                                  description: 备注
+                                projectType:
+                                  type: string
+                                  description: 项目类型2c_new
+                                province:
+                                  type: string
+                                  description: 省名称
+                                provinceCode:
+                                  type: string
+                                  description: 省
+                                qq:
+                                  type: string
+                                  description: QQ
+                                sex:
+                                  type: string
+                                  description: 性别
+                                webSiteSource:
+                                  type: string
+                                  description: 来源
+                              description: "布局方案客户信息入参  \n客户信息"
+                            designerId:
+                              type: string
+                              description: 从业者(分享人)ID
+                            designerNickName:
+                              type: string
+                              description: 从业者昵称
+                            designerOpenId:
+                              type: string
+                              description: 从业者(分享人)openId
+                            designerThumbnail:
+                              type: string
+                              description: 从业者头像
+                            deviceAmount:
+                              type: number
+                              format: double
+                              description: 设备数
+                            district:
+                              type: string
+                              description: 区代码
+                            districtName:
+                              type: string
+                              description: 区名称
+                            expireDate:
+                              type: string
+                              description: 过期时间
+                            explanatoryImage:
+                              type: string
+                              description: 企业样板间说明图
+                            floors:
+                              type: string
+                              description: 层数
+                            folderId:
+                              type: string
+                              description: 文件夹ID
+                            folderName:
+                              type: string
+                              description: 文件夹名称
+                            funcRequire:
+                              type: string
+                              description: 功能需求
+                            houseMold:
+                              type: string
+                              description: 房屋类型
+                            houseType:
+                              type: string
+                              description: 户型例:三室两厅
+                            houseTypeId:
+                              type: string
+                              description: 户型ID
+                            houseTypeInfo:
+                              type: object
+                              properties:
+                                area:
+                                  type: number
+                                  format: double
+                                  description: 面积
+                                bathroom:
+                                  type: string
+                                  description: 卫
+                                buildingName:
+                                  type: string
+                                  description: 小区名称
+                                city:
+                                  type: string
+                                  description: 市代码
+                                createDate:
+                                  type: string
+                                  description: 创建时间
+                                createUser:
+                                  type: string
+                                  description: 创建人
+                                dataUrl:
+                                  type: string
+                                  description: 户型数据
+                                district:
+                                  type: string
+                                  description: 区代码
+                                dwgUrl:
+                                  type: string
+                                  description: '*dwg文件'
+                                hall:
+                                  type: string
+                                  description: 厅
+                                houseSchemeId:
+                                  type: string
+                                  description: 户型方案ID
+                                houseTypeName:
+                                  type: string
+                                  description: 名称
+                                id:
+                                  type: string
+                                  description: 主键ID
+                                imageUrl:
+                                  type: string
+                                  description: 户型图url
+                                industId:
+                                  type: string
+                                  description: 行业应用ID
+                                isDelete:
+                                  type: integer
+                                  format: int32
+                                  description: 删除1是0否
+                                kitchen:
+                                  type: string
+                                  description: 厨
+                                platHouseTypeId:
+                                  type: string
+                                  description: 平台库户型ID
+                                platLayoutId:
+                                  type: string
+                                  description: 平台库户型ID
+                                province:
+                                  type: string
+                                  description: 省代码
+                                room:
+                                  type: string
+                                  description: 房
+                                roomTypeId:
+                                  type: string
+                                  description: roomtypeid
+                                roomTypeName:
+                                  type: string
+                                  description: roomtypename
+                                source:
+                                  type: string
+                                  description: 来源1户型库2上传
+                                status:
+                                  type: integer
+                                  format: int32
+                                  description: 状态1启用0禁用默认1
+                                tenantId:
+                                  type: string
+                                  description: 租户ID
+                                towards:
+                                  type: string
+                                  description: 朝向
+                                updateDate:
+                                  type: string
+                                  description: 更新时间
+                                updateUser:
+                                  type: string
+                                  description: 更新人
+                              description: "户型详情结果  \n户型详细信息"
+                            hwCustomerId:
+                              type: string
+                              description: hw潜客ID
+                            id:
+                              type: string
+                              description: 主键ID
+                            industId:
+                              type: string
+                              description: 行业应用id
+                            installType:
+                              type: string
+                              description: 安装类型前装/后装/通用
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 删除0否1是
+                            isSample:
+                              type: integer
+                              format: int32
+                              description: 样板间1是0否
+                            layoutSchemeName:
+                              type: string
+                              description: 方案名称
+                            layoutSketchImage:
+                              type: string
+                              description: 布局示意图
+                            mobile:
+                              type: string
+                              description: 客户电话
+                            orientation:
+                              type: string
+                              description: 户型朝向正东/正西/正南/正北/东南/西南/西北/东北
+                            outerSchemeId:
+                              type: string
+                              description: 外部方案ID
+                            outerUserId:
+                              type: string
+                              description: 外部用户ID
+                            panoLink:
+                              type: string
+                              description: 全景链接
+                            platLayoutId:
+                              type: string
+                              description: 平台库户型ID
+                            populate:
+                              type: string
+                              description: 居住人口
+                            praised:
+                              type: integer
+                              format: int32
+                              description: 是否被AI轻设计点赞1是0否默认0
+                            projectAddr:
+                              type: string
+                              description: 项目地址
+                            projectCode:
+                              type: string
+                              description: 项目编码
+                            projectId:
+                              type: string
+                              description: 项目ID(对应多方案originSchemeId)
+                            projectType:
+                              type: string
+                              description: 项目类型2c_new、b_to_c_repeat、2c_repeat、2b_project、null
+                            province:
+                              type: string
+                              description: 省代码
+                            provinceName:
+                              type: string
+                              description: 省名称
+                            quoteXmlUrl:
+                              type: string
+                              description: 3D报价URL
+                            ruleId:
+                              type: string
+                              description: 套系ID
+                            schemeType:
+                              type: string
+                              description: 方案类型seller|designer
+                            schemeVersion:
+                              type: string
+                              description: CPQ方案版本
+                            scoreData:
+                              type: string
+                              description: 评分数据链接
+                            shared:
+                              type: integer
+                              format: int32
+                              description: 仅显示我分享1是0否
+                            shelveStatus:
+                              type: integer
+                              format: int32
+                              description: 上架状态0否1是2待上架[默认]
+                            showPersonal:
+                              type: integer
+                              format: int32
+                              description: AI轻设计小程序个人主页显示1是0否
+                            sort:
+                              type: integer
+                              format: int32
+                              description: 排序
+                            source:
+                              type: string
+                              description: 数据来源
+                            succeeded:
+                              type: boolean
+                              description: 易维推送成功标识
+                            svjSchemeId:
+                              type: string
+                              description: 3D方案ID
+                            templateId:
+                              type: string
+                              description: 布局模板ID
+                            tenantId:
+                              type: string
+                              description: 租户ID
+                            totalPrice:
+                              type: number
+                              format: double
+                              description: 方案价格(总价)
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人ID
+                            ywCode:
+                              type: string
+                              description: 易维项目编码(推送易维时用户自填,记录上一次的填写)
+                        description: "布局模板方案表结果类  \n布局方案详情"
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - isSample: 0
+                    cpqRespId: ''
+                    houseTypeInfo:
+                      updateDate: ''
+                      city: ''
+                      industId: ''
+                      hall: ''
+                      source: ''
+                      roomTypeId: ''
+                      platHouseTypeId: ''
+                      province: ''
+                      imageUrl: ''
+                      platLayoutId: ''
+                      id: ''
+                      kitchen: ''
+                      bathroom: ''
+                      createDate: ''
+                      dataUrl: ''
+                      isDelete: 0
+                      roomTypeName: ''
+                      houseSchemeId: ''
+                      houseTypeName: ''
+                      updateUser: ''
+                      towards: ''
+                      room: ''
+                      buildingName: ''
+                      district: ''
+                      tenantId: ''
+                      createUser: ''
+                      dwgUrl: ''
+                      status: 0
+                    scoreData: ''
+                    schemeType: ''
+                    hwCustomerId: ''
+                    designerNickName: ''
+                    createUserNickName: ''
+                    outerUserId: ''
+                    projectType: ''
+                    customerInfo:
+                      qq: ''
+                      note: ''
+                      address: ''
+                      clientId: ''
+                      city: ''
+                      hwCustomerId: ''
+                      cityCode: ''
+                      industId: ''
+                      provinceCode: ''
+                      sex: ''
+                      mobile: ''
+                      projectType: ''
+                      webSiteSource: ''
+                      cntactMan: ''
+                      buildingName: ''
+                      areaCode: ''
+                      province: ''
+                      district: ''
+                      email: ''
+                    createUserName: ''
+                    source: ''
+                    templateId: ''
+                    ywCode: ''
+                    houseTypeId: ''
+                    province: ''
+                    svjSchemeId: ''
+                    coverImage: ''
+                    id: ''
+                    ruleId: ''
+                    quoteXmlUrl: ''
+                    budget: ''
+                    designerId: ''
+                    praised: 0
+                    cntactMan: ''
+                    sort: 0
+                    folderId: ''
+                    funcRequire: ''
+                    installType: ''
+                    district: ''
+                    designerOpenId: ''
+                    panoLink: ''
+                    folderName: ''
+                    provinceName: ''
+                    projectId: ''
+                    succeeded: false
+                    shared: 0
+                    updateDate: ''
+                    houseMold: ''
+                    city: ''
+                    industId: ''
+                    layoutSketchImage: ''
+                    floors: ''
+                    cityName: ''
+                    projectCode: ''
+                    projectAddr: ''
+                    platLayoutId: ''
+                    expireDate: ''
+                    shelveStatus: 0
+                    createDate: ''
+                    belongType: 0
+                    orientation: ''
+                    outerSchemeId: ''
+                    address: ''
+                    districtName: ''
+                    isDelete: 0
+                    houseType: ''
+                    mobile: ''
+                    updateUser: ''
+                    designerThumbnail: ''
+                    custInfoId: ''
+                    schemeVersion: ''
+                    explanatoryImage: ''
+                    contentUrl: ''
+                    populate: ''
+                    layoutSchemeName: ''
+                    tenantId: ''
+                    createUser: ''
+                    showPersonal: 0
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/metaTenantMaterial/listByPage:
+    post:
+      operationId: apiMetaTenantMaterialListByPage
+      summary: 分页查询企业自定义图元素材
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=843157642473017440
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createUser:
+                  type: string
+                  description: 创建人ID
+                height:
+                  type: number
+                  format: double
+                  description: 高
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \nID"
+                imagePath:
+                  type: string
+                  description: 素材图片
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除1是0否
+                length:
+                  type: number
+                  format: double
+                  description: 长
+                materialId:
+                  type: string
+                  description: 素材ID
+                materialName:
+                  type: string
+                  description: 素材名称
+                materialNameLike:
+                  type: string
+                  description: 素材名称模糊匹配
+                metaCode:
+                  type: string
+                  description: 图元/模型位编码
+                metaName:
+                  type: string
+                  description: 图元/模型位名称
+                metaNameLike:
+                  type: string
+                  description: 图元/模型位名称模糊匹配
+                metaNameList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n图元模型位名称集合"
+                modelFlag:
+                  type: integer
+                  format: int32
+                  description: 模型标志
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                tenantId:
+                  type: string
+                  description: 租户ID
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateUser:
+                  type: string
+                  description: 更新人ID
+                width:
+                  type: number
+                  format: double
+                  description: 宽
+            example:
+              imagePath: ''
+              isDelete: 0
+              orderBy: ''
+              pageSize: 0
+              updateUser: ''
+              materialId: ''
+              metaCode: ''
+              materialName: ''
+              metaNameList: []
+              metaName: ''
+              modelFlag: 0
+              createDateStart: ''
+              pageIndex: 0
+              updateDateStart: ''
+              metaNameLike: ''
+              tenantId: ''
+              updateDateEnd: ''
+              ids: []
+              createUser: ''
+              createDateEnd: ''
+              materialNameLike: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人ID
+                            height:
+                              type: number
+                              format: double
+                              description: 高
+                            id:
+                              type: string
+                              description: ID
+                            imagePath:
+                              type: string
+                              description: 素材图片
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 删除1是0否
+                            length:
+                              type: number
+                              format: double
+                              description: 长
+                            materialId:
+                              type: string
+                              description: 素材ID
+                            materialName:
+                              type: string
+                              description: 素材名称
+                            metaCode:
+                              type: string
+                              description: 图元/模型位编码
+                            metaName:
+                              type: string
+                              description: 图元/模型位名称
+                            modelFlag:
+                              type: integer
+                              format: int32
+                              description: 模型标志
+                            tenantId:
+                              type: string
+                              description: 租户ID
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人ID
+                            width:
+                              type: number
+                              format: double
+                              description: 宽
+                        description: 企业自定义图元素材结果类
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - updateDate: ''
+                    imagePath: ''
+                    isDelete: 0
+                    updateUser: ''
+                    materialId: ''
+                    metaCode: ''
+                    materialName: ''
+                    metaName: ''
+                    modelFlag: 0
+                    tenantId: ''
+                    createUser: ''
+                    id: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/modelocMaterialCategory/listByPage:
+    post:
+      operationId: apiModelocMaterialCategoryListByPage
+      summary: 分页查询模型位素材分类目录配置
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=843157642473017442
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryCode:
+                  type: string
+                  description: 分类代码
+                categoryId:
+                  type: string
+                  description: 分类ID
+                categoryName:
+                  type: string
+                  description: 分类名称
+                categoryType:
+                  type: string
+                  description: 目录类型
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createUser:
+                  type: string
+                  description: 创建人ID
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n主键ID"
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除1是0否
+                leftValue:
+                  type: integer
+                  format: int32
+                  description: 子级1是0否
+                modelFlag:
+                  type: string
+                  description: 素材标识
+                modelloc:
+                  type: string
+                  description: AI模型位
+                moduleName:
+                  type: string
+                  description: 分类模块
+                orderBy:
+                  type: string
+                  description: 排序
+                organType:
+                  type: integer
+                  format: int32
+                  description: 归属0企业1部门2个人
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                tenantId:
+                  type: string
+                  description: 租户ID
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateUser:
+                  type: string
+                  description: 更新人ID
+            example:
+              isDelete: 0
+              leftValue: 0
+              moduleName: ''
+              orderBy: ''
+              pageSize: 0
+              updateUser: ''
+              categoryCode: ''
+              categoryName: ''
+              modelloc: ''
+              categoryType: ''
+              modelFlag: ''
+              createDateStart: ''
+              pageIndex: 0
+              updateDateStart: ''
+              tenantId: ''
+              updateDateEnd: ''
+              ids: []
+              createUser: ''
+              organType: 0
+              createDateEnd: ''
+              categoryId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            categoryCode:
+                              type: string
+                              description: 分类代码
+                            categoryId:
+                              type: string
+                              description: 分类ID
+                            categoryName:
+                              type: string
+                              description: 分类名称
+                            categoryType:
+                              type: string
+                              description: 目录类型
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人ID
+                            id:
+                              type: string
+                              description: 主键ID
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 删除1是0否
+                            leftValue:
+                              type: integer
+                              format: int32
+                              description: 子级1是0否
+                            modelFlag:
+                              type: string
+                              description: 素材标识
+                            modelloc:
+                              type: string
+                              description: AI模型位
+                            moduleName:
+                              type: string
+                              description: 分类模块
+                            organType:
+                              type: integer
+                              format: int32
+                              description: 归属0企业1部门2个人
+                            tenantId:
+                              type: string
+                              description: 租户ID
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人ID
+                        description: 模型位素材分类目录配置结果类
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - updateDate: ''
+                    isDelete: 0
+                    leftValue: 0
+                    moduleName: ''
+                    updateUser: ''
+                    categoryCode: ''
+                    categoryName: ''
+                    modelloc: ''
+                    categoryType: ''
+                    modelFlag: ''
+                    tenantId: ''
+                    createUser: ''
+                    id: ''
+                    organType: 0
+                    categoryId: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/ruleseedscheme/pageRelatedScheme:
+    post:
+      operationId: apiRuleseedschemePageRelatedScheme
+      summary: 获取规则关联的种子方案 默认查询已发布
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=868070585434017833
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createDateEnd:
+                  type: string
+                  description: 创建结束时间
+                createDateStart:
+                  type: string
+                  description: 创建开始时间
+                createUser:
+                  type: string
+                  description: 创建人
+                id:
+                  type: integer
+                  format: int32
+                  description: 主键id
+                industId:
+                  type: string
+                  description: 行业应用ID
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除默认0未删除
+                isTenantPublic:
+                  type: integer
+                  format: int32
+                  description: 是否租户共享0否1是
+                kgId:
+                  type: string
+                  description: 图谱入库id
+                kgStatuses:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n规则入图谱状态@seecom.swj.api.njvr.enums.VrRule2KgStatusEnum"
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                queryType:
+                  type: integer
+                  format: int32
+                  description: 查询类型1样板间(方案)2风格系列(规则)默认1
+                ruleId:
+                  type: integer
+                  format: int32
+                  description: 设计规则id
+                ruleIdList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n设计规则id列表"
+                ruleKeyWord:
+                  type: string
+                  description: 系列(规则)关键词查询（规则id/规则名称）
+                rulePublishState:
+                  type: integer
+                  format: int32
+                  description: 设计规则发布状态0未发布1已发布默认1
+                ruleStyleId:
+                  type: string
+                  description: 系列/规则/风格id
+                ruleType:
+                  type: integer
+                  format: int32
+                  description: 规则/系列类型1平台、2企业默认2
+                schemeKeyWord:
+                  type: string
+                  description: 方案关键词(种子方案ID/名称)
+                schemeName:
+                  type: string
+                  description: 种子方案名称模糊全匹配
+                schemeStyleId:
+                  type: string
+                  description: 方案风格id
+                seedSchemeId:
+                  type: string
+                  description: 种子方案id
+                spaceName:
+                  type: string
+                  description: 空间名称
+                status:
+                  type: integer
+                  format: int32
+                  description: 种子方案关联状态2已入库3已发布@seecom.swj.api.njvr.enums.SeedSchemeStatusEnum
+                statusList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n种子方案关联状态列表2已入库3已发布"
+                tenantId:
+                  type: string
+                  description: 租户ID
+                tenantIdList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n租户ID列表"
+                updateDateEnd:
+                  type: string
+                  description: 更新结束时间
+                updateDateStart:
+                  type: string
+                  description: 更新开始时间
+                updateUser:
+                  type: string
+                  description: 更新人
+            example:
+              ruleStyleId: ''
+              industId: ''
+              orderBy: ''
+              pageSize: 0
+              spaceName: ''
+              ruleKeyWord: ''
+              rulePublishState: 0
+              createDateStart: ''
+              ruleType: 0
+              updateDateStart: ''
+              updateDateEnd: ''
+              schemeStyleId: ''
+              id: 0
+              createDateEnd: ''
+              ruleId: 0
+              tenantIdList: []
+              kgId: ''
+              isDelete: 0
+              schemeName: ''
+              updateUser: ''
+              schemeKeyWord: ''
+              queryType: 0
+              seedSchemeId: ''
+              kgStatuses: []
+              ruleIdList: []
+              statusList: []
+              pageIndex: 0
+              isTenantPublic: 0
+              tenantId: ''
+              createUser: ''
+              status: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            brushStyleReqs:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  styleCode:
+                                    type: string
+                                    description: 风格刷唯一标识(固定传值)code全屋风格刷:styleBrushId厨房风格刷:kitchenBrushId背景墙风格刷:wallBrushId
+                                  styleId:
+                                    type: string
+                                    description: 风格刷ID
+                                  styleImage:
+                                    type: string
+                                    description: 封面图
+                                  styleName:
+                                    type: string
+                                    description: 风格名称
+                                  styleType:
+                                    type: string
+                                    description: 风格类别
+                                  xmlDataUrl:
+                                    type: string
+                                    description: 风格刷对应数据URL
+                              description: '*风格刷参数'
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人
+                            id:
+                              type: integer
+                              format: int32
+                              description: 主键id
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否删除
+                            kgId:
+                              type: string
+                              description: 图谱入库id
+                            layoutTemplates:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    description: ID
+                                  layoutData:
+                                    type: string
+                                    description: 布局详情oss
+                                  roomId:
+                                    type: string
+                                    description: 空间ID
+                                  roomName:
+                                    type: string
+                                    description: 空间名称
+                                  schemeId:
+                                    type: string
+                                    description: 方案ID
+                                  uId:
+                                    type: string
+                                    description: 空间UID
+                              description: 布局模板信息
+                            lightTemplateDataUrl:
+                              type: string
+                              description: 灯光模板数据URL
+                            lightTemplateId:
+                              type: string
+                              description: 布局灯光模板
+                            roomCovers:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  coverImage:
+                                    type: string
+                                    description: 空间封面图
+                                  createDate:
+                                    type: string
+                                    description: 创建时间
+                                  createUser:
+                                    type: string
+                                    description: 创建人ID
+                                  id:
+                                    type: string
+                                    description: 主键ID
+                                  industId:
+                                    type: string
+                                    description: 应用ID，对应layout_meta_room_type.indust_id
+                                  isDelete:
+                                    type: integer
+                                    format: int32
+                                    description: 删除标识：0否1是
+                                  roomTypeId:
+                                    type: string
+                                    description: 空间类型ID，对应layout_meta_room_type.id
+                                  roomTypeName:
+                                    type: string
+                                    description: 空间类型名称快照
+                                  ruleId:
+                                    type: integer
+                                    format: int32
+                                    description: 套系ID，对应vr_rule.rule_id
+                                  tenantId:
+                                    type: string
+                                    description: 租户ID
+                                  updateDate:
+                                    type: string
+                                    description: 更新时间
+                                  updateUser:
+                                    type: string
+                                    description: 更新人ID
+                              description: 套系空间封面结果
+                            roomList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  area:
+                                    type: number
+                                    format: double
+                                    description: 空间面积
+                                  imgPath:
+                                    type: string
+                                    description: 空间封面图
+                                  imgPath720:
+                                    type: string
+                                    description: 空间全景图
+                                  name:
+                                    type: string
+                                    description: 空间名称
+                                  style:
+                                    type: string
+                                    description: 空间风格
+                              description: '*种子方案空间类'
+                            ruleComment:
+                              type: string
+                              description: 规则详情
+                            ruleId:
+                              type: integer
+                              format: int32
+                              description: 设计规则id
+                            ruleImageList:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n规则/系列封面列表"
+                            ruleName:
+                              type: string
+                              description: 规则/系列名称
+                            schemeArea:
+                              type: number
+                              format: double
+                              description: 方案面积
+                            schemeName:
+                              type: string
+                              description: 种子方案名称冗余名称等同seedSchemeName
+                            seedId:
+                              type: string
+                              description: 种子方案主ID
+                            seedSchemeId:
+                              type: string
+                              description: 种子方案id
+                            seedSchemeName:
+                              type: string
+                              description: 种子方案名称
+                            seriesStyle:
+                              type: string
+                              description: 系列风格
+                            status:
+                              type: integer
+                              format: int32
+                              description: 种子方案关联状态@seecom.swj.api.njvr.enums.SeedSchemeStatusEnum
+                            styleId:
+                              type: string
+                              description: 全屋默认风格刷ID
+                            thumbnail:
+                              type: string
+                              description: 种子方案封面/系列封面图
+                            updateDate:
+                              type: string
+                              description: 修改时间
+                            updateUser:
+                              type: string
+                              description: 修改人
+                        description: This is List Type
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - brushStyleReqs:
+                    - xmlDataUrl: ''
+                      styleImage: ''
+                      styleName: ''
+                      styleCode: ''
+                      styleType: ''
+                      styleId: ''
+                    updateDate: ''
+                    layoutTemplates:
+                    - layoutData: ''
+                      schemeId: ''
+                      roomId: ''
+                      roomName: ''
+                      uId: ''
+                      id: ''
+                    lightTemplateDataUrl: ''
+                    styleId: ''
+                    seedId: ''
+                    ruleName: ''
+                    id: 0
+                    ruleId: 0
+                    createDate: ''
+                    seriesStyle: ''
+                    thumbnail: ''
+                    kgId: ''
+                    roomCovers:
+                    - updateDate: ''
+                      industId: ''
+                      isDelete: 0
+                      roomTypeName: ''
+                      updateUser: ''
+                      roomTypeId: ''
+                      coverImage: ''
+                      tenantId: ''
+                      createUser: ''
+                      id: ''
+                      ruleId: 0
+                      createDate: ''
+                    isDelete: 0
+                    ruleImageList: []
+                    schemeName: ''
+                    seedSchemeName: ''
+                    updateUser: ''
+                    seedSchemeId: ''
+                    createUser: ''
+                    lightTemplateId: ''
+                    roomList:
+                    - imgPath720: ''
+                      imgPath: ''
+                      name: ''
+                      style: ''
+                    ruleComment: ''
+                    status: 0
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/layoutScheme/get:
+    post:
+      operationId: apiV1LayoutSchemeGet
+      summary: 获取布局模板方案表详情
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=736154292423118879
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: object
+            example:
+              id: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                        description: 地址
+                      area:
+                        type: number
+                        format: float
+                        description: 方案面积(户型面积)
+                      belongType:
+                        type: integer
+                        format: int32
+                        description: 归属1企业2门店
+                      budget:
+                        type: string
+                        description: 装修预算
+                      city:
+                        type: string
+                        description: 市代码
+                      cntactMan:
+                        type: string
+                        description: 客户名称
+                      contentUrl:
+                        type: string
+                        description: 方案内容URL
+                      coverImage:
+                        type: string
+                        description: 布局方案封面图
+                      cpqRespId:
+                        type: string
+                        description: CPQ下单返回ID
+                      createDate:
+                        type: string
+                        description: 创建时间
+                      createUser:
+                        type: string
+                        description: 创建人ID
+                      createUserName:
+                        type: string
+                        description: 创建人名称
+                      createUserNickName:
+                        type: string
+                        description: 创建人昵称
+                      custInfoId:
+                        type: string
+                        description: 客户信息关联ID
+                      customerInfo:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                            description: 地址详情
+                          areaCode:
+                            type: string
+                            description: 区代码
+                          buildingName:
+                            type: string
+                            description: 楼盘名称
+                          city:
+                            type: string
+                            description: 市名称
+                          cityCode:
+                            type: string
+                            description: 市代码
+                          clientId:
+                            type: string
+                            description: 客户端ID
+                          cntactMan:
+                            type: string
+                            description: 联系人
+                          district:
+                            type: string
+                            description: 区名称
+                          email:
+                            type: string
+                            description: email
+                          hwCustomerId:
+                            type: string
+                            description: 华为潜客ID
+                          mobile:
+                            type: string
+                            description: 联系电话
+                          note:
+                            type: string
+                            description: 备注
+                          province:
+                            type: string
+                            description: 省名称
+                          provinceCode:
+                            type: string
+                            description: 省
+                          qq:
+                            type: string
+                            description: QQ
+                          sex:
+                            type: string
+                            description: 性别
+                          webSiteSource:
+                            type: string
+                            description: 来源
+                        description: "布局方案客户信息入参  \n客户信息"
+                      designerId:
+                        type: string
+                        description: 从业者(分享人)ID
+                      designerNickName:
+                        type: string
+                        description: 从业者昵称
+                      designerOpenId:
+                        type: string
+                        description: 从业者(分享人)openId
+                      designerThumbnail:
+                        type: string
+                        description: 从业者头像
+                      deviceAmount:
+                        type: number
+                        format: double
+                        description: 设备数
+                      district:
+                        type: string
+                        description: 区代码
+                      expireDate:
+                        type: string
+                        description: 过期时间
+                      explanatoryImage:
+                        type: string
+                        description: 企业样板间说明图
+                      floors:
+                        type: string
+                        description: 层数
+                      funcRequire:
+                        type: string
+                        description: 功能需求
+                      houseMold:
+                        type: string
+                        description: 房屋类型
+                      houseType:
+                        type: string
+                        description: 户型例:三室两厅
+                      houseTypeId:
+                        type: string
+                        description: 户型ID
+                      houseTypeInfo:
+                        type: object
+                        properties:
+                          area:
+                            type: number
+                            format: double
+                            description: 面积
+                          bathroom:
+                            type: string
+                            description: 卫
+                          buildingName:
+                            type: string
+                            description: 小区名称
+                          city:
+                            type: string
+                            description: 市代码
+                          createDate:
+                            type: string
+                            description: 创建时间
+                          createUser:
+                            type: string
+                            description: 创建人
+                          dataUrl:
+                            type: string
+                            description: 户型数据
+                          district:
+                            type: string
+                            description: 区代码
+                          dwgUrl:
+                            type: string
+                            description: '*dwg文件'
+                          hall:
+                            type: string
+                            description: 厅
+                          houseSchemeId:
+                            type: string
+                            description: 户型方案ID
+                          houseTypeName:
+                            type: string
+                            description: 名称
+                          id:
+                            type: string
+                            description: 主键ID
+                          imageUrl:
+                            type: string
+                            description: 户型图url
+                          isDelete:
+                            type: integer
+                            format: int32
+                            description: 删除1是0否
+                          kitchen:
+                            type: string
+                            description: 厨
+                          platLayoutId:
+                            type: string
+                            description: 平台库户型ID
+                          province:
+                            type: string
+                            description: 省代码
+                          room:
+                            type: string
+                            description: 房
+                          source:
+                            type: string
+                            description: 来源1户型库2上传
+                          tenantId:
+                            type: string
+                            description: 租户ID
+                          towards:
+                            type: string
+                            description: 朝向
+                          updateDate:
+                            type: string
+                            description: 更新时间
+                          updateUser:
+                            type: string
+                            description: 更新人
+                        description: "户型详情结果  \n户型详细信息"
+                      hwCustomerId:
+                        type: string
+                        description: hw潜客ID
+                      id:
+                        type: string
+                        description: 主键ID
+                      installType:
+                        type: string
+                        description: 安装类型前装/后装/通用
+                      isDelete:
+                        type: integer
+                        format: int32
+                        description: 删除0否1是
+                      isSample:
+                        type: integer
+                        format: int32
+                        description: 样板间1是0否
+                      layoutSchemeName:
+                        type: string
+                        description: 方案名称
+                      layoutSketchImage:
+                        type: string
+                        description: 布局示意图
+                      mobile:
+                        type: string
+                        description: 客户电话
+                      orientation:
+                        type: string
+                        description: 户型朝向正东/正西/正南/正北/东南/西南/西北/东北
+                      panoLink:
+                        type: string
+                        description: 全景链接
+                      populate:
+                        type: string
+                        description: 居住人口
+                      praised:
+                        type: integer
+                        format: int32
+                        description: 是否被AI轻设计点赞1是0否默认0
+                      projectAddr:
+                        type: string
+                        description: 项目地址
+                      projectId:
+                        type: string
+                        description: 项目ID(对应多方案originSchemeId)
+                      province:
+                        type: string
+                        description: 省代码
+                      ruleId:
+                        type: string
+                        description: 套系ID
+                      schemeType:
+                        type: string
+                        description: 方案类型seller|designer
+                      scoreData:
+                        type: string
+                        description: 评分数据链接
+                      shared:
+                        type: integer
+                        format: int32
+                        description: 仅显示我分享1是0否
+                      shelveStatus:
+                        type: integer
+                        format: int32
+                        description: 上架状态0否1是2待上架[默认]
+                      showPersonal:
+                        type: integer
+                        format: int32
+                        description: AI轻设计小程序个人主页显示1是0否
+                      sort:
+                        type: integer
+                        format: int32
+                        description: 排序
+                      source:
+                        type: string
+                        description: 数据来源
+                      succeeded:
+                        type: boolean
+                        description: 易维推送成功标识
+                      svjSchemeId:
+                        type: string
+                        description: 3D方案ID
+                      templateId:
+                        type: string
+                        description: 布局模板ID
+                      tenantId:
+                        type: string
+                        description: 租户ID
+                      totalPrice:
+                        type: number
+                        format: double
+                        description: 方案价格(总价)
+                      updateDate:
+                        type: string
+                        description: 更新时间
+                      updateUser:
+                        type: string
+                        description: 更新人ID
+                      ywCode:
+                        type: string
+                        description: 易维项目编码(推送易维时用户自填,记录上一次的填写)
+              example:
+                msg: ''
+                code: 0
+                data:
+                  isSample: 0
+                  cpqRespId: ''
+                  houseTypeInfo:
+                    dataUrl: ''
+                    updateDate: ''
+                    city: ''
+                    isDelete: 0
+                    hall: ''
+                    houseSchemeId: ''
+                    houseTypeName: ''
+                    updateUser: ''
+                    source: ''
+                    towards: ''
+                    room: ''
+                    buildingName: ''
+                    province: ''
+                    district: ''
+                    imageUrl: ''
+                    tenantId: ''
+                    platLayoutId: ''
+                    createUser: ''
+                    dwgUrl: ''
+                    id: ''
+                    kitchen: ''
+                    bathroom: ''
+                    createDate: ''
+                  scoreData: ''
+                  schemeType: ''
+                  hwCustomerId: ''
+                  designerNickName: ''
+                  createUserNickName: ''
+                  customerInfo:
+                    qq: ''
+                    note: ''
+                    address: ''
+                    clientId: ''
+                    city: ''
+                    hwCustomerId: ''
+                    cityCode: ''
+                    provinceCode: ''
+                    sex: ''
+                    mobile: ''
+                    webSiteSource: ''
+                    cntactMan: ''
+                    buildingName: ''
+                    areaCode: ''
+                    province: ''
+                    district: ''
+                    email: ''
+                  createUserName: ''
+                  source: ''
+                  templateId: ''
+                  ywCode: ''
+                  houseTypeId: ''
+                  province: ''
+                  svjSchemeId: ''
+                  coverImage: ''
+                  id: ''
+                  ruleId: ''
+                  budget: ''
+                  designerId: ''
+                  praised: 0
+                  cntactMan: ''
+                  sort: 0
+                  funcRequire: ''
+                  installType: ''
+                  district: ''
+                  designerOpenId: ''
+                  panoLink: ''
+                  projectId: ''
+                  succeeded: false
+                  shared: 0
+                  updateDate: ''
+                  houseMold: ''
+                  city: ''
+                  layoutSketchImage: ''
+                  floors: ''
+                  projectAddr: ''
+                  expireDate: ''
+                  shelveStatus: 0
+                  createDate: ''
+                  belongType: 0
+                  orientation: ''
+                  address: ''
+                  isDelete: 0
+                  houseType: ''
+                  mobile: ''
+                  updateUser: ''
+                  designerThumbnail: ''
+                  custInfoId: ''
+                  explanatoryImage: ''
+                  contentUrl: ''
+                  populate: ''
+                  layoutSchemeName: ''
+                  tenantId: ''
+                  createUser: ''
+                  showPersonal: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/layoutScheme/getDetail:
+    post:
+      operationId: apiV1LayoutSchemeGetDetail
+      summary: 根据ID获取方案详情,包含户型信息(若有)
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=743469653241774154
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 布局方案ID
+            example:
+              id: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                        description: 地址
+                      area:
+                        type: number
+                        format: float
+                        description: 方案面积(户型面积)
+                      belongType:
+                        type: integer
+                        format: int32
+                        description: 归属1企业2门店
+                      budget:
+                        type: string
+                        description: 装修预算
+                      city:
+                        type: string
+                        description: 市代码
+                      cityName:
+                        type: string
+                        description: 市名称
+                      cntactMan:
+                        type: string
+                        description: 客户名称
+                      contentUrl:
+                        type: string
+                        description: 方案内容URL
+                      coverImage:
+                        type: string
+                        description: 布局方案封面图
+                      cpqRespId:
+                        type: string
+                        description: CPQ下单返回ID
+                      createDate:
+                        type: string
+                        description: 创建时间
+                      createUser:
+                        type: string
+                        description: 创建人ID
+                      createUserName:
+                        type: string
+                        description: 创建人名称
+                      createUserNickName:
+                        type: string
+                        description: 创建人昵称
+                      custInfoId:
+                        type: string
+                        description: 客户信息关联ID
+                      customerInfo:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                            description: 地址详情
+                          areaCode:
+                            type: string
+                            description: 区代码
+                          buildingName:
+                            type: string
+                            description: 楼盘名称
+                          city:
+                            type: string
+                            description: 市名称
+                          cityCode:
+                            type: string
+                            description: 市代码
+                          clientId:
+                            type: string
+                            description: 客户端ID
+                          cntactMan:
+                            type: string
+                            description: 联系人
+                          district:
+                            type: string
+                            description: 区名称
+                          email:
+                            type: string
+                            description: email
+                          hwCustomerId:
+                            type: string
+                            description: 华为潜客ID
+                          industId:
+                            type: string
+                            description: 行业应用id
+                          mobile:
+                            type: string
+                            description: 联系电话
+                          note:
+                            type: string
+                            description: 备注
+                          projectType:
+                            type: string
+                            description: 项目类型2c_new
+                          province:
+                            type: string
+                            description: 省名称
+                          provinceCode:
+                            type: string
+                            description: 省
+                          qq:
+                            type: string
+                            description: QQ
+                          sex:
+                            type: string
+                            description: 性别
+                          webSiteSource:
+                            type: string
+                            description: 来源
+                        description: "布局方案客户信息入参  \n客户信息"
+                      designerId:
+                        type: string
+                        description: 从业者(分享人)ID
+                      designerNickName:
+                        type: string
+                        description: 从业者昵称
+                      designerOpenId:
+                        type: string
+                        description: 从业者(分享人)openId
+                      designerThumbnail:
+                        type: string
+                        description: 从业者头像
+                      deviceAmount:
+                        type: number
+                        format: double
+                        description: 设备数
+                      district:
+                        type: string
+                        description: 区代码
+                      districtName:
+                        type: string
+                        description: 区名称
+                      expireDate:
+                        type: string
+                        description: 过期时间
+                      explanatoryImage:
+                        type: string
+                        description: 企业样板间说明图
+                      floors:
+                        type: string
+                        description: 层数
+                      folderId:
+                        type: string
+                        description: 文件夹ID
+                      folderName:
+                        type: string
+                        description: 文件夹名称
+                      funcRequire:
+                        type: string
+                        description: 功能需求
+                      houseMold:
+                        type: string
+                        description: 房屋类型
+                      houseType:
+                        type: string
+                        description: 户型例:三室两厅
+                      houseTypeId:
+                        type: string
+                        description: 户型ID
+                      houseTypeInfo:
+                        type: object
+                        properties:
+                          area:
+                            type: number
+                            format: double
+                            description: 面积
+                          bathroom:
+                            type: string
+                            description: 卫
+                          buildingName:
+                            type: string
+                            description: 小区名称
+                          city:
+                            type: string
+                            description: 市代码
+                          createDate:
+                            type: string
+                            description: 创建时间
+                          createUser:
+                            type: string
+                            description: 创建人
+                          dataUrl:
+                            type: string
+                            description: 户型数据
+                          district:
+                            type: string
+                            description: 区代码
+                          dwgUrl:
+                            type: string
+                            description: '*dwg文件'
+                          hall:
+                            type: string
+                            description: 厅
+                          houseSchemeId:
+                            type: string
+                            description: 户型方案ID
+                          houseTypeName:
+                            type: string
+                            description: 名称
+                          id:
+                            type: string
+                            description: 主键ID
+                          imageUrl:
+                            type: string
+                            description: 户型图url
+                          industId:
+                            type: string
+                            description: 行业应用ID
+                          isDelete:
+                            type: integer
+                            format: int32
+                            description: 删除1是0否
+                          kitchen:
+                            type: string
+                            description: 厨
+                          platHouseTypeId:
+                            type: string
+                            description: 平台库户型ID
+                          platLayoutId:
+                            type: string
+                            description: 平台库户型ID
+                          province:
+                            type: string
+                            description: 省代码
+                          room:
+                            type: string
+                            description: 房
+                          source:
+                            type: string
+                            description: 来源1户型库2上传
+                          status:
+                            type: integer
+                            format: int32
+                            description: 状态1启用0禁用默认1
+                          tenantId:
+                            type: string
+                            description: 租户ID
+                          towards:
+                            type: string
+                            description: 朝向
+                          updateDate:
+                            type: string
+                            description: 更新时间
+                          updateUser:
+                            type: string
+                            description: 更新人
+                        description: "户型详情结果  \n户型详细信息"
+                      hwCustomerId:
+                        type: string
+                        description: hw潜客ID
+                      id:
+                        type: string
+                        description: 主键ID
+                      industId:
+                        type: string
+                        description: 行业应用id
+                      installType:
+                        type: string
+                        description: 安装类型前装/后装/通用
+                      isDelete:
+                        type: integer
+                        format: int32
+                        description: 删除0否1是
+                      isSample:
+                        type: integer
+                        format: int32
+                        description: 样板间1是0否
+                      layoutSchemeName:
+                        type: string
+                        description: 方案名称
+                      layoutSketchImage:
+                        type: string
+                        description: 布局示意图
+                      mobile:
+                        type: string
+                        description: 客户电话
+                      orientation:
+                        type: string
+                        description: 户型朝向正东/正西/正南/正北/东南/西南/西北/东北
+                      outerSchemeId:
+                        type: string
+                        description: 外部方案ID
+                      panoLink:
+                        type: string
+                        description: 全景链接
+                      platLayoutId:
+                        type: string
+                        description: 平台库户型ID
+                      populate:
+                        type: string
+                        description: 居住人口
+                      praised:
+                        type: integer
+                        format: int32
+                        description: 是否被AI轻设计点赞1是0否默认0
+                      projectAddr:
+                        type: string
+                        description: 项目地址
+                      projectCode:
+                        type: string
+                        description: 项目编码
+                      projectId:
+                        type: string
+                        description: 项目ID(对应多方案originSchemeId)
+                      projectType:
+                        type: string
+                        description: 项目类型2c_new
+                      province:
+                        type: string
+                        description: 省代码
+                      provinceName:
+                        type: string
+                        description: 省名称
+                      quoteXmlUrl:
+                        type: string
+                        description: 3D报价URL
+                      ruleId:
+                        type: string
+                        description: 套系ID
+                      schemeType:
+                        type: string
+                        description: 方案类型seller|designer
+                      schemeVersion:
+                        type: string
+                        description: CPQ方案版本
+                      scoreData:
+                        type: string
+                        description: 评分数据链接
+                      shared:
+                        type: integer
+                        format: int32
+                        description: 仅显示我分享1是0否
+                      shelveStatus:
+                        type: integer
+                        format: int32
+                        description: 上架状态0否1是2待上架[默认]
+                      showPersonal:
+                        type: integer
+                        format: int32
+                        description: AI轻设计小程序个人主页显示1是0否
+                      sort:
+                        type: integer
+                        format: int32
+                        description: 排序
+                      source:
+                        type: string
+                        description: 数据来源
+                      succeeded:
+                        type: boolean
+                        description: 易维推送成功标识
+                      svjSchemeId:
+                        type: string
+                        description: 3D方案ID
+                      templateId:
+                        type: string
+                        description: 布局模板ID
+                      tenantId:
+                        type: string
+                        description: 租户ID
+                      totalPrice:
+                        type: number
+                        format: double
+                        description: 方案价格(总价)
+                      updateDate:
+                        type: string
+                        description: 更新时间
+                      updateUser:
+                        type: string
+                        description: 更新人ID
+                      ywCode:
+                        type: string
+                        description: 易维项目编码(推送易维时用户自填,记录上一次的填写)
+              example:
+                msg: ''
+                code: 0
+                data:
+                  isSample: 0
+                  cpqRespId: ''
+                  houseTypeInfo:
+                    updateDate: ''
+                    city: ''
+                    industId: ''
+                    hall: ''
+                    source: ''
+                    platHouseTypeId: ''
+                    province: ''
+                    imageUrl: ''
+                    platLayoutId: ''
+                    id: ''
+                    kitchen: ''
+                    bathroom: ''
+                    createDate: ''
+                    dataUrl: ''
+                    isDelete: 0
+                    houseSchemeId: ''
+                    houseTypeName: ''
+                    updateUser: ''
+                    towards: ''
+                    room: ''
+                    buildingName: ''
+                    district: ''
+                    tenantId: ''
+                    createUser: ''
+                    dwgUrl: ''
+                    status: 0
+                  scoreData: ''
+                  schemeType: ''
+                  hwCustomerId: ''
+                  designerNickName: ''
+                  createUserNickName: ''
+                  projectType: ''
+                  customerInfo:
+                    qq: ''
+                    note: ''
+                    address: ''
+                    clientId: ''
+                    city: ''
+                    hwCustomerId: ''
+                    cityCode: ''
+                    industId: ''
+                    provinceCode: ''
+                    sex: ''
+                    mobile: ''
+                    projectType: ''
+                    webSiteSource: ''
+                    cntactMan: ''
+                    buildingName: ''
+                    areaCode: ''
+                    province: ''
+                    district: ''
+                    email: ''
+                  createUserName: ''
+                  source: ''
+                  templateId: ''
+                  ywCode: ''
+                  houseTypeId: ''
+                  province: ''
+                  svjSchemeId: ''
+                  coverImage: ''
+                  id: ''
+                  ruleId: ''
+                  quoteXmlUrl: ''
+                  budget: ''
+                  designerId: ''
+                  praised: 0
+                  cntactMan: ''
+                  sort: 0
+                  folderId: ''
+                  funcRequire: ''
+                  installType: ''
+                  district: ''
+                  designerOpenId: ''
+                  panoLink: ''
+                  folderName: ''
+                  provinceName: ''
+                  projectId: ''
+                  succeeded: false
+                  shared: 0
+                  updateDate: ''
+                  houseMold: ''
+                  city: ''
+                  industId: ''
+                  layoutSketchImage: ''
+                  floors: ''
+                  cityName: ''
+                  projectCode: ''
+                  projectAddr: ''
+                  platLayoutId: ''
+                  expireDate: ''
+                  shelveStatus: 0
+                  createDate: ''
+                  belongType: 0
+                  orientation: ''
+                  outerSchemeId: ''
+                  address: ''
+                  districtName: ''
+                  isDelete: 0
+                  houseType: ''
+                  mobile: ''
+                  updateUser: ''
+                  designerThumbnail: ''
+                  custInfoId: ''
+                  schemeVersion: ''
+                  explanatoryImage: ''
+                  contentUrl: ''
+                  populate: ''
+                  layoutSchemeName: ''
+                  tenantId: ''
+                  createUser: ''
+                  showPersonal: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/layoutScheme/save:
+    post:
+      operationId: apiV1LayoutSchemeSave
+      summary: 保存布局模板方案
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=713795630753005674
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                area:
+                  type: number
+                  format: float
+                  description: 方案面积
+                city:
+                  type: string
+                  description: 市代码
+                content:
+                  type: string
+                  description: 方案内容
+                contentUrl:
+                  type: string
+                  description: 方案内容路径
+                coverImage:
+                  type: string
+                  description: 封面图
+                coverImageUrl:
+                  type: string
+                  description: 封面图路径
+                cpqRespId:
+                  type: string
+                  description: CPQ下单返回ID
+                customerInfo:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                      description: 地址详情
+                    areaCode:
+                      type: string
+                      description: 区代码
+                    buildingName:
+                      type: string
+                      description: 楼盘名称
+                    city:
+                      type: string
+                      description: 市名称
+                    cityCode:
+                      type: string
+                      description: 市代码
+                    clientId:
+                      type: string
+                      description: 客户端ID
+                    cntactMan:
+                      type: string
+                      description: 联系人
+                    district:
+                      type: string
+                      description: 区名称
+                    email:
+                      type: string
+                      description: email
+                    hwCustomerId:
+                      type: string
+                      description: 华为潜客ID
+                    mobile:
+                      type: string
+                      description: 联系电话
+                    note:
+                      type: string
+                      description: 备注
+                    province:
+                      type: string
+                      description: 省名称
+                    provinceCode:
+                      type: string
+                      description: 省
+                    qq:
+                      type: string
+                      description: QQ
+                    sex:
+                      type: string
+                      description: 性别
+                    webSiteSource:
+                      type: string
+                      description: 来源
+                  description: "布局方案客户信息入参  \n客户信息"
+                designerId:
+                  type: string
+                  description: 从业者(分享人)账号ID
+                designerOpenId:
+                  type: string
+                  description: 从业者/分享人openId
+                deviceAmount:
+                  type: number
+                  format: double
+                  description: 设备数
+                district:
+                  type: string
+                  description: 区代码
+                floors:
+                  type: string
+                  description: 层数
+                houseType:
+                  type: string
+                  description: 户型<p>一室一厅两室一厅两室两厅三室一厅三室两厅四室两厅大平层多层别墅定制户型
+                houseTypeParam:
+                  type: object
+                  properties:
+                    area:
+                      type: number
+                      format: double
+                      description: 面积
+                    bathroom:
+                      type: string
+                      description: 卫
+                    buildingName:
+                      type: string
+                      description: 小区名称
+                    city:
+                      type: string
+                      description: 市代码
+                    dataUrl:
+                      type: string
+                      description: 户型数据
+                    district:
+                      type: string
+                      description: 区代码
+                    dwgUrl:
+                      type: string
+                      description: dwg文件路径
+                    hall:
+                      type: string
+                      description: 厅
+                    houseSchemeId:
+                      type: string
+                      description: 户型对应布局方案ID
+                    houseTypeName:
+                      type: string
+                      description: 名称
+                    imageUrl:
+                      type: string
+                      description: 户型图url
+                    kitchen:
+                      type: string
+                      description: 厨
+                    platLayoutId:
+                      type: string
+                      description: 平台库户型ID
+                    province:
+                      type: string
+                      description: 省代码
+                    room:
+                      type: string
+                      description: 房
+                    source:
+                      type: string
+                      description: 来源1户型库2上传CAD3上传临摹图
+                    towards:
+                      type: string
+                      description: 朝向
+                  description: "AI个人工作台户型创建类  \n户型信息"
+                id:
+                  type: string
+                  description: 主键ID（若有则为编辑）
+                installType:
+                  type: string
+                  description: 安装类型前装/后装/通用
+                isSample:
+                  type: integer
+                  format: int32
+                  description: 样板间1是0否
+                layoutSchemeName:
+                  type: string
+                  description: 方案名称
+                orientation:
+                  type: string
+                  description: 户型朝向正东/正西/正南/正北/东南/西南/西北/东北
+                panoLink:
+                  type: string
+                  description: 全景链接
+                projectAddr:
+                  type: string
+                  description: 项目地址
+                projectId:
+                  type: string
+                  description: 布局项目ID(多方案originSchemeId)
+                province:
+                  type: string
+                  description: 省代码
+                roomList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      area:
+                        type: number
+                        format: float
+                        description: 面积
+                      layoutSchemeId:
+                        type: string
+                        description: 布局方案ID
+                      roomAlias:
+                        type: string
+                        description: 空间别名
+                      roomName:
+                        type: string
+                        description: 空间名称
+                      ruleId:
+                        type: string
+                        description: 套系ID
+                      seriesKgId:
+                        type: string
+                        description: 套系图谱ID
+                      templateId:
+                        type: string
+                        description: 布局模板ID
+                      uid:
+                        type: string
+                        description: 空间uid
+                  description: 布局方案空间表创建类
+                schemeType:
+                  type: string
+                  description: 方案类型seller|designer
+                scoreData:
+                  type: string
+                  description: 评分数据链接
+                source:
+                  type: string
+                  description: 数据来源
+                svjSchemeId:
+                  type: string
+                  description: 3D方案ID
+                totalPrice:
+                  type: number
+                  format: double
+                  description: 方案总价
+            example:
+              isSample: 0
+              cpqRespId: ''
+              scoreData: ''
+              schemeType: ''
+              city: ''
+              coverImageUrl: ''
+              customerInfo:
+                qq: ''
+                note: ''
+                address: ''
+                clientId: ''
+                city: ''
+                hwCustomerId: ''
+                cityCode: ''
+                provinceCode: ''
+                sex: ''
+                mobile: ''
+                webSiteSource: ''
+                cntactMan: ''
+                buildingName: ''
+                areaCode: ''
+                province: ''
+                district: ''
+                email: ''
+              source: ''
+              content: ''
+              floors: ''
+              province: ''
+              svjSchemeId: ''
+              coverImage: ''
+              projectAddr: ''
+              id: ''
+              designerId: ''
+              orientation: ''
+              houseType: ''
+              houseTypeParam:
+                dataUrl: ''
+                city: ''
+                hall: ''
+                houseSchemeId: ''
+                houseTypeName: ''
+                source: ''
+                towards: ''
+                room: ''
+                buildingName: ''
+                province: ''
+                district: ''
+                imageUrl: ''
+                platLayoutId: ''
+                dwgUrl: ''
+                kitchen: ''
+                bathroom: ''
+              contentUrl: ''
+              installType: ''
+              district: ''
+              layoutSchemeName: ''
+              designerOpenId: ''
+              panoLink: ''
+              projectId: ''
+              roomList:
+              - roomAlias: ''
+                layoutSchemeId: ''
+                templateId: ''
+                seriesKgId: ''
+                roomName: ''
+                uid: ''
+                ruleId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/layoutSchemeFiles/listByPage:
+    post:
+      operationId: apiV1LayoutSchemeFilesListByPage
+      summary: 分页查询布局方案附件信息
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=736154710528114759
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createUser:
+                  type: string
+                  description: 创建人ID
+                fileName:
+                  type: string
+                  description: '*附件名称'
+                fileType:
+                  type: string
+                  description: 附件类型布局图：layoutImage彩屏图：colorScreen动线图：moveLine效果图：effectImage鸟瞰图：birdEyeImage全景图：panoramaImage
+                fileUrl:
+                  type: string
+                  description: 附件链接
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \nID"
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除1是0否
+                layoutSchemeId:
+                  type: string
+                  description: 布局方案ID
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateUser:
+                  type: string
+                  description: 更新人ID
+            example:
+              fileName: ''
+              layoutSchemeId: ''
+              isDelete: 0
+              orderBy: ''
+              pageSize: 0
+              updateUser: ''
+              createDateStart: ''
+              pageIndex: 0
+              updateDateStart: ''
+              updateDateEnd: ''
+              ids: []
+              createUser: ''
+              fileUrl: ''
+              createDateEnd: ''
+              fileType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人ID
+                            fileDesc:
+                              type: string
+                            fileName:
+                              type: string
+                              description: '*附件名称'
+                            fileType:
+                              type: string
+                              description: 附件类型
+                            fileUrl:
+                              type: string
+                              description: 附件链接
+                            id:
+                              type: string
+                              description: ID
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 删除1是0否
+                            layoutSchemeId:
+                              type: string
+                              description: 布局方案ID
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人ID
+                        description: 布局方案附件信息表结果类
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - fileName: ''
+                    updateDate: ''
+                    layoutSchemeId: ''
+                    isDelete: 0
+                    updateUser: ''
+                    fileDesc: ''
+                    createUser: ''
+                    fileUrl: ''
+                    id: ''
+                    fileType: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/layoutSchemeViewEffects/pageViewImage:
+    post:
+      operationId: apiV1LayoutSchemeViewEffectsPageViewImage
+      summary: 分页查询布局视角效果图
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=744141336357261412
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                createDateEnd:
+                  type: string
+                  description: 创建时间结束日期
+                createDateStart:
+                  type: string
+                  description: 创建时间开始日期
+                createUser:
+                  type: string
+                  description: 创建人ID
+                ids:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n主键ID"
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 删除1是0否
+                layoutSchemeId:
+                  type: string
+                  description: 布局方案ID
+                orderBy:
+                  type: string
+                  description: 排序
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                queueFlag:
+                  type: integer
+                  format: int32
+                  description: 效果图类型0效果图1全景
+                queueId:
+                  type: string
+                  description: 效果图ID
+                roomId:
+                  type: string
+                  description: 空间标识
+                roomName:
+                  type: string
+                  description: 空间名称
+                updateDateEnd:
+                  type: string
+                  description: 更新时间结束日期
+                updateDateStart:
+                  type: string
+                  description: 更新时间开始日期
+                updateUser:
+                  type: string
+                  description: 更新人ID
+                viewAngleData:
+                  type: string
+                  description: 视角数据
+                viewAngleId:
+                  type: string
+                  description: 视角ID
+                viewAngleIdList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n视角ID列表"
+                viewAngleName:
+                  type: string
+                  description: 视角名称
+            example:
+              queueId: ''
+              layoutSchemeId: ''
+              isDelete: 0
+              viewAngleData: ''
+              orderBy: ''
+              pageSize: 0
+              updateUser: ''
+              roomId: ''
+              roomName: ''
+              viewAngleIdList: []
+              viewAngleId: ''
+              createDateStart: ''
+              pageIndex: 0
+              queueFlag: 0
+              updateDateStart: ''
+              updateDateEnd: ''
+              ids: []
+              createUser: ''
+              viewAngleName: ''
+              createDateEnd: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                        description: 页码
+                      pageSize:
+                        type: integer
+                        format: int32
+                        description: 页容量
+                      recordCount:
+                        type: integer
+                        format: int32
+                        description: 记录数
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            createUser:
+                              type: string
+                              description: 创建人ID
+                            id:
+                              type: string
+                              description: 主键ID
+                            imageUrl:
+                              type: string
+                              description: 效果图链接
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 删除1是0否
+                            layoutSchemeId:
+                              type: string
+                              description: 布局方案ID
+                            queueFlag:
+                              type: integer
+                              format: int32
+                              description: 效果图类型0效果图1全景
+                            queueId:
+                              type: string
+                              description: 效果图ID
+                            roomId:
+                              type: string
+                              description: 空间标识
+                            roomName:
+                              type: string
+                              description: 空间名称
+                            tenantId:
+                              type: string
+                              description: 租户ID
+                            updateDate:
+                              type: string
+                              description: 更新时间
+                            updateUser:
+                              type: string
+                              description: 更新人ID
+                            viewAngleId:
+                              type: string
+                              description: 视角ID
+                            viewAngleName:
+                              type: string
+                              description: 视角名称
+                        description: 布局视角与效果图结果
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - queueId: ''
+                    updateDate: ''
+                    layoutSchemeId: ''
+                    isDelete: 0
+                    updateUser: ''
+                    roomId: ''
+                    roomName: ''
+                    viewAngleId: ''
+                    queueFlag: 0
+                    imageUrl: ''
+                    tenantId: ''
+                    createUser: ''
+                    id: ''
+                    viewAngleName: ''
+                    createDate: ''
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/queueok/listEffectsByPage:
+    post:
+      operationId: apiV1QueueokListEffectsByPage
+      summary: 获取效果图分页列表
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=736154292423118899
+      x-documentation-category: 轻设计
+      description: 获取布局方案效果图
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                beginDate:
+                  type: string
+                  description: 开始时间
+                belongType:
+                  type: string
+                  description: 归属类型10:设计岛
+                definition:
+                  type: string
+                  description: 清晰度，标清：normal_standard、高清：normal_high、超清：normal_hyper4k：normal_4K
+                definitionFlag:
+                  type: string
+                  description: 支持查8k（兼容旧definition字段）清晰度，标清：normal_standard、高清：normal_high、超清：normal_hyper4k：normal_4K,8k：normal_8K
+                deptId:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n部门ID"
+                endDate:
+                  type: string
+                  description: 结束时间
+                extraId:
+                  type: string
+                  description: 扩展id
+                extraIds:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n扩展id集合"
+                flag:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n效果图类型0:普通渲染图，1:全景，2,鸟瞰图"
+                includeMain:
+                  type: boolean
+                  description: 是否包含主图true包含false不包含默认false
+                isDelete:
+                  type: integer
+                  format: int32
+                  description: 是否删除
+                materialId:
+                  type: string
+                  description: 素材ID
+                modifyDateBegin:
+                  type: string
+                  description: 更新时间开始
+                modifyDateEnd:
+                  type: string
+                  description: 更新时间结束
+                orderBy:
+                  type: string
+                  description: 排序默认：orderbycreateDatedesc
+                organId:
+                  type: string
+                  description: 机构ID
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页大小
+                queueIds:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n队列Ids"
+                queueType:
+                  type: integer
+                  format: int32
+                  description: 渲染类型queueType
+                roomId:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n空间ID"
+                roomIdNull:
+                  type: integer
+                  format: int32
+                  description: 空间Id为空筛选1查询空间ID为空的;0不查询;2查询空间不存在及空间id为空的，仅限传递userId以及方案id的情况
+                schemeId:
+                  type: string
+                  description: 方案编号ID
+                schemeIds:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n方案编号IDs"
+                shopId:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n门店id集合"
+                templateVersion:
+                  type: string
+                  description: 任务类型标识
+                templateVersionList:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n任务类型标识集合"
+            example:
+              flag: []
+              modifyDateEnd: ''
+              endDate: ''
+              definitionFlag: ''
+              orderBy: ''
+              pageSize: 0
+              schemeId: ''
+              roomId: []
+              templateVersionList: []
+              definition: ''
+              shopId: []
+              extraIds: []
+              belongType: ''
+              includeMain: false
+              isDelete: 0
+              deptId: []
+              materialId: ''
+              queueIds: []
+              beginDate: ''
+              schemeIds: []
+              modifyDateBegin: ''
+              pageIndex: 0
+              extraId: ''
+              organId: ''
+              queueType: 0
+              templateVersion: ''
+              roomIdNull: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            buildingId:
+                              type: integer
+                              format: int64
+                              description: 楼栋ID
+                            createDate:
+                              type: string
+                              description: 创建时间
+                            definition:
+                              type: string
+                              description: 分辨率
+                            deptId:
+                              type: string
+                              description: 部门ID
+                            depthImageUrl:
+                              type: string
+                              description: 深度图路径
+                            extraId:
+                              type: string
+                              description: 扩展id
+                            fileFullPath:
+                              type: string
+                              description: 效果图路径
+                            fileIdOutPut2:
+                              type: string
+                              description: 附件Id
+                            fileName:
+                              type: string
+                              description: 文件名
+                            flag:
+                              type: integer
+                              format: int32
+                              description: 效果图类型0:普通渲染图，1:全景，2,鸟瞰图
+                            height:
+                              type: integer
+                              format: int32
+                              description: 高
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否删除
+                            isHide:
+                              type: integer
+                              format: int32
+                              description: 显示/隐藏
+                            materialid:
+                              type: string
+                              description: 素材ID
+                            modifyDate:
+                              type: string
+                              description: 更新时间
+                            movieId:
+                              type: string
+                              description: 神笔影片ID
+                            movieName:
+                              type: string
+                              description: 神笔影片名称
+                            projectId:
+                              type: integer
+                              format: int64
+                              description: 项目ID
+                            queueId:
+                              type: string
+                              description: 队列ID
+                            queueType:
+                              type: integer
+                              format: int32
+                              description: 渲染类型queueType
+                            resolution:
+                              type: string
+                              description: 分辨率中文字符
+                            roomId:
+                              type: string
+                              description: 空间ID
+                            schemeId:
+                              type: string
+                              description: 方案ID
+                            shopId:
+                              type: string
+                              description: 商家id
+                            showPath:
+                              type: string
+                              description: 全景封面图
+                            source:
+                              type: integer
+                              format: int32
+                              description: 来源0queueok表1renderuploadFile表
+                            storeyId:
+                              type: integer
+                              format: int64
+                              description: 楼层ID
+                            templateVersion:
+                              type: string
+                              description: 前端版本信息2.0-02.0增强品质-13.0-2容器化-100
+                            userId:
+                              type: string
+                              description: 用户ID
+                            width:
+                              type: integer
+                              format: int32
+                              description: 宽
+                        description: 效果图，全景图请求参数
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - fileIdOutPut2: ''
+                    queueId: ''
+                    fileName: ''
+                    flag: 0
+                    showPath: ''
+                    movieId: ''
+                    schemeId: ''
+                    source: 0
+                    materialid: ''
+                    resolution: ''
+                    roomId: ''
+                    fileFullPath: ''
+                    definition: ''
+                    shopId: ''
+                    movieName: ''
+                    createDate: ''
+                    height: 0
+                    modifyDate: ''
+                    isDelete: 0
+                    deptId: ''
+                    storeyId: 0
+                    userId: ''
+                    buildingId: 0
+                    isHide: 0
+                    depthImageUrl: ''
+                    width: 0
+                    extraId: ''
+                    queueType: 0
+                    templateVersion: ''
+                    projectId: 0
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/vrrule/getAllMaterialSelectSort:
+    post:
+      operationId: apiVrruleGetAllMaterialSelectSort
+      summary: 获取选择素材分类列表结构目录
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=843159135649435699
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organType:
+                  type: integer
+                  format: int32
+                  description: 机构类型：1平台、2企业
+                categoryId:
+                  type: integer
+                  format: int32
+                  description: 类别id
+                groupType:
+                  type: integer
+                  format: int32
+                  description: 素材组类型（只有首次获取目录时需要传递）：1地板瓷砖、2涂料、3模型、4墙体瓷砖、6模型组合
+                tenantId:
+                  type: string
+            example:
+              groupType: 0
+              tenantId: ''
+              organType: 0
+              categoryId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      categoryList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            categoryCode:
+                              type: string
+                              description: 类别代码
+                            categoryId:
+                              type: integer
+                              format: int32
+                              description: 素材分类id
+                            categoryName:
+                              type: string
+                              description: 类别名称
+                            enterprise:
+                              type: string
+                              description: 企业名称
+                            leftValue:
+                              type: integer
+                              format: int32
+                              description: 左分值（>0表示有子集）
+                            module:
+                              type: string
+                              description: 所属模块
+                            organId:
+                              type: string
+                              description: 企业Id
+                            parentId:
+                              type: integer
+                              format: int32
+                              description: 父类编号
+                            subList:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n子集"
+                        description: "This is List Type  \n分类"
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      returnList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            author:
+                              type: string
+                              description: 上传用户
+                            brushStyleXmlUrl:
+                              type: string
+                              description: 风格刷对应XML数据URL
+                            categoryId:
+                              type: integer
+                              format: int32
+                              description: 素材分类id
+                            categoryTags:
+                              type: string
+                              description: 素材的标签集合
+                            color:
+                              type: string
+                              description: 素材颜色
+                            contentUrl:
+                              type: string
+                              description: content路径
+                            deptId:
+                              type: string
+                              description: 部门Id
+                            designMaterialTagIds:
+                              type: string
+                              description: 新素材标签id，多个用逗号隔开
+                            glbUrl:
+                              type: string
+                              description: glburl
+                            height:
+                              type: number
+                              format: double
+                              description: 图片高
+                            imagePath:
+                              type: string
+                              description: 图片路径
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否删除
+                            isFavorite:
+                              type: boolean
+                              description: 是否收藏
+                            length:
+                              type: number
+                              format: double
+                              description: 图片长
+                            matImg:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n砖块贴图路径列表，matImg.length=seqWidth*seqHeight"
+                            matType:
+                              type: integer
+                              format: int32
+                              description: Single=0,//普通纹理noSingleMix=1,//单砖混铺MPS_RandomPaveMultiSeq=2,//多砖连纹MultiMix=3,//多砖混铺MPS_MultiBrickPave<p>砖块贴图显示方式多转混铺：0MPS_MultiBrickPave随机混铺：1MPS_RandomPave
+                            matTypeStr:
+                              type: string
+                              description: 砖块贴图显示方式字符串多转混铺：0MPS_MultiBrickPave随机混铺：1MPS_RandomPave
+                            materialCategory:
+                              type: string
+                              description: 素材分类
+                            materialId:
+                              type: string
+                              description: 素材Id
+                            materialName:
+                              type: string
+                              description: 素材名称
+                            modelDepth:
+                              type: number
+                              format: double
+                              description: 模型深度
+                            modelFlag:
+                              type: integer
+                              format: int32
+                              description: 模型标志1成品模型，15组合，2贴图，14铺砖
+                            organId:
+                              type: string
+                              description: 发布商家
+                            picSize:
+                              type: string
+                              description: 素材图片的尺寸大小，例如：806A504
+                            postTime:
+                              type: string
+                              description: 上传时间
+                            productId:
+                              type: string
+                              description: 产品Id
+                            schemeType:
+                              type: string
+                              description: 方案种类cupboard:橱柜wardrobe:衣柜systemCabinet:系统柜
+                            seqHeight:
+                              type: integer
+                              format: int32
+                              description: 几列的连纹，不是连纹则为0
+                            seqWidth:
+                              type: integer
+                              format: int32
+                              description: 几行的连纹，不是连纹则为0
+                            useArea:
+                              type: string
+                              description: 使用区域
+                            width:
+                              type: number
+                              format: double
+                              description: 图片宽
+                            xmlContentUrl:
+                              type: string
+                              description: xmlContent路径
+                        description: "This is List Type  \n素材集合"
+                      totalCount:
+                        type: integer
+                        format: int32
+                        description: 总数
+              example:
+                msg: ''
+                code: 0
+                data:
+                  totalCount: 0
+                  pageIndex: 0
+                  categoryList:
+                  - subList: []
+                    enterprise: ''
+                    leftValue: 0
+                    module: ''
+                    categoryCode: ''
+                    categoryName: ''
+                    parentId: 0
+                    organId: ''
+                    categoryId: 0
+                  returnList:
+                  - color: ''
+                    schemeType: ''
+                    imagePath: ''
+                    matTypeStr: ''
+                    xmlContentUrl: ''
+                    matImg: []
+                    categoryTags: ''
+                    useArea: ''
+                    postTime: ''
+                    modelFlag: 0
+                    productId: ''
+                    author: ''
+                    isDelete: 0
+                    brushStyleXmlUrl: ''
+                    deptId: ''
+                    picSize: ''
+                    designMaterialTagIds: ''
+                    materialId: ''
+                    seqWidth: 0
+                    matType: 0
+                    materialCategory: ''
+                    glbUrl: ''
+                    materialName: ''
+                    contentUrl: ''
+                    seqHeight: 0
+                    organId: ''
+                    categoryId: 0
+                    isFavorite: false
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/vrrule/getDesignMaterials:
+    post:
+      operationId: apiVrruleGetDesignMaterials
+      summary: 分页查询素材列表
+      tags:
+      - Light Design
+      x-source-documentation: https://dev.3vjia.com/document?apiId=843159135649435701
+      x-documentation-category: 轻设计
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                  description: 素材分类id
+                groupType:
+                  type: integer
+                  format: int32
+                  description: 素材组类型：1地板瓷砖、2墙体涂料、3模型、4墙体瓷砖、6模型组合
+                likeMaterialId:
+                  type: string
+                  description: 模糊查询-素材Id
+                likeMaterialName:
+                  type: string
+                  description: 模糊查询-素材名称
+                materialId:
+                  type: string
+                  description: 素材Id
+                materialIds:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n素材ID列表"
+                materialName:
+                  type: string
+                  description: 素材名称
+                orderBy:
+                  type: string
+                  description: 排序
+                organType:
+                  type: integer
+                  format: int32
+                  description: 机构类型：1平台、2企业
+                pageIndex:
+                  type: integer
+                  format: int32
+                pageSize:
+                  type: integer
+                  format: int32
+                planId:
+                  type: string
+                  description: 方案id
+                projectId:
+                  type: string
+                  description: 项目id
+                subApp:
+                  type: string
+                  description: 大后台模块:系统柜SchemeType：systemCabinet衣柜SchemeType：wardrobe橱柜SchemeType：cupboard
+                tenantId:
+                  type: string
+                  description: 定制企业租户ID
+            example:
+              groupType: 0
+              orderBy: ''
+              pageSize: 0
+              materialId: ''
+              likeMaterialId: ''
+              materialName: ''
+              likeMaterialName: ''
+              pageIndex: 0
+              materialIds: []
+              tenantId: ''
+              planId: ''
+              subApp: ''
+              organType: 0
+              projectId: ''
+              categoryId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      pageIndex:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            author:
+                              type: string
+                              description: 上传用户
+                            brushStyleXmlUrl:
+                              type: string
+                              description: 风格刷对应XML数据URL
+                            categoryId:
+                              type: integer
+                              format: int32
+                              description: 素材分类id
+                            categoryTags:
+                              type: string
+                              description: 素材的标签集合
+                            color:
+                              type: string
+                              description: 素材颜色
+                            contentUrl:
+                              type: string
+                              description: content路径
+                            deptId:
+                              type: string
+                              description: 部门Id
+                            designMaterialTagIds:
+                              type: string
+                              description: 新素材标签id，多个用逗号隔开
+                            glbUrl:
+                              type: string
+                              description: glburl
+                            height:
+                              type: number
+                              format: double
+                              description: 图片高
+                            imagePath:
+                              type: string
+                              description: 图片路径
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否删除
+                            isFavorite:
+                              type: boolean
+                              description: 是否收藏
+                            length:
+                              type: number
+                              format: double
+                              description: 图片长
+                            matImg:
+                              type: array
+                              items: {}
+                              description: "This is List Type  \n砖块贴图路径列表，matImg.length=seqWidth*seqHeight"
+                            matType:
+                              type: integer
+                              format: int32
+                              description: Single=0,//普通纹理noSingleMix=1,//单砖混铺MPS_RandomPaveMultiSeq=2,//多砖连纹MultiMix=3,//多砖混铺MPS_MultiBrickPave<p>砖块贴图显示方式多转混铺：0MPS_MultiBrickPave随机混铺：1MPS_RandomPave
+                            matTypeStr:
+                              type: string
+                              description: 砖块贴图显示方式字符串多转混铺：0MPS_MultiBrickPave随机混铺：1MPS_RandomPave
+                            materialCategory:
+                              type: string
+                              description: 素材分类
+                            materialId:
+                              type: string
+                              description: 素材Id
+                            materialName:
+                              type: string
+                              description: 素材名称
+                            modelDepth:
+                              type: number
+                              format: double
+                              description: 模型深度
+                            modelFlag:
+                              type: integer
+                              format: int32
+                              description: 模型标志1成品模型，15组合，2贴图，14铺砖
+                            organId:
+                              type: string
+                              description: 发布商家
+                            picSize:
+                              type: string
+                              description: 素材图片的尺寸大小，例如：806A504
+                            postTime:
+                              type: string
+                              description: 上传时间
+                            productId:
+                              type: string
+                              description: 产品Id
+                            schemeType:
+                              type: string
+                              description: 方案种类cupboard:橱柜wardrobe:衣柜systemCabinet:系统柜
+                            seqHeight:
+                              type: integer
+                              format: int32
+                              description: 几列的连纹，不是连纹则为0
+                            seqWidth:
+                              type: integer
+                              format: int32
+                              description: 几行的连纹，不是连纹则为0
+                            useArea:
+                              type: string
+                              description: 使用区域
+                            width:
+                              type: number
+                              format: double
+                              description: 图片宽
+                            xmlContentUrl:
+                              type: string
+                              description: xmlContent路径
+                        description: This is List Type
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  pageSize: 0
+                  result:
+                  - color: ''
+                    schemeType: ''
+                    imagePath: ''
+                    matTypeStr: ''
+                    xmlContentUrl: ''
+                    matImg: []
+                    categoryTags: ''
+                    useArea: ''
+                    postTime: ''
+                    modelFlag: 0
+                    productId: ''
+                    author: ''
+                    isDelete: 0
+                    brushStyleXmlUrl: ''
+                    deptId: ''
+                    picSize: ''
+                    designMaterialTagIds: ''
+                    materialId: ''
+                    seqWidth: 0
+                    matType: 0
+                    materialCategory: ''
+                    glbUrl: ''
+                    materialName: ''
+                    contentUrl: ''
+                    seqHeight: 0
+                    organId: ''
+                    categoryId: 0
+                    isFavorite: false
+                  pageIndex: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

@@ -1,0 +1,56 @@
+{
+  "provider": "3vjia-technology",
+  "sources": [
+    "_original/3vjia-technology-open-platform-openapi.yml"
+  ],
+  "outputs": [
+    "3vjia-technology-3d-show-api-openapi.yml",
+    "3vjia-technology-3vjia-ai-api-openapi.yml",
+    "3vjia-technology-aimes-api-openapi.yml",
+    "3vjia-technology-accounts-api-openapi.yml",
+    "3vjia-technology-asset-management-api-openapi.yml",
+    "3vjia-technology-authorization-api-openapi.yml",
+    "3vjia-technology-cad-api-openapi.yml",
+    "3vjia-technology-chuangdian-api-openapi.yml",
+    "3vjia-technology-common-services-api-openapi.yml",
+    "3vjia-technology-dms-api-openapi.yml",
+    "3vjia-technology-dedicated-services-api-openapi.yml",
+    "3vjia-technology-design-schemes-api-openapi.yml",
+    "3vjia-technology-dreamer-api-openapi.yml",
+    "3vjia-technology-floor-plans-api-openapi.yml",
+    "3vjia-technology-light-design-api-openapi.yml",
+    "3vjia-technology-mos-api-openapi.yml",
+    "3vjia-technology-products-api-openapi.yml",
+    "3vjia-technology-quotation-api-openapi.yml",
+    "3vjia-technology-xuanchi-ai-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "3vjia-technology-open-platform-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "3vjia-technology-3d-show-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-3vjia-ai-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-aimes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-asset-management-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-cad-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-chuangdian-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-common-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-dedicated-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-design-schemes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-dms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-dreamer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-floor-plans-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-light-design-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-mos-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-quotation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "3vjia-technology-xuanchi-ai-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

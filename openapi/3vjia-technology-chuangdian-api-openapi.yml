@@ -1,0 +1,965 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Chuangdian API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Chuangdian
+  description: 创点系统
+paths:
+  /api/v1/compute/account/quantityStatistics:
+    post:
+      operationId: apiV1ComputeAccountQuantityStatistics
+      summary: 查询指定账号自身创点数量统计
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869961899935158340
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountType:
+                  type: string
+                  description: 账号类型(person-个人|shop-门店|organ-企业)
+                accountTypeId:
+                  type: string
+                  description: 账号类型对应Id(用户Id|门店Id|租户Id)
+              required:
+              - accountType
+              - accountTypeId
+            example:
+              accountType: ''
+              accountTypeId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      accountType:
+                        type: string
+                        description: 账号类型
+                      accountTypeId:
+                        type: string
+                        description: 账号类型对应Id
+                      accountTypeName:
+                        type: string
+                        description: 账号名称
+                      computeAccountId:
+                        type: integer
+                        format: int64
+                        description: 创点账号主键Id
+                      confirmedConsumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 实扣消费数量
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费总数：等于预扣消费数量与实扣消费数量之和
+                      distributedQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 分配数量
+                      originalQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 原始数量
+                      preConsumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 预扣消费数量
+                      remainingQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 剩余数量
+              example:
+                msg: ''
+                code: 0
+                data:
+                  remainingQuantity: 0
+                  distributedQuantity: 0
+                  originalQuantity: 0
+                  accountType: ''
+                  preConsumeQuantity: 0
+                  accountTypeName: ''
+                  consumeQuantity: 0
+                  accountTypeId: ''
+                  computeAccountId: 0
+                  confirmedConsumeQuantity: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/accountDetail/allocatablePage:
+    post:
+      operationId: apiV1ComputeAccountDetailAllocatablePage
+      summary: 分页查询可分配创点账号明细
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869962655010541650
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                sort:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      ascending:
+                        type: boolean
+                        description: 字段排序规则
+                      normalized:
+                        type: boolean
+                        description: 是否已经规范化，即字段名与数据库字段已经一致，false的时候会将驼峰转下划线
+                      property:
+                        type: string
+                        description: 根据哪个字段进行排序
+                  description: 排序定义
+              required:
+              - current
+              - size
+            example:
+              sort:
+              - normalized: false
+                ascending: false
+                property: ''
+              current: 0
+              size: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            accountType:
+                              type: string
+                              description: 账号类型
+                            accountTypeId:
+                              type: string
+                              description: 账号类型对应Id
+                            accountTypeName:
+                              type: string
+                              description: 账号名称
+                            computeAccountDetailId:
+                              type: integer
+                              format: int64
+                              description: 账户明细ID
+                            expirationTime:
+                              type: string
+                              format: date-time
+                              description: 到期时间
+                            remainingQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 剩余可分配数量
+                        description: 分页记录
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - remainingQuantity: 0
+                    accountType: ''
+                    accountTypeName: ''
+                    accountTypeId: ''
+                    computeAccountDetailId: 0
+                    expirationTime: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/consumeRecord/listByRecordTransactionIds:
+    post:
+      operationId: apiV1ComputeConsumeRecordListByRecordTransactionIds
+      summary: 根据流水号批量查询消费记录
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=864932006767775811
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recordTransactionIds:
+                  type: array
+                  items: {}
+                  description: 消费流水号列表
+              required:
+              - recordTransactionIds
+            example:
+              recordTransactionIds: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      bizDesc:
+                        type: string
+                        description: 消耗备注
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消耗数量
+                      consumeStatus:
+                        type: integer
+                        format: int32
+                        description: '消耗状态: 0-预扣, 1-已消费, 2-已回滚'
+                      createTime:
+                        type: string
+                        format: date-time
+                        description: 消耗时间
+                      moduleName:
+                        type: string
+                        description: 模块名称
+                      productName:
+                        type: string
+                        description: 产品名称
+                      recordTransactionId:
+                        type: string
+                        description: 消费流水号
+                      userName:
+                        type: string
+                        description: 消费账号
+              example:
+                msg: ''
+                code: 0
+                data:
+                - bizDesc: ''
+                  recordTransactionId: ''
+                  moduleName: ''
+                  consumeQuantity: 0
+                  userName: ''
+                  consumeStatus: 0
+                  productName: ''
+                  createTime: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/consumeRecord/pageDetail:
+    post:
+      operationId: apiV1ComputeConsumeRecordPageDetail
+      summary: 分页查询当前租户消费记录明细
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869963409867821146
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consumeEndTime:
+                  type: string
+                  format: date-time
+                  description: 消费结束时间
+                consumeStartTime:
+                  type: string
+                  format: date-time
+                  description: 消费开始时间
+                consumeStatusList:
+                  type: array
+                  items: {}
+                  description: 消费状态集合：0-预扣，1-已消费，2-已回滚
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                likeUserName:
+                  type: string
+                  description: 消费账号名称，模糊匹配
+                recordTransactionId:
+                  type: string
+                  description: 消费流水号
+                shopId:
+                  type: string
+                  description: 门店ID
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                userId:
+                  type: string
+                  description: 用户ID
+                userName:
+                  type: string
+                  description: 消费账号名称，精确匹配
+              required:
+              - current
+              - size
+            example:
+              consumeStatusList: []
+              recordTransactionId: ''
+              likeUserName: ''
+              userName: ''
+              userId: ''
+              consumeEndTime: ''
+              current: 0
+              size: 0
+              consumeStartTime: ''
+              shopId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            bizDesc:
+                              type: string
+                              description: 业务描述
+                            consumeQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 消费数量
+                            consumeStatus:
+                              type: integer
+                              format: int32
+                              description: 消费状态：0-预扣，1-已消费，2-已回滚
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 消费时间
+                            id:
+                              type: integer
+                              format: int64
+                              description: 消费记录ID
+                            moduleName:
+                              type: string
+                              description: 模块名称
+                            productName:
+                              type: string
+                              description: 产品名称
+                            recordTransactionId:
+                              type: string
+                              description: 消费流水号
+                            userName:
+                              type: string
+                              description: 消费账号
+                        description: 分页记录
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - bizDesc: ''
+                    recordTransactionId: ''
+                    moduleName: ''
+                    consumeQuantity: 0
+                    userName: ''
+                    consumeStatus: 0
+                    productName: ''
+                    createTime: ''
+                    id: 0
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/distributeRecord/distributeBatch:
+    post:
+      operationId: apiV1ComputeDistributeRecordDistributeBatch
+      summary: 批量分配创点并返回分配记录ID及目标账号标识
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869963409867821164
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountType:
+                  type: string
+                  description: 接收账号类型：person或shop
+                accountTypeId:
+                  type: string
+                  description: 接收账号ID：个人账号传用户ID，门店账号传门店ID
+                computeAccountDetailId:
+                  type: integer
+                  format: int64
+                  description: 来源账号明细ID
+                distributedQuantity:
+                  type: number
+                  format: bigdecimal
+                  description: 分配数量
+              required:
+              - accountType
+              - accountTypeId
+              - computeAccountDetailId
+              - distributedQuantity
+            example:
+            - accountType: ''
+              accountTypeId: ''
+              computeAccountDetailId: 0
+              distributedQuantity: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      accountType:
+                        type: string
+                        description: 接收账号类型：person或shop
+                      accountTypeId:
+                        type: string
+                        description: 接收账号类型对应ID：用户ID或门店ID
+                      distributeRecordId:
+                        type: integer
+                        format: int64
+                        description: 分配记录ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                - accountType: ''
+                  distributeRecordId: 0
+                  accountTypeId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/distributeRecord/pageDetail:
+    post:
+      operationId: apiV1ComputeDistributeRecordPageDetail
+      summary: 分页查询当前租户分配结果
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869963409867821166
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountName:
+                  type: string
+                  description: 接收账号名称，精确匹配
+                accountType:
+                  type: string
+                  description: 接收账号类型：person或shop
+                accountTypeId:
+                  type: string
+                  description: 接收账号类型对应ID：用户ID或门店ID
+                creator:
+                  type: string
+                  description: 操作人账号，精确匹配
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                distributeEndTime:
+                  type: string
+                  format: date-time
+                  description: 分配结束时间
+                distributeRecordId:
+                  type: integer
+                  format: int64
+                  description: 分配记录ID
+                distributeStartTime:
+                  type: string
+                  format: date-time
+                  description: 分配开始时间
+                likeAccountName:
+                  type: string
+                  description: 接收账号名称，模糊匹配
+                likeCreator:
+                  type: string
+                  description: 操作人账号，模糊匹配
+                shopId:
+                  type: string
+                  description: 门店ID
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                status:
+                  type: integer
+                  format: int32
+                  description: 状态：0-已完成，1-已回收
+                userId:
+                  type: string
+                  description: 用户ID，仅查询目标为该个人账号的分配记录
+              required:
+              - current
+              - size
+            example:
+              creator: ''
+              accountName: ''
+              likeCreator: ''
+              accountType: ''
+              likeAccountName: ''
+              distributeRecordId: 0
+              userId: ''
+              distributeEndTime: ''
+              current: 0
+              accountTypeId: ''
+              size: 0
+              shopId: ''
+              distributeStartTime: ''
+              status: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            accountName:
+                              type: string
+                              description: 接收账号名称
+                            accountType:
+                              type: string
+                              description: 接收账号类型：person或shop
+                            accountTypeId:
+                              type: string
+                              description: 接收账号类型对应ID：用户ID或门店ID
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 分配时间
+                            creator:
+                              type: string
+                              description: 操作人
+                            currentQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 目标创点明细当前剩余数量
+                            distributedQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 分配数量
+                            expirationTime:
+                              type: string
+                              format: date-time
+                              description: 到期时间
+                            id:
+                              type: integer
+                              format: int64
+                              description: 分配记录ID
+                            modifyTime:
+                              type: string
+                              format: date-time
+                              description: 修改时间
+                            sourceComputeAccountDetailId:
+                              type: integer
+                              format: int64
+                              description: 来源创点明细ID
+                            sourceComputeAccountId:
+                              type: integer
+                              format: int64
+                              description: 来源创点账号ID
+                            status:
+                              type: integer
+                              format: int32
+                              description: 状态：0-已完成，1-已回收
+                            targetComputeAccountDetailId:
+                              type: integer
+                              format: int64
+                              description: 分配产生的目标创点明细ID
+                        description: 分页记录
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - creator: ''
+                    distributedQuantity: 0
+                    accountName: ''
+                    targetComputeAccountDetailId: 0
+                    accountType: ''
+                    accountTypeId: ''
+                    modifyTime: ''
+                    createTime: ''
+                    expirationTime: ''
+                    sourceComputeAccountDetailId: 0
+                    id: 0
+                    currentQuantity: 0
+                    sourceComputeAccountId: 0
+                    status: 0
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/personalConsumeStatistics:
+    post:
+      operationId: apiV1ComputePersonalConsumeStatistics
+      summary: 根据用户id集合查询用户消费创点统计
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869964919968256071
+      x-documentation-category: 创点系统
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userIds:
+                  type: array
+                  items: {}
+                  description: 用户Id集合
+              required:
+              - userIds
+            example:
+              userIds: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      accountConsumes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            accountType:
+                              type: string
+                              description: 实际扣款账号类型
+                            accountTypeId:
+                              type: string
+                              description: 实际扣款账号类型对应Id
+                            accountTypeName:
+                              type: string
+                              description: 实际扣款账号名称
+                            computeAccountId:
+                              type: integer
+                              format: int64
+                              description: 实际扣款创点账号主键Id
+                            confirmedConsumeQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 从该账号实扣的创点数量
+                            consumeQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 从该账号消费的创点总数：等于预扣消费数量与实扣消费数量之和
+                            preConsumeQuantity:
+                              type: number
+                              format: bigdecimal
+                              description: 从该账号预扣的创点数量
+                            userId:
+                              type: string
+                              description: 消费用户Id
+                        description: 按实际扣款账号分组的消费明细
+                      confirmedConsumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人实扣消费创点总数
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人消费创点总数：等于预扣消费数量与实扣消费数量之和
+                      preConsumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人预扣消费创点总数
+                      userId:
+                        type: string
+                        description: 用户Id
+              example:
+                msg: ''
+                code: 0
+                data:
+                - preConsumeQuantity: 0
+                  consumeQuantity: 0
+                  userId: ''
+                  accountConsumes:
+                  - accountType: ''
+                    preConsumeQuantity: 0
+                    accountTypeName: ''
+                    consumeQuantity: 0
+                    userId: ''
+                    accountTypeId: ''
+                    computeAccountId: 0
+                    confirmedConsumeQuantity: 0
+                  confirmedConsumeQuantity: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/compute/tenantQuantityStatistics:
+    post:
+      operationId: apiV1ComputeTenantQuantityStatistics
+      summary: 查询整个机构全部账号创点数量汇总
+      tags:
+      - Chuangdian
+      x-source-documentation: https://dev.3vjia.com/document?apiId=869961899935158338
+      x-documentation-category: 创点系统
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      accountCount:
+                        type: integer
+                        format: int64
+                        description: 机构、门店和个人账号总数
+                      confirmedConsumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 全部账号实扣消费数量合计
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 全部账号消费总数：等于预扣消费数量与实扣消费数量之和
+                      originalQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 全部账号原始数量合计
+                      preConsumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 全部账号预扣消费数量合计
+                      remainingQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 全部账号剩余数量合计
+              example:
+                msg: ''
+                code: 0
+                data:
+                  remainingQuantity: 0
+                  accountCount: 0
+                  originalQuantity: 0
+                  preConsumeQuantity: 0
+                  consumeQuantity: 0
+                  confirmedConsumeQuantity: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

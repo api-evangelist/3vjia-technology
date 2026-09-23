@@ -1,0 +1,970 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Quotation API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Quotation
+  description: 报价模块
+paths:
+  /api/v1/openInterface/getCustomReportTemplate:
+    post:
+      operationId: apiV1OpenInterfaceGetCustomReportTemplate
+      summary: 获取报价模板接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=457250328803344465
+      x-documentation-category: 报价模块
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organId:
+                  type: string
+                  description: 机构id
+                overseasType:
+                  type: string
+                  description: 海外标识
+                reportCode:
+                  type: string
+                  description: 报价模板reportCode
+                solutionCode:
+                  type: string
+                  description: 报价方案solutionCode
+                userId:
+                  type: string
+                  description: 用户id（用户Id和用户名称不能同时为空）
+                userName:
+                  type: string
+                  description: 用户名称（用户Id和用户名称不能同时为空）
+              required:
+              - organId
+              - userId
+              - userName
+            example:
+              userName: ''
+              userId: ''
+              solutionCode: ''
+              overseasType: ''
+              reportCode: ''
+              organId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      moduleTemplateViewResultList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            moduleName:
+                              type: string
+                              description: 模块名
+                            moduleSort:
+                              type: integer
+                              format: int32
+                              description: 模块排序字段
+                            templates:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  authUserIdList:
+                                    type: string
+                                    description: 授权的用户ID
+                                  authUserIds:
+                                    type: array
+                                    items: {}
+                                    description: 授权的用户ID
+                                  bimReport:
+                                    type: boolean
+                                    description: 是否是BIM模板
+                                  completeReport:
+                                    type: boolean
+                                    description: completeReport
+                                  createTime:
+                                    type: string
+                                    format: date-time
+                                    description: 创建时间
+                                  creatorId:
+                                    type: string
+                                    description: 创建用户
+                                  cusState:
+                                    type: string
+                                    description: 自定义状态
+                                  cusType:
+                                    type: string
+                                    description: 自定义类型
+                                  fileType:
+                                    type: string
+                                    description: 导出文件格式
+                                  id:
+                                    type: string
+                                    description: 唯一ID
+                                  isApplyDefault:
+                                    type: boolean
+                                    description: 是否默认显示模版
+                                  isAuthUser:
+                                    type: boolean
+                                    description: isAuthUser
+                                  isDelete:
+                                    type: integer
+                                    format: int32
+                                    description: 伪删除标识码
+                                  isShowAllNode:
+                                    type: boolean
+                                    description: isShowAllNode
+                                  modifierId:
+                                    type: string
+                                    description: 修改人员
+                                  modifyTime:
+                                    type: string
+                                    format: date-time
+                                    description: 修改时间
+                                  organId:
+                                    type: string
+                                    description: OrganId
+                                  remark:
+                                    type: string
+                                    description: 备注
+                                  reportCode:
+                                    type: string
+                                    description: 报表编号
+                                  reportName:
+                                    type: string
+                                    description: 报价模版名称
+                                  solutionId:
+                                    type: string
+                                    description: 方案ID
+                                  sysState:
+                                    type: string
+                                    description: 系统状态
+                                  sysType:
+                                    type: string
+                                    description: 系统类型
+                                required:
+                                - authUserIdList
+                                - authUserIds
+                                - bimReport
+                                - completeReport
+                                - createTime
+                                - creatorId
+                                - cusState
+                                - cusType
+                                - fileType
+                                - id
+                                - isApplyDefault
+                                - isAuthUser
+                                - isDelete
+                                - isShowAllNode
+                                - modifierId
+                                - modifyTime
+                                - organId
+                                - remark
+                                - reportCode
+                                - reportName
+                                - solutionId
+                                - sysState
+                                - sysType
+                              description: 报价模板返回结果1
+                          required:
+                          - moduleName
+                          - moduleSort
+                          - templates
+                        description: 报价模板返回结果2
+                      quoteSolutionReportResultList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            authUserIdList:
+                              type: string
+                              description: 授权的用户ID
+                            authUserIds:
+                              type: array
+                              items: {}
+                              description: 授权的用户ID
+                            bimReport:
+                              type: boolean
+                              description: 是否是BIM模板
+                            completeReport:
+                              type: boolean
+                              description: completeReport
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            creatorId:
+                              type: string
+                              description: 创建用户
+                            cusState:
+                              type: string
+                              description: 自定义状态
+                            cusType:
+                              type: string
+                              description: 自定义类型
+                            fileType:
+                              type: string
+                              description: 导出文件格式
+                            id:
+                              type: string
+                              description: 唯一ID
+                            isApplyDefault:
+                              type: boolean
+                              description: 是否默认显示模版
+                            isAuthUser:
+                              type: boolean
+                              description: isAuthUser
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 伪删除标识码
+                            isShowAllNode:
+                              type: boolean
+                              description: isShowAllNode
+                            modifierId:
+                              type: string
+                              description: 修改人员
+                            modifyTime:
+                              type: string
+                              format: date-time
+                              description: 修改时间
+                            organId:
+                              type: string
+                              description: OrganId
+                            remark:
+                              type: string
+                              description: 备注
+                            reportCode:
+                              type: string
+                              description: 报表编号
+                            reportName:
+                              type: string
+                              description: 报价模版名称
+                            solutionId:
+                              type: string
+                              description: 方案ID
+                            sysState:
+                              type: string
+                              description: 系统状态
+                            sysType:
+                              type: string
+                              description: 系统类型
+                          required:
+                          - authUserIdList
+                          - authUserIds
+                          - bimReport
+                          - completeReport
+                          - createTime
+                          - creatorId
+                          - cusState
+                          - cusType
+                          - fileType
+                          - id
+                          - isApplyDefault
+                          - isAuthUser
+                          - isDelete
+                          - isShowAllNode
+                          - modifierId
+                          - modifyTime
+                          - organId
+                          - remark
+                          - reportCode
+                          - reportName
+                          - solutionId
+                          - sysState
+                          - sysType
+                        description: 报价模板返回结果1
+                    required:
+                    - moduleTemplateViewResultList
+                    - quoteSolutionReportResultList
+              example:
+                msg: ''
+                code: 0
+                data:
+                  moduleTemplateViewResultList:
+                  - templates:
+                    - cusState: ''
+                      reportName: ''
+                      sysType: ''
+                      isDelete: 0
+                      creatorId: ''
+                      modifierId: ''
+                      isApplyDefault: false
+                      isShowAllNode: false
+                      remark: ''
+                      authUserIdList: ''
+                      isAuthUser: false
+                      authUserIds: []
+                      modifyTime: ''
+                      createTime: ''
+                      cusType: ''
+                      reportCode: ''
+                      organId: ''
+                      sysState: ''
+                      id: ''
+                      solutionId: ''
+                      bimReport: false
+                      completeReport: false
+                      fileType: ''
+                    moduleName: ''
+                    moduleSort: 0
+                  quoteSolutionReportResultList:
+                  - cusState: ''
+                    reportName: ''
+                    sysType: ''
+                    isDelete: 0
+                    creatorId: ''
+                    modifierId: ''
+                    isApplyDefault: false
+                    isShowAllNode: false
+                    remark: ''
+                    authUserIdList: ''
+                    isAuthUser: false
+                    authUserIds: []
+                    modifyTime: ''
+                    createTime: ''
+                    cusType: ''
+                    reportCode: ''
+                    organId: ''
+                    sysState: ''
+                    id: ''
+                    solutionId: ''
+                    bimReport: false
+                    completeReport: false
+                    fileType: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quotation/getSchemeQuotationXml:
+    post:
+      operationId: apiV1QuotationGetSchemeQuotationXml
+      summary: 获取方案定制模块报价XML数据接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474665760673857559
+      x-documentation-category: 报价模块
+      description: 获取方案定制模块报价XML，只包含定制模块
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '51024567'
+            example:
+              schemeId: '51024567'
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                          mobile:
+                            type: string
+                            description: 手机号码
+                          name:
+                            type: string
+                            description: 姓名
+                          nickName:
+                            type: string
+                            description: 昵称
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                          userName:
+                            type: string
+                            description: 三维家账号
+                        description: 操作用户
+                      dept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                          deptId:
+                            type: string
+                            description: 部门ID
+                          deptName:
+                            type: string
+                            description: 部门名称
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                        description: 上级部门信息
+                      hasXmlDetail:
+                        type: boolean
+                        description: 此份xml里是否有明细的数据(存在方案内原本有柜子数据，后删除柜子保存，则最后的xml里是没有数据的可能)
+                        examples:
+                        - 'true'
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                          organName:
+                            type: string
+                            description: 企业名称
+                        description: 部门所属机构信息
+                      schemeId:
+                        type: string
+                        description: 方案Id
+                        examples:
+                        - '50053081'
+                      schemeName:
+                        type: string
+                        description: 方案名称
+                        examples:
+                        - 广州碧桂园·樾时光—毁梦3vj
+                      xmlContent:
+                        type: string
+                        description: 报价xml的Base64字符串
+                        examples:
+                        - Jmx0O1Jvb3QgQXBwbGljYXRpb249Ildvb2RNYWNoaW5lIiBBcHBsaWNhdGlvblZlcnNpb249IjMuMCIgdmVyc2lvbj0iMy4wLjExLjMzNzUiJmd0Ow0KJmx0Oy9Sb290Jmd0Ow==
+                      xmlSaveTime:
+                        type: string
+                        description: xml的保存时间,格式yyyy-MM-ddHH:mm:ss
+                        examples:
+                        - 2020-06-16 18::57:57
+              example:
+                msg: 成功
+                code: 0
+                data:
+                  organ:
+                    organName: ''
+                    organId: ''
+                  author:
+                    nickName: ''
+                    mobile: ''
+                    avatar: ''
+                    outUserId: ''
+                    userName: ''
+                    userId: ''
+                    name: ''
+                  schemeName: 广州碧桂园·樾时光—毁梦3vj
+                  hasXmlDetail: true
+                  xmlSaveTime: 2020-06-16 18::57:57
+                  schemeId: '50053081'
+                  dept:
+                    deptName: ''
+                    storeType: 0
+                    deptId: ''
+                    customerCode: ''
+                    outDeptId: ''
+                  xmlContent: Jmx0O1Jvb3QgQXBwbGljYXRpb249Ildvb2RNYWNoaW5lIiBBcHBsaWNhdGlvblZlcnNpb249IjMuMCIgdmVyc2lvbj0iMy4wLjExLjMzNzUiJmd0Ow0KJmx0Oy9Sb290Jmd0Ow==
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quotation/queryQuoteSchemeResult:
+    post:
+      operationId: apiV1QuotationQueryQuoteSchemeResult
+      summary: 获取方案报价计算结果接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474644013685772384
+      x-documentation-category: 报价模块
+      description: 获取报价计算结果，用提交报价计算任务接口返回的令牌查询
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: 查询令牌，发起报价计算接口返回的值
+                  examples:
+                  - xxx
+              required:
+              - key
+            example:
+              key: xxx
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      author:
+                        type: object
+                        properties:
+                          avatar:
+                            type: string
+                            description: 设计师头像
+                          mobile:
+                            type: string
+                            description: 手机号码
+                          name:
+                            type: string
+                            description: 姓名
+                          nickName:
+                            type: string
+                            description: 昵称
+                          outUserId:
+                            type: string
+                            description: 账号绑定的企业系统用户ID
+                          userId:
+                            type: string
+                            description: 三维家用户ID
+                          userName:
+                            type: string
+                            description: 三维家账号
+                        description: 操作用户
+                      dept:
+                        type: object
+                        properties:
+                          customerCode:
+                            type: string
+                            description: 部门对应客户部门编码
+                          deptId:
+                            type: string
+                            description: 部门ID
+                          deptName:
+                            type: string
+                            description: 部门名称
+                          outDeptId:
+                            type: string
+                            description: 部门所绑定企业系统部门ID，绑定过才有值
+                          storeType:
+                            type: integer
+                            format: int32
+                            description: 类型0=门店，1=部门
+                        description: 上级部门信息
+                      organ:
+                        type: object
+                        properties:
+                          organId:
+                            type: string
+                            description: 企业ID
+                          organName:
+                            type: string
+                            description: 企业名称
+                        description: 部门所属机构信息
+                      quoteInfo:
+                        type: object
+                        description: 报价信息，此字段为可配置字段，结果动态
+                      schemeId:
+                        type: string
+                        description: 方案Id
+                      schemeName:
+                        type: string
+                        description: 方案名称
+              example:
+                msg: success
+                code: 0
+                data:
+                  organ:
+                    organName: ''
+                    organId: ''
+                  author:
+                    nickName: ''
+                    mobile: ''
+                    avatar: ''
+                    outUserId: ''
+                    userName: ''
+                    userId: ''
+                    name: ''
+                  schemeName: ''
+                  schemeId: ''
+                  dept:
+                    deptName: ''
+                    storeType: 0
+                    deptId: ''
+                    customerCode: ''
+                    outDeptId: ''
+                  quoteInfo: ''
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quotation/quoteScheme:
+    post:
+      operationId: apiV1QuotationQuoteScheme
+      summary: 提交方案报价计算任务接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=474660108194910283
+      x-documentation-category: 报价模块
+      description: 只能计算方案报价，无法计算订单报价
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                outUserId:
+                  type: string
+                  description: 操作人的绑定过三维家账号的企业系统的用户ID，当userId、userName为空时，outUserId有效
+                  examples:
+                  - '123456'
+                quoteSolutionCode:
+                  type: string
+                  description: 报价方案的编码，请在报价管理页面获取
+                  examples:
+                  - CupboardSolution
+                schemeId:
+                  type: string
+                  description: 方案ID
+                  examples:
+                  - '51024567'
+                userId:
+                  type: string
+                  description: 操作人的三维家用户ID，若传了userId，当忽略userName、outUserId字段
+                  examples:
+                  - '1000123456'
+                userName:
+                  type: string
+                  description: 操作人的三维家账号，当userId为空时，userName有效，传了userName将忽略outUserId字段
+                  examples:
+                  - 3vj13800000000
+            example:
+              schemeId: '51024567'
+              outUserId: '123456'
+              userName: 3vj13800000000
+              userId: '1000123456'
+              quoteSolutionCode: CupboardSolution
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: success
+                code: 0
+                data: 'true'
+                success: true
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quote/calculation/quoteFileResult:
+    post:
+      operationId: apiV1QuoteCalculationQuoteFileResult
+      summary: 获取报价文件URL接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=515955644919001090
+      x-documentation-category: 报价模块
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dataUrl:
+                  type: string
+                  description: 报价XML链接，schemeId、xmlContent、dataUrl有且只有1个不为空。
+                schemeId:
+                  type: string
+                  description: 方案ID，schemeId、xmlContent、dataUrl有且只有1个不为空。
+                templateId:
+                  type: string
+                  description: 报价模板ID
+                xmlContent:
+                  type: string
+                  description: 报价XML内容，schemeId、xmlContent、dataUrl有且只有1个不为空。
+                orderCreateTime:
+                  type: string
+                  description: 下单时间，格式：yyyy-MM-dd HH:mm:ss，定制业务专用。
+                placeType:
+                  type: string
+                  description: 下单类型，定制业务专用。
+                userId:
+                  type: string
+                  description: 三维家用户ID，定制业务专用。
+              required:
+              - templateId
+            example:
+              dataUrl: ''
+              orderCreateTime: ''
+              schemeId: ''
+              templateId: ''
+              userId: ''
+              placeType: ''
+              xmlContent: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quote/calculation/quoteJsonResult:
+    post:
+      operationId: apiV1QuoteCalculationQuoteJsonResult
+      summary: 获取报价JSON数据接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=515552877465382984
+      x-documentation-category: 报价模块
+      description: 报价JSON数据结构详情，请到【三维家工作台】-【报价管理】-【配置管理】-【接口配置】页面，按需配置结构和字段。
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dataUrl:
+                  type: string
+                  description: 报价XML链接，schemeId、xmlContent、dataUrl有且只有1个不为空。
+                schemeId:
+                  type: string
+                  description: 方案ID，schemeId、xmlContent、dataUrl有且只有1个不为空。
+                solutionCode:
+                  type: string
+                  description: 报价方案Code，solutionId、solutionCode有且只有1个不为空。
+                solutionId:
+                  type: string
+                  description: 报价方案ID，solutionId、solutionCode有且只有1个不为空。
+                xmlContent:
+                  type: string
+                  description: 报价XML内容，schemeId、xmlContent、dataUrl有且只有1个不为空。
+                orderCreateTime:
+                  type: string
+                  description: 下单时间，格式：yyyy-MM-dd HH:mm:ss，定制业务专用。
+                placeType:
+                  type: string
+                  description: 下单类型，定制业务专用。
+                userId:
+                  type: string
+                  description: 三维家用户ID，定制业务专用。
+            example:
+              dataUrl: ''
+              orderCreateTime: ''
+              schemeId: ''
+              userId: ''
+              solutionCode: ''
+              placeType: ''
+              solutionId: ''
+              xmlContent: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/quote/quoteXmlBiz/customQuoteExcelUrl:
+    post:
+      operationId: apiV1QuoteQuoteXmlBizCustomQuoteExcelUrl
+      summary: 【已过时】获取报价文件URL接口
+      tags:
+      - Quotation
+      x-source-documentation: https://dev.3vjia.com/document?apiId=457112906782277719
+      x-documentation-category: 报价模块
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deptId:
+                  type: string
+                  description: 部门id
+                module:
+                  type: string
+                  description: 至爱特殊module
+                organId:
+                  type: string
+                  description: 机构Id
+                quoteInfo:
+                  type: string
+                  description: quoteInfo
+                schemeId:
+                  type: string
+                  description: schemeId
+                solutionId:
+                  type: string
+                  description: 报价方案id
+                userId:
+                  type: string
+                  description: userId
+                userLevel:
+                  type: string
+                  description: 至爱特殊userLevel
+              required:
+              - organId
+            example:
+              module: ''
+              deptId: ''
+              schemeId: ''
+              userId: ''
+              userLevel: ''
+              organId: ''
+              solutionId: ''
+              quoteInfo: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

@@ -1,0 +1,500 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform 3D Show API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: 3D Show
+  description: 3D秀
+paths:
+  /api/v1/njvr/sts/getSign:
+    post:
+      operationId: apiV1NjvrStsGetSign
+      summary: 获取OSS上传签名接口
+      tags:
+      - 3D Show
+      x-source-documentation: https://dev.3vjia.com/document?apiId=506846884346802186
+      x-documentation-category: 3D秀
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  description: 文件名
+                key:
+                  type: string
+                  description: 约束本次签名上传的key，本次签名只能使用对应的全路径
+                keyPrefix:
+                  type: string
+                  description: 约束本次签名上传的key前缀，以/结尾。如果没有指定，则使用AliOssTemplate指定的前缀
+                type:
+                  type: string
+                  description: 类型默认0
+            example:
+              fileName: ''
+              type: ''
+              keyPrefix: ''
+              key: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      accessKeyId:
+                        type: string
+                        description: accessKeyId
+                      callback:
+                        type: string
+                        description: callback
+                      expireAt:
+                        type: integer
+                        format: int64
+                        description: expireAt
+                      keyPrefix:
+                        type: string
+                        description: keyPrefix
+                      ossHost:
+                        type: string
+                        description: ossHost
+                      path:
+                        type: string
+                        description: path
+                      policy:
+                        type: string
+                        description: policy
+                      signature:
+                        type: string
+                        description: signature
+              example:
+                msg: ''
+                code: 0
+                data:
+                  accessKeyId: ''
+                  signature: ''
+                  expireAt: 0
+                  keyPrefix: ''
+                  ossHost: ''
+                  path: ''
+                  callback: ''
+                  policy: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/vrlayout/checkingReBuildHouse:
+    post:
+      operationId: apiV1VrlayoutCheckingReBuildHouse
+      summary: 户型图检测
+      tags:
+      - 3D Show
+      x-source-documentation: https://dev.3vjia.com/document?apiId=492394844031889453
+      x-documentation-category: 3D秀
+      description: 验证上传户型图->验证通过则生成2d户型图
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                IndoorArea:
+                  type: number
+                  format: double
+                  description: 户型套内面积
+                b64_img:
+                  type: string
+                  description: 图片的二进制流base64格式
+            example:
+              b64_img: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      key:
+                        type: object
+              example:
+                msg: ''
+                code: 0
+                data:
+                  key: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/vrlayout/createLayoutAndFinishDraw:
+    post:
+      operationId: apiV1VrlayoutCreateLayoutAndFinishDraw
+      summary: 提交上传户型
+      tags:
+      - 3D Show
+      x-source-documentation: https://dev.3vjia.com/document?apiId=492400473068875805
+      x-documentation-category: 3D秀
+      description: 验证上传户型图->验证通过则生成2d户型图
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                area:
+                  type: number
+                  format: double
+                  description: 建筑面积
+                buildingName:
+                  type: string
+                  description: 楼盘名称
+                city:
+                  type: string
+                  description: 市代码
+                correctImgPath:
+                  type: string
+                  description: 矫正后的户型图路径
+                isCorrect:
+                  type: boolean
+                  description: 是否矫正过1是0否
+                layoutImage:
+                  type: string
+                  description: 上传户型图oss路径
+                layoutXml:
+                  type: string
+                  description: AI户型XMLxmloss链接
+                province:
+                  type: string
+                  description: 省代码
+                roomNum:
+                  type: string
+                  description: x室x厅x厨x卫
+                towards:
+                  type: integer
+                  format: int32
+                  description: 朝向(0东1南2西3北4东南5西南6东北7西北)
+                useDeviceType:
+                  type: integer
+                  format: int32
+                  description: '@seecom.swj.api.njvr.enums.UseDeviceType使用设备分类:1pc、2小程序'
+            example:
+              city: ''
+              correctImgPath: ''
+              towards: 0
+              buildingName: ''
+              province: ''
+              roomNum: ''
+              layoutImage: ''
+              useDeviceType: 0
+              layoutXml: ''
+              isCorrect: false
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: false
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/vrlayout/getPlatformAndPersonalLayoutInfo:
+    post:
+      operationId: apiV1VrlayoutGetPlatformAndPersonalLayoutInfo
+      summary: 选择我家户型接口
+      tags:
+      - 3D Show
+      x-source-documentation: https://dev.3vjia.com/document?apiId=502120622118256726
+      x-documentation-category: 3D秀
+      description: 选择我家户型接口（聚合平台+私有）
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                areaId:
+                  type: integer
+                  format: int32
+                  description: 户型面积1：小于等于50平方，2：（50，70]，3：（70，90]，4：（90，140]，5：大于140平方，
+                buildingName:
+                  type: string
+                  description: 小区名（楼盘名称）
+                city:
+                  type: string
+                  description: 城市code
+                encryptTenantId:
+                  type: string
+                  description: 加密tenantId
+                encryptUserId:
+                  type: string
+                  description: 加密userId
+                layoutId:
+                  type: string
+                  description: 户型id
+                layoutOrganType:
+                  type: integer
+                  format: int32
+                  description: 户型分类（1平台、2企业（私有））不传则聚合检索
+                pageIndex:
+                  type: integer
+                  format: int32
+                  description: 页码
+                pageSize:
+                  type: integer
+                  format: int32
+                  description: 页容量
+                roomTypeId:
+                  type: integer
+                  format: int32
+                  description: 户型类型列表，1:一居，2:二居,3:三居,4:四居,5:五居及以上的
+                searchAfter:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n翻页参数：首次查询不需传该参数，进行翻页时把上一次查询结果返回的searchAfter传到该处"
+                stateGroup:
+                  type: array
+                  items: {}
+                  description: "This is List Type  \n入库状态"
+                swjUser:
+                  type: string
+                  description: 三维家用户支持ID和账号
+            example:
+              encryptUserId: ''
+              city: ''
+              pageSize: 0
+              swjUser: ''
+              layoutId: ''
+              roomTypeId: 0
+              buildingName: ''
+              encryptTenantId: ''
+              stateGroup: []
+              areaId: 0
+              pageIndex: 0
+              searchAfter: []
+              layoutOrganType: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      recordCount:
+                        type: integer
+                        format: int32
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            address:
+                              type: string
+                              description: 楼盘地址
+                            aiImagePath:
+                              type: string
+                            area:
+                              type: number
+                              format: double
+                              description: 建筑面积
+                            buildingId:
+                              type: integer
+                              format: int64
+                              description: 楼盘id
+                            buildingName:
+                              type: string
+                              description: 楼盘名字,xxx楼盘
+                            city:
+                              type: string
+                              description: 市代码
+                            createDate:
+                              type: object
+                              description: 注册时间
+                            createUser:
+                              type: string
+                              description: 创建人
+                            district:
+                              type: string
+                              description: 区代码
+                            grounding:
+                              type: integer
+                              format: int32
+                              description: 是否上架,0:否,1:是
+                            houseType:
+                              type: string
+                              description: 房型(例:3室2厅1厨1卫03020101)
+                            houseTypeZh:
+                              type: string
+                              description: 房型中文
+                            innerWallJsonUrl:
+                              type: string
+                              description: 内墙json地址(缓存数据)
+                            isDelete:
+                              type: integer
+                              format: int32
+                              description: 是否已删除（逻辑删除标记），0：未删除；1：已删除
+                            layout2d:
+                              type: string
+                              description: 2D户型图2D截图没有则显示默认图
+                            layoutGlbUrl:
+                              type: string
+                              description: 户型glbUrl
+                            layoutId:
+                              type: string
+                              description: 户型id
+                            layoutImage:
+                              type: string
+                              description: 户型图路径
+                            layoutName:
+                              type: string
+                              description: 户型图名称
+                            layoutOrganType:
+                              type: integer
+                              format: int32
+                              description: 户型类型：1平台2私有
+                            layoutXml:
+                              type: string
+                              description: 户型xml
+                            province:
+                              type: string
+                              description: 省代码
+                            schemeId:
+                              type: string
+                              description: 3D方案id
+                            tenantId:
+                              type: string
+                              description: 租户id
+                            updateDate:
+                              type: object
+                              description: 注册时间
+                            updateUser:
+                              type: string
+                              description: 更新人
+                        description: This is List Type
+                      searchAfter:
+                        type: array
+                        items: {}
+                        description: "This is List Type  \n翻页参数"
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordCount: 0
+                  result:
+                  - updateDate: ''
+                    city: ''
+                    aiImagePath: ''
+                    schemeId: ''
+                    layoutName: ''
+                    layout2d: ''
+                    province: ''
+                    layoutGlbUrl: ''
+                    layoutXml: ''
+                    createDate: ''
+                    address: ''
+                    isDelete: 0
+                    houseType: ''
+                    updateUser: ''
+                    layoutId: ''
+                    buildingId: 0
+                    houseTypeZh: ''
+                    buildingName: ''
+                    district: ''
+                    tenantId: ''
+                    createUser: ''
+                    layoutImage: ''
+                    grounding: 0
+                    innerWallJsonUrl: ''
+                    layoutOrganType: 0
+                  searchAfter: []
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

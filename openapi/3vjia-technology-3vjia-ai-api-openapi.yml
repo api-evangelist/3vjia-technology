@@ -1,0 +1,3805 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform 3vjia AI API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: 3vjia AI
+  description: 三维家AI
+paths:
+  /api/v1/aiImage/createImage:
+    post:
+      operationId: apiV1AiImageCreateImage
+      summary: AI生图接口
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=844311885481394218
+      x-documentation-category: 三维家AI / 图片生成
+      description: '该接口为异步接口，调用成功后会先返回任务信息，图片生成完成后可再通过异步任务查询接口获取最终结果。
+
+
+        当前支持以下模型：
+
+
+        - `ai_image_3_0`：(三维家)AI改图3.0
+
+        - `i_g_2_pro`：gemini-2.5-flash-image
+
+        - `i_g_3_pre`：gemini-3-pro-image-preview
+
+        - `i_g_31_pre`：gemini-3.1-flash-image-preview
+
+        - `i_o_1`：gpt-image-1
+
+        - `i_o_1_pro`：gpt-image-1.5
+
+        - `i_o_2`：gpt-image-2
+
+        - `i_d_4`：seedream-v4
+
+        - `i_d_4_pro`：seedream-v4.5
+
+        - `i_d_5_lite`：seedream-v5-lite
+
+        - `i_d_5_lite`：seedream-v5-lite
+
+        - `seedream-v5`：doubao-seedream-5-0-pro-260628
+
+        - `i_j_4`：jimeng-v4
+
+        - `i_b_1`：baidu
+
+
+        接口的详细对接说明查看：https://help.3vjia.com/doc/aigc-open/832612605813211232/844307490291204140'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extImageUrls:
+                  type: array
+                  items: {}
+                  description: 其他参考图片链接列表，支持普通图片 URL，也支持标准 data URL
+                extraParam:
+                  type: object
+                  description: 额外参数。size 支持：512、1K、2K、4K；aspectRatio 支持：1:1、1:4、1:8、2:3、3:2、3:4、4:1、4:3、4:5、5:4、8:1、9:16、16:9、21:9
+                imageNumber:
+                  type: integer
+                  format: int32
+                  description: 出图张数，默认 1
+                imageUrl:
+                  type: string
+                  description: 初始图片链接，支持普通图片 URL，也支持标准 data URL
+                model:
+                  type: string
+                  description: 模型英文编码，支持：ai_image_3_0（AI改图3.0）、i_g_2_pro、i_g_3_pre、i_g_31_pre、i_o_1、i_o_1_pro、i_o_2、i_d_4、i_d_4_pro、i_d_5_lite、seedream-v5、i_j_4、i_b_1
+                prompt:
+                  type: string
+                  description: 用于生成图像的提示词，中英文均可输入
+                seed:
+                  type: integer
+                  format: int64
+                  description: 相同的 seed 能让结果更稳定
+              required:
+              - model
+              - prompt
+            example:
+              seed: 0
+              imageNumber: 0
+              extraParam: ''
+              extImageUrls: []
+              imageUrl: ''
+              model: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消耗创点数量
+                      failure:
+                        type: string
+                        description: 失败原因
+                      failureCode:
+                        type: string
+                        description: 错误码
+                      imageUrl:
+                        type: string
+                        description: 图片地址
+                      msg:
+                        type: string
+                        description: 任务状态描述
+                      progress:
+                        type: number
+                        format: float
+                        description: 进度, 当状态为RUNNING时有值, 取值范围[0, 1]之间
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余数量
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余数量（共享情况下会返回）
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余数量（共享情况下会返回）
+                      status:
+                        type: string
+                        description: 任务状态. -1:未知或者任务不存在, 1:排队中, 2:生成中, 3:生成成功, 4:生成失败, 5:已取消
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      recordTransactionId:
+                        type: string
+                        description: 创点消费流水号
+              example:
+                msg: ''
+                code: 0
+                data:
+                  msg: ''
+                  failureCode: ''
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  failure: ''
+                  imageUrl: ''
+                  progress: 0
+                  taskId: ''
+                  status: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aiImage/render/createImage:
+    post:
+      operationId: apiV1AiImageRenderCreateImage
+      summary: AI渲染生图接口
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=853284784322023452
+      x-documentation-category: 三维家AI / 图片生成
+      description: 该接口为异步接口，提交成功后返回任务信息，图片生成完成后可通过异步任务查询接口获取最终结果。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extra:
+                  type: object
+                  description: 额外参数，按任务类型透传给下游
+                  examples:
+                  - '{}'
+                initImage:
+                  type: string
+                  description: 漫反图 URL
+                prompt:
+                  type: string
+                  description: 出图语义
+                taskType:
+                  type: string
+                  description: 任务类型
+              required:
+              - initImage
+              - taskType
+            example:
+              initImage: ''
+              taskType: ''
+              extra: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消耗创点数量
+                      failure:
+                        type: string
+                        description: 失败原因
+                      failureCode:
+                        type: string
+                        description: 错误码
+                      imageUrl:
+                        type: string
+                        description: 图片地址
+                      msg:
+                        type: string
+                        description: 任务状态描述
+                      progress:
+                        type: number
+                        format: float
+                        description: 进度, 当状态为RUNNING时有值, 取值范围[0, 1]之间
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余数量
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余数量（共享情况下会返回）
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余数量（共享情况下会返回）
+                      status:
+                        type: string
+                        description: 任务状态. -1:未知或者任务不存在, 1:排队中, 2:生成中, 3:生成成功, 4:生成失败, 5:已取消
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      recordTransactionId:
+                        type: string
+                        description: 创点消费流水号
+              example:
+                msg: ''
+                code: 0
+                data:
+                  msg: ''
+                  failureCode: ''
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  failure: ''
+                  imageUrl: ''
+                  progress: 0
+                  taskId: ''
+                  status: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aiModel/create:
+    post:
+      operationId: apiV1AiModelCreate
+      summary: 提交AI生模任务
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=882346505367887926
+      x-documentation-category: 三维家AI / 图生模
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                genModelMainImg:
+                  type: boolean
+                  description: 是否生成模型主图
+                genTopDownViewImage:
+                  type: boolean
+                  description: 是否生成正交俯视图
+                imageUrl:
+                  type: string
+                  description: 主图片地址；imageUrl和prompt至少传一个，同时传时优先使用imageUrl
+                intoDesign:
+                  type: boolean
+                  description: 是否入库；为true时materialConf必填
+                materialConf:
+                  type: object
+                  properties:
+                    belongSource:
+                      type: integer
+                      format: int32
+                      description: 素材来源。0-个人，1-门店，2-企业
+                    categoryId:
+                      type: integer
+                      format: int64
+                      description: 分类ID
+                    materialName:
+                      type: string
+                      description: 入库素材名称
+                    picHeight:
+                      type: number
+                      format: double
+                      description: 入库素材高度，单位毫米
+                    picLength:
+                      type: number
+                      format: double
+                      description: 入库素材长度，单位毫米
+                    picWidth:
+                      type: number
+                      format: double
+                      description: 入库素材宽度，单位毫米
+                    resetImagePath:
+                      type: boolean
+                      description: 是否将素材主图设置为白底图。默认为True
+                  description: 入库素材参数，字段同3D云设计素材表
+                modelConf:
+                  type: object
+                  properties:
+                    faceNum:
+                      type: integer
+                      format: int32
+                      description: 模型面数。不填则走系统默认配置
+                    rmbg:
+                      type: boolean
+                      description: 是否去除背景，默认是
+                    seed:
+                      type: integer
+                      format: int32
+                      description: 模型种子。不同种子生成的效果会不同。默认42
+                    segment:
+                      type: boolean
+                      description: 是否在生模完成后进行部件拆分。目前由ModelSegmentScheduler处理，支持TRIPO_31、自研SWJ拆分
+                    segmentModel:
+                      type: string
+                      description: 部件拆分模型。可选值：SWJ、TRIPO。不填且segment为true时，使用系统配置默认值
+                  description: 模型参数
+                modelEnum:
+                  type: string
+                  description: 生模模型，modelEnum：生模模型枚举，当前支持以下取值： TRELLIS_2：对应创点中心模型 Trellis2，用于根据图片或文本生成 3D 模型。 TRIPO_31：对应创点中心模型 Tripo3D-3.1，modelConf.segment 不传或传 false 时使用。 TRIPO_31：当 modelConf.segment=true 时，对应创点中心模型 Tripo3D-3.1-seg，用于生成模型并进行部件拆分。 注意：Tripo3D-3.1 和 Tripo3D-3.1-seg 使用相同的 modelEnum=TRIPO_31，通过 modelConf.segment 参数区分
+                modelPriority:
+                  type: integer
+                  format: int32
+                  description: 模型生成优先级，0到10，默认5
+                multiView:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      viewImageUrl:
+                        type: string
+                        description: 视角图片Url地址。支持jpg或png。单边分辨率小于5000且大于128。编码后大小不可超过8M<br/><font color='red'>【如果是oss地址，建议对url加上resize参数再传】</font>
+                      viewType:
+                        type: string
+                        description: 视角类型<br/><table border='1'><thead><tr><th>枚举值</th><th>说明</th></tr></thead><tbody><tr><td>LEFT</td><td>左视图</td></tr><tr><td>RIGHT</td><td>右视图</td></tr><tr><td>BACK</td><td>后视图</td></tr><tr><td>TOP</td><td>顶视图（仅混元3.1版本支持）</td></tr><tr><td>BOTTOM</td><td>底视图（仅混元3.1版本支持）</td></tr><tr><td>LEFT_FRONT</td><td>左前45°视图（仅混元3.1版本支持）</td></tr><tr><td>RIGHT_FRONT</td><td>右前45°视图（仅混元3.1版本支持）</td></tr></tbody></table>
+                  description: 混元图生3D多视角请求
+                prompt:
+                  type: string
+                  description: 文本提示词，imageUrl为空时用于文生3D
+                sourceId:
+                  type: string
+                  description: 调用方业务关联ID
+                type:
+                  type: string
+                  description: 调用方业务标识
+              required:
+              - modelEnum
+              - type
+            example:
+              sourceId: ''
+              genTopDownViewImage: false
+              modelEnum: ''
+              modelPriority: 0
+              type: ''
+              genModelMainImg: false
+              modelConf:
+                seed: 0
+                segmentModel: ''
+                faceNum: 0
+                rmbg: false
+                segment: false
+              multiView:
+              - viewImageUrl: ''
+                viewType: ''
+              intoDesign: false
+              materialConf:
+                picWidth: 0
+                picHeight: 0
+                belongSource: 0
+                resetImagePath: false
+                materialName: ''
+                picLength: 0
+                categoryId: 0
+              imageUrl: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 本次预扣创点数量
+                      recordTransactionId:
+                        type: string
+                        description: 创点消费流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余数量
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余数量（共享情况下会返回）
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余数量（共享情况下会返回）
+                      taskId:
+                        type: string
+                        description: 任务ID，后续通过结果查询接口获取任务状态和模型地址
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aiModel/result:
+    post:
+      operationId: apiV1AiModelResult
+      summary: 查询AI生模任务结果
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=882347917220946004
+      x-documentation-category: 三维家AI / 图生模
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: 任务ID
+              required:
+              - taskId
+            example:
+              taskId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      failInfo:
+                        type: string
+                        description: 失败信息
+                      genModelMainImg:
+                        type: boolean
+                        description: 是否生成模型主图
+                      genTopDownViewImage:
+                        type: boolean
+                        description: 是否生成俯视图
+                      materialId:
+                        type: string
+                        description: 入库素材ID
+                      materialTime:
+                        type: string
+                        format: date-time
+                        description: 素材入库完成时间
+                      modelMainImgUrl:
+                        type: string
+                        description: 模型主图地址
+                      modelStatus:
+                        type: integer
+                        format: int32
+                        description: 生模业务状态，0-新增/等待处理，1-等待生模，2-模型生成中，3-模型生成完成，-1-已取消或过滤不通过，-2-模型生成失败，4-素材入库中，-4-提交入库失败，5-素材入库成功，-5-素材入库失败，6-获取俯视图成功，-6-获取俯视图失败。
+                      modelTime:
+                        type: string
+                        format: date-time
+                        description: 模型生成时间
+                      modelUrl:
+                        type: string
+                        description: 模型地址
+                      queueId:
+                        type: string
+                        description: 入库队列ID
+                      queueTime:
+                        type: string
+                        format: date-time
+                        description: 进入入库队列时间
+                      resizeFinish:
+                        type: boolean
+                        description: 是否完成素材参数配置
+                      segmentFinishTime:
+                        type: string
+                        format: date-time
+                        description: 部件拆分完成时间
+                      segmentModelUrl:
+                        type: string
+                        description: 部件拆分后的模型地址
+                      segmentStatus:
+                        type: integer
+                        format: int32
+                        description: 部件拆分状态：0待提交，1排队中，2处理中，3完成，-2失败
+                      sourceId:
+                        type: string
+                        description: 调用方业务关联ID
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 统一任务状态：0初始化，1排队中，2执行中，3成功，4失败
+                      topDownViewImage:
+                        type: string
+                        description: 俯视图地址
+                      type:
+                        type: string
+                        description: 调用方业务标识
+              example:
+                msg: ''
+                code: 0
+                data:
+                  sourceId: ''
+                  queueId: ''
+                  segmentStatus: 0
+                  genTopDownViewImage: false
+                  modelStatus: 0
+                  modelMainImgUrl: ''
+                  materialId: ''
+                  type: ''
+                  genModelMainImg: false
+                  queueTime: ''
+                  materialTime: ''
+                  topDownViewImage: ''
+                  segmentModelUrl: ''
+                  failInfo: ''
+                  modelUrl: ''
+                  segmentFinishTime: ''
+                  modelTime: ''
+                  taskId: ''
+                  taskStatus: 0
+                  resizeFinish: false
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/2d3dNatural:
+    post:
+      operationId: apiV1Aigc2d3dNatural
+      summary: AI渲染
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=648937765865668656
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数
+                  default: '4'
+                height:
+                  type: integer
+                  format: int32
+                  description: 分辨率，高度
+                initImagePath:
+                  type: string
+                  description: 初始图片路径（2d图片）
+                prompt:
+                  type: string
+                  description: 出图语义
+                similarStr:
+                  type: number
+                  format: float
+                  description: 相似度，如果风格图参数不为空，可调整与风格图的相似度，值为0.6-1之间
+                styleImagePath:
+                  type: string
+                  description: 风格图路径，可根据风格图渲染出相似风格的结果图
+                width:
+                  type: integer
+                  format: int32
+                  description: 分辨率，宽度
+            example:
+              styleImagePath: ''
+              batchCount: 0
+              initImagePath: ''
+              similarStr: 0
+              width: 0
+              prompt: ''
+              height: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/fillCleanRoom:
+    post:
+      operationId: apiV1AigcFillCleanRoom
+      summary: 空间填充（旧改翻新）
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=636578074753912911
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数
+                initImagePath:
+                  type: string
+                  description: 初始图片路径
+                prompt:
+                  type: string
+                  description: 出图语义
+                styleImagePath:
+                  type: string
+                  description: 风格图路径，可根据风格图渲染出相似风格的结果图
+                styleWeight:
+                  type: number
+                  format: float
+                  description: 风格权重，0.40~T0.70之间，步长为0.05，当风格图参数不为空时，可调整风格权重，默认为0.6
+            example:
+              styleImagePath: ''
+              batchCount: 0
+              initImagePath: ''
+              styleWeight: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/fillRoom:
+    post:
+      operationId: apiV1AigcFillRoom
+      summary: 空间填充（毛坯变装）
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=624615521941348386
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数，最多支持4张
+                  default: '4'
+                initImagePath:
+                  type: string
+                  description: 原始图片路径
+                prompt:
+                  type: string
+                  description: 出图语义
+                styleImagePath:
+                  type: string
+                  description: 风格图路径，可根据风格图渲染出相似风格的结果图
+                styleWeight:
+                  type: number
+                  format: float
+                  description: 风格权重，0.40~0.70之间，步长为0.05，当风格图参数不为空时，可调整风格权重，默认为0.6
+              required:
+              - initImagePath
+            example:
+              styleImagePath: ''
+              batchCount: 0
+              initImagePath: ''
+              styleWeight: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/fillRoomPro:
+    post:
+      operationId: apiV1AigcFillRoomPro
+      summary: 空间填充PRO
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=655081337652408331
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数
+                initImagePath:
+                  type: string
+                  description: 初始图片路径
+                prompt:
+                  type: string
+                  description: 出图语义
+                roomId:
+                  type: string
+                  description: 空间模型ID
+            example:
+              batchCount: 0
+              roomId: ''
+              initImagePath: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/getResult:
+    post:
+      operationId: apiV1AigcGetResult
+      summary: 根据任务ID获取AI处理结果接口
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=624649185760796759
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: AI任务ID
+              required:
+              - taskId
+            example:
+              taskId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      images:
+                        type: array
+                        items: {}
+                        description: 图片地址
+                      info:
+                        type: string
+                        description: 返回信息
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态，1、排队中，2、渲染中，3、渲染成功，4、渲染失败
+              example:
+                msg: ''
+                code: 0
+                data:
+                  images: []
+                  taskStatus: 0
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/imageVariationPlus:
+    post:
+      operationId: apiV1AigcImageVariationPlus
+      summary: 图形变化PLUS
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=654269900700930149
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数，最多支持4张
+                  default: '4'
+                initImagePath:
+                  type: string
+                  description: 初始图片路径
+                prompt:
+                  type: string
+                  description: 出图语义
+                similarStr:
+                  type: number
+                  format: float
+                  description: 相似度，0.3~TT0.5之间，步长为0.1，跟初始图片的相似程度调整，默认为0.4
+                  default: '0.4'
+            example:
+              batchCount: 0
+              initImagePath: ''
+              similarStr: 0
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/imgPaint:
+    post:
+      operationId: apiV1AigcImgPaint
+      summary: 产品替换(需模型训练)
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=624615521941348388
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数，最多支持4张
+                  examples:
+                  - '1'
+                  default: '1'
+                initImagePath:
+                  type: string
+                  description: 原图路径
+                maskImagePath:
+                  type: string
+                  description: 遮罩图路径，遮罩图为黑白图片，遮罩部分为白色，遮罩外为黑色，例如： 原图为 https://3vj-innovation.3vjia.com/demo/overture-creationso.png 经过涂鸦如图：https://3vj-innovation.3vjia.com/demo/clipspace-189600.png, 最终获取的遮罩图为 https://3vj-innovation.3vjia.com/demo/temp_lnktu_00001_.png
+                prompt:
+                  type: string
+                  description: 出图语义
+                paintType:
+                  type: integer
+                  format: int32
+                  description: 替换类型：0为替换遮罩内物体，1为替换遮罩外物体
+                productId:
+                  type: string
+                  description: 产品ID
+              required:
+              - initImagePath
+              - maskImagePath
+            example:
+              productId: ''
+              paintType: 0
+              batchCount: 1
+              initImagePath: ''
+              maskImagePath: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/imgPaintRef:
+    post:
+      operationId: apiV1AigcImgPaintRef
+      summary: 产品替换
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=693385617882644529
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImagePath:
+                  type: string
+                  description: 产品图片路径
+                maskImagePath:
+                  type: string
+                  description: 遮罩图路径，遮罩图为黑白图片，遮罩部分为白色，遮罩外为黑色，例如： 原图为 https://3vj-innovation.3vjia.com/demo/overture-creationso.png 经过涂鸦如图：https://3vj-innovation.3vjia.com/demo/clipspace-189600.png, 最终获取的遮罩图为 https://3vj-innovation.3vjia.com/demo/temp_lnktu_00001_.png
+                styleImagePath:
+                  type: string
+                  description: 场景图路径
+            example:
+              styleImagePath: ''
+              initImagePath: ''
+              maskImagePath: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/imgRemBg:
+    post:
+      operationId: apiV1AigcImgRemBg
+      summary: 背景抠图
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=712305059010072663
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initImagePath:
+                  type: string
+                  description: 图片路径
+            example:
+              initImagePath: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/t2iSdxl:
+    post:
+      operationId: apiV1AigcT2iSdxl
+      summary: 文生图
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=647461790330015841
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数
+                  default: '4'
+                height:
+                  type: integer
+                  format: int32
+                  description: 分辨率高
+                prompt:
+                  type: string
+                  description: 出图语义
+                width:
+                  type: integer
+                  format: int32
+                  description: 分辨率宽
+            example:
+              batchCount: 0
+              width: 0
+              prompt: ''
+              height: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aigc/textureChange:
+    post:
+      operationId: apiV1AigcTextureChange
+      summary: 材质替换
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=636271051596255350
+      x-documentation-category: 三维家AI / 空间AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchCount:
+                  type: integer
+                  format: int32
+                  description: 出图张数，最多支持4张
+                  default: '4'
+                initImagePath:
+                  type: string
+                  description: 材质图片路径，用来替换场景图目标物体的材质
+                prompt:
+                  type: string
+                  description: 出图语义
+                styleImagePath:
+                  type: string
+                  description: 场景图路径，图片需要存在着能被材质图替换的目标物体，如沙发，地板等
+                targetObject:
+                  type: string
+                  description: 替换目标,场景图片中想要替换的物体，如沙发，地板等
+              required:
+              - initImagePath
+            example:
+              targetObject: ''
+              styleImagePath: ''
+              batchCount: 0
+              initImagePath: ''
+              prompt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      info:
+                        type: string
+                        description: 生成信息
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                  info: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/aiimage/getTaskResult:
+    post:
+      operationId: apiV1AiimageGetTaskResult
+      summary: 查询出图任务结果
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=697512839270776869
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: 任务ID
+            example:
+              taskId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      error:
+                        type: string
+                      fail:
+                        type: boolean
+                      imageUrls:
+                        type: array
+                        items: {}
+                        description: 返回图片的url数组
+                      progress:
+                        type: number
+                        format: float
+                      status:
+                        type: integer
+                        format: int32
+                        description: 任务状态，当执行成功后，才能获取图片。-1：未知; 1：排队中；2：执行中；3：执行成功；4：失败；5： 任务不存在
+                      success:
+                        type: boolean
+              example:
+                msg: ''
+                code: 0
+                data:
+                  error: ''
+                  fail: false
+                  success: false
+                  imageUrls: []
+                  progress: 0
+                  status: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/asyn/aiimage/t2i:
+    post:
+      operationId: apiV1AsynAiimageT2i
+      summary: 提交异步文生图任务
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=697510574388559938
+      x-documentation-category: 三维家AI / 图片生成
+      description: 异步文生图任务
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                height:
+                  type: integer
+                  format: int32
+                  description: 生成图像的高，取值范围[256,768]。默认值：512。宽、高与512差距过大，则出图效果不佳、延迟过长概率显著增加。超分前建议比例及对应宽高：width*height。1:1：512*5124:3：512*3843:4：384*5123:2：512*3412:3：341*51216:9：512*2889:16：288*512
+                imageNumber:
+                  type: integer
+                  format: int32
+                  description: 出图张数, 默认1,不能超过8
+                  default: '1'
+                prompt:
+                  type: string
+                  description: 用于生成图像的提示词 ，中英文均可输入
+                width:
+                  type: integer
+                  format: int32
+                  description: 生成图像的高，取值范围[256,768]。默认值：512。宽、高与512差距过大，则出图效果不佳、延迟过长概率显著增加。超分前建议比例及对应宽高：width*height。1:1：512*5124:3：512*3843:4：384*5123:2：512*3412:3：341*51216:9：512*2889:16：288*512
+              required:
+              - prompt
+            example:
+              imageNumber: 0
+              width: 0
+              prompt: ''
+              height: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      taskId:
+                        type: string
+                        description: 任务ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  taskId: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/asyn/video/i2v:
+    post:
+      operationId: apiV1AsynVideoI2v
+      summary: 图生视频(异步)
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=697518375739478129
+      x-documentation-category: 三维家AI / 视频生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                duration:
+                  type: integer
+                  format: int32
+                  description: 视频时长，支持5s/10s
+                imageUrl:
+                  type: string
+                  description: 初始图片链接
+                isCrop:
+                  type: boolean
+                  description: 是否需要裁剪，可选
+                keyFrames:
+                  type: array
+                  items: {}
+                  description: 关键帧，可选（最多两张图片）
+                promptText:
+                  type: string
+                  description: 提示语，仅支持英文，可选
+              required:
+              - duration
+              - imageUrl
+            example:
+              keyFrames: []
+              duration: 0
+              imageUrl: ''
+              isCrop: false
+              promptText: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      failure:
+                        type: string
+                        description: 失败原因
+                      failureCode:
+                        type: string
+                        description: 错误码
+                      msg:
+                        type: string
+                        description: 任务状态描述
+                      progress:
+                        type: number
+                        format: float
+                        description: 进度, 当状态为RUNNING时有值, 取值范围[0, 1]之间
+                      status:
+                        type: string
+                        description: 任务状态. -1:未知或者任务不存在, 1:排队中, 2:生成中, 3:生成成功, 4:生成失败, 5:已取消
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      videoUrl:
+                        type: string
+                        description: 视频地址
+              example:
+                msg: ''
+                code: 0
+                data:
+                  msg: ''
+                  failureCode: ''
+                  videoUrl: ''
+                  failure: ''
+                  progress: 0
+                  taskId: ''
+                  status: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/asyncTask/batchGetTaskStatus:
+    post:
+      operationId: apiV1AsyncTaskBatchGetTaskStatus
+      summary: 批量查询任务状态
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=832636727683354684
+      x-documentation-category: 三维家AI / 任务查询
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskIds:
+                  type: array
+                  items: {}
+                  description: 任务ID列表
+              required:
+              - taskIds
+            example:
+              taskIds: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      failTimes:
+                        type: integer
+                        format: int32
+                        description: 任务自动轮询或重试过程中的失败次数。部分视频任务失败后会由调度逻辑累加，用于判断是否继续重试。
+                      failure:
+                        type: string
+                        description: 任务自动轮询或重试过程中的失败次数。部分视频任务失败后会由调度逻辑累加，用于判断是否继续重试。
+                      failureCode:
+                        type: string
+                        description: 任务失败码。任务失败时可用于程序化判断错误类型；不同渠道可能返回不同错误码。
+                      finishTime:
+                        type: string
+                        format: date-time
+                        description: 任务结束时间。任务成功、失败或取消后由调度/回调更新；任务仍在排队或生成中时通常为空。
+                      images:
+                        type: array
+                        items: {}
+                        description: 兼容旧图片任务响应的图片地址列表。batchGetTaskStatus 当前从统一异步任务表 aigc_hub_asyn_task 返回时通常为空，图片/视频最终结果以 result 字段为准。
+                      info:
+                        type: string
+                        description: 兼容旧任务响应的提示信息。batchGetTaskStatus 当前从统一异步任务表 aigc_hub_asyn_task 返回时通常为空，失败信息请优先查看 failure/failureCode。
+                      manualRetryTimes:
+                        type: integer
+                        format: int32
+                        description: 人工触发重启任务的次数。调用 restart 接口或人工重试流程时可能累加。
+                      progress:
+                        type: number
+                        format: float
+                        description: 任务处理进度，范围通常为 0 到 1。部分渠道会在轮询时回写；成功时通常为 1；不支持进度的渠道可能为空。
+                      reqJson:
+                        type: string
+                        description: 任务创建时保存的原始请求参数 JSON 字符串。doubaoVideo 保存 DoubaoVideoReq 转换后的请求 JSON；AI 图片任务保存对应生图请求 JSON。
+                      result:
+                        type: string
+                        description: 任务最终结果。图片任务通常保存生成图片地址，多个结果可能以逗号分隔；视频任务通常保存生成视频地址或结果内容；任务未完成时通常为空。
+                      startTime:
+                        type: string
+                        format: date-time
+                        description: 任务开始时间。doubaoVideo 在创建模型方任务并保存统一异步任务时写入；AI 图片任务在进入执行或外部平台任务创建时写入。
+                      status:
+                        type: integer
+                        format: int32
+                        description: 统一异步任务状态。-1=未知或任务不存在，1=PENDING/排队中，2=RUNNING/生成中，3=SUCCEEDED/成功，4=FAILED/失败，5=CANCELLED/已取消。doubaoVideo 创建后通常为 2，AI 图片任务创建后通常为 1 或 2，任务完成后由调度或回调更新为 3/4。
+                      taskId:
+                        type: string
+                        description: 统一异步任务 ID。doubaoVideo 场景保存为模型方返回的 Seedance 任务 ID；AI 图片异步任务为系统生成或模型方返回后关联的任务 ID。
+                      taskType:
+                        type: string
+                        description: 任务类型，用于区分业务场景。取值来自统一异步任务表 task_type，例如 doubaoVideo 保存为 video_doubao，混合渲染保存为 mix_render，VOD 图片任务保存为 vod_image。
+              example:
+                msg: ''
+                code: 0
+                data:
+                - finishTime: ''
+                  images: []
+                  failureCode: ''
+                  failTimes: 0
+                  result: ''
+                  taskType: ''
+                  failure: ''
+                  progress: 0
+                  startTime: ''
+                  manualRetryTimes: 0
+                  reqJson: ''
+                  taskId: ''
+                  info: ''
+                  status: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/aiCutOutGenerate:
+    post:
+      operationId: apiV1BuildImageAiCutOutGenerate
+      summary: AI抠图
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=874663726098301005
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                generateModel:
+                  type: string
+                  description: '模型: BANANA2(i_g_31_pre)、SEEDREAM40(i_d_4)（按实际对接场景传，不传会有默认模型，传括号里面的值）'
+                  default: i_g_31_pre
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                resolution:
+                  type: string
+                  description: 分辨率 1K（默认） 、......
+                sourceImgUrl:
+                  type: string
+                  description: 原效果图地址，不能为空
+              required:
+              - generateModel
+              - imgCount
+              - inputPrompt
+              - sourceImgUrl
+            example:
+              generateModel: ''
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+              resolution: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/furnitureRecognize:
+    post:
+      operationId: apiV1BuildImageFurnitureRecognize
+      summary: 家具/物品识别
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860537802272686097
+      x-documentation-category: 三维家AI / 其他
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgUrl:
+                  type: string
+                  description: 图片地址
+              required:
+              - imgUrl
+            example:
+              imgUrl: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: []
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/getMxjTemplateHasDataTag:
+    post:
+      operationId: apiV1BuildImageGetMxjTemplateHasDataTag
+      summary: 获取模板有关联数据的标签
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=874665111619543093
+      x-documentation-category: 三维家AI / 其他
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                botType:
+                  type: integer
+                  format: int32
+                  description: ai类型：1画图师、23视频师、21引流师
+                libraryType:
+                  type: string
+                  description: 库类型：platform=平台库，enterprise=企业库
+                tagIds:
+                  type: array
+                  items: {}
+                  description: 标签id
+              required:
+              - libraryType
+            example:
+              tagIds: []
+              botType: 0
+              libraryType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      childList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            childList:
+                              type: array
+                              items: {}
+                              description: 资产标签项
+                            hasContent:
+                              type: integer
+                              format: int32
+                              description: 是否有内容:1 有、0 无
+                            id:
+                              type: integer
+                              format: int64
+                              description: 主键id
+                            isHide:
+                              type: integer
+                              format: int32
+                              description: 隐藏,1隐藏，0不隐藏
+                            name:
+                              type: string
+                              description: 名称
+                            parentId:
+                              type: integer
+                              format: int64
+                              description: 父id
+                            sortNum:
+                              type: integer
+                              format: int32
+                              description: 排序
+                            tagId:
+                              type: integer
+                              format: int64
+                              description: 主键id
+                            tagLibraryId:
+                              type: integer
+                              format: int64
+                              description: 库id
+                            tagName:
+                              type: string
+                              description: 名称
+                            tenantId:
+                              type: string
+                              description: 租户
+                        description: 资产标签项
+                      id:
+                        type: integer
+                        format: int64
+                        description: 主键id
+                      name:
+                        type: string
+                        description: 名称
+                      parentId:
+                        type: integer
+                        format: int64
+                        description: 父id
+                      sortNum:
+                        type: integer
+                        format: int32
+                        description: 排序
+                      status:
+                        type: integer
+                        format: int32
+                        description: 状态： 1 启用 0 停用
+                      tagId:
+                        type: integer
+                        format: int64
+                        description: 主键id
+                      tagLibraryId:
+                        type: integer
+                        format: int64
+                        description: 库id
+                      tagName:
+                        type: string
+                        description: 名称
+                      tenantId:
+                        type: string
+                        description: 租户
+              example:
+                msg: ''
+                code: 0
+                data:
+                - tagId: 0
+                  childList:
+                  - hasContent: 0
+                    tagId: 0
+                    childList: []
+                    tagLibraryId: 0
+                    tagName: ''
+                    parentId: 0
+                    isHide: 0
+                    name: ''
+                    tenantId: ''
+                    sortNum: 0
+                    id: 0
+                  tagLibraryId: 0
+                  tagName: ''
+                  parentId: 0
+                  name: ''
+                  tenantId: ''
+                  sortNum: 0
+                  id: 0
+                  status: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/hardcoverGenerate:
+    post:
+      operationId: apiV1BuildImageHardcoverGenerate
+      summary: 精装图生图
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860538053792514098
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                multiTypeProductList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: 产品名称
+                      type:
+                        type: string
+                        description: 产品状态类型，placeholder：文本标签、normal：正常、disable:禁止
+                      url:
+                        type: string
+                        description: 产品图片地址
+                    required:
+                    - name
+                    - type
+                  description: 生图-多品类产品项
+                resolution:
+                  type: string
+                  description: 分辨率 1K（默认） 、......
+                roomType:
+                  type: string
+                  description: 房间类型:客厅，卧室，餐厅，卫生间，书房，儿童房，阳台，自定义
+                sourceImgUrl:
+                  type: string
+                  description: 合成图地址
+                styleType:
+                  type: string
+                  description: 风格类型：轻奢，现代，奶油风，轻法式，中古风，新中式，自定义
+              required:
+              - imgCount
+              - inputPrompt
+              - multiTypeProductList
+              - roomType
+              - sourceImgUrl
+              - styleType
+            example:
+              multiTypeProductList:
+              - type: ''
+                url: ''
+                name: ''
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+              resolution: ''
+              styleType: ''
+              roomType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/hdAmplifyGenerate:
+    post:
+      operationId: apiV1BuildImageHdAmplifyGenerate
+      summary: 高清放大
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=868147695729135675
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                generateModel:
+                  type: string
+                  description: '模型: VZ1、SEEDREAM40'
+                resolution:
+                  type: string
+                  description: 输出分辨率。维智1.0模型可选值：4K和6K；seedream4.0不用传
+                sourceImgUrl:
+                  type: string
+                  description: 待放大的图片地址，不能为空
+              required:
+              - sourceImgUrl
+            example:
+              generateModel: ''
+              sourceImgUrl: ''
+              resolution: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/multiTypeGenerate:
+    post:
+      operationId: apiV1BuildImageMultiTypeGenerate
+      summary: 换多品
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=868146437412765842
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                generateModel:
+                  type: string
+                  description: '模型: BANANA2、VZ1、SEEDREAM40'
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                multiTypeProductList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      action:
+                        type: string
+                        description: 换多品工具的操作类型，替换/添加/删除，replace/add/delete
+                      name:
+                        type: string
+                        description: 产品名称
+                      replaceTargetName:
+                        type: string
+                        description: 替换目标名称，即原效果图中标签所指位置产品名称
+                      type:
+                        type: string
+                        description: 产品状态类型，placeholder：文本标签、normal：正常、disable:禁止
+                      url:
+                        type: string
+                        description: 产品图片地址
+                    required:
+                    - name
+                    - type
+                  description: 生图-多品类产品项
+                resolution:
+                  type: string
+                  description: 分辨率 1K（默认） 、......
+                sourceImgUrl:
+                  type: string
+                  description: 原效果图地址，不能为空
+              required:
+              - imgCount
+              - inputPrompt
+              - multiTypeProductList
+              - sourceImgUrl
+            example:
+              generateModel: ''
+              multiTypeProductList:
+              - type: ''
+                url: ''
+                replaceTargetName: ''
+                name: ''
+                action: ''
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+              resolution: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/multiTypeModifyMaterialGenerate:
+    post:
+      operationId: apiV1BuildImageMultiTypeModifyMaterialGenerate
+      summary: 改材质
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=868146437412765844
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                generateModel:
+                  type: string
+                  description: '模型: BANANA2、VZ1、SEEDREAM40'
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                multiTypeProductList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      action:
+                        type: string
+                        description: 换多品工具的操作类型，替换/添加/删除，replace/add/delete
+                      name:
+                        type: string
+                        description: 产品名称
+                      replaceTargetName:
+                        type: string
+                        description: 替换目标名称，即原效果图中标签所指位置产品名称
+                      type:
+                        type: string
+                        description: 产品状态类型，placeholder：文本标签、normal：正常、disable:禁止
+                      url:
+                        type: string
+                        description: 产品图片地址
+                    required:
+                    - name
+                    - type
+                  description: 生图-多品类产品项
+                resolution:
+                  type: string
+                  description: 分辨率 1K（默认） 、......
+                sourceImgUrl:
+                  type: string
+                  description: 原效果图地址，不能为空
+              required:
+              - imgCount
+              - inputPrompt
+              - multiTypeProductList
+              - sourceImgUrl
+            example:
+              generateModel: ''
+              multiTypeProductList:
+              - type: ''
+                url: ''
+                replaceTargetName: ''
+                name: ''
+                action: ''
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+              resolution: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/multiTypePromptHandle:
+    post:
+      operationId: apiV1BuildImageMultiTypePromptHandle
+      summary: 多品类物体识别提示词处理
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=868143920784232515
+      x-documentation-category: 三维家AI / 其他
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgUrl:
+                  type: string
+                  description: 图片链接
+                opt:
+                  type: string
+                  description: 标签物品识别：label_product_recognize、材质识别：material_recognize
+            example:
+              imgUrl: ''
+              opt: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/mxjTemplateListResultPage:
+    post:
+      operationId: apiV1BuildImageMxjTemplateListResultPage
+      summary: 分页查询mxj模板列表
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=874663726098301040
+      x-documentation-category: 三维家AI / 其他
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                beginCreateTime:
+                  type: string
+                  description: 创建时间区间左值
+                botType:
+                  type: integer
+                  format: int32
+                  description: ai类型：1画图师、23视频师
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                endCreateTime:
+                  type: string
+                  description: 创建时间区间右值
+                libraryType:
+                  type: string
+                  description: 库类型：platform=平台库，enterprise=企业库
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                sort:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      ascending:
+                        type: boolean
+                        description: 字段排序规则
+                      normalized:
+                        type: boolean
+                        description: 是否已经规范化，即字段名与数据库字段已经一致，false的时候会将驼峰转下划线
+                      property:
+                        type: string
+                        description: 根据哪个字段进行排序
+                  description: 排序定义
+                tagIds:
+                  type: array
+                  items: {}
+                  description: 标签id列表
+                templateName:
+                  type: string
+                  description: 模板名称
+              required:
+              - current
+              - libraryType
+              - size
+            example:
+              tagIds: []
+              sort:
+              - normalized: false
+                ascending: false
+                property: ''
+              endCreateTime: ''
+              current: 0
+              beginCreateTime: ''
+              size: 0
+              templateName: ''
+              botType: 0
+              libraryType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            author:
+                              type: string
+                              description: 作者
+                            botType:
+                              type: integer
+                              format: int32
+                              description: ai类型：1画图师、23视频师、21引流师
+                            copywriting:
+                              type: string
+                              description: 引流文案
+                            coverUrl:
+                              type: string
+                              description: 封面图
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建
+                            fileUrls:
+                              type: array
+                              items: {}
+                              description: 文件列表
+                            generateAudio:
+                              type: boolean
+                              description: 是否生成有声视频：1是、0否
+                            generateModel:
+                              type: string
+                              description: '模型: BANANA2(i_g_31_pre)、VZ1(VZ1)、SEEDREAM40(i_d_4)（按实际对接场景传，不传会有默认模型，传括号里面的值）'
+                            id:
+                              type: integer
+                              format: int64
+                              description: 模板id
+                            imgCount:
+                              type: integer
+                              format: int32
+                              description: 生成数量
+                            modifyTime:
+                              type: string
+                              format: date-time
+                              description: 更新
+                            prompt:
+                              type: string
+                              description: 提示词
+                            promptDocument:
+                              type: string
+                              description: '@功能存储结构'
+                            promptModel:
+                              type: string
+                              description: 引流师模板使用到的模型
+                            ratio:
+                              type: string
+                              description: 宽高比
+                            referenceImgUrl:
+                              type: string
+                              description: 尾帧图
+                            remark:
+                              type: string
+                              description: 备注，说明
+                            resolution:
+                              type: string
+                              description: 分辨率
+                            resultUrl:
+                              type: string
+                              description: 生成产物的链接
+                            sortNum:
+                              type: integer
+                              format: int32
+                              description: 排序
+                            sourceImgUrl:
+                              type: string
+                              description: 首帧图
+                            status:
+                              type: integer
+                              format: int32
+                              description: 'status: 1 上架, 0 下架'
+                            tagList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    format: int64
+                                    description: 标签id
+                                  name:
+                                    type: string
+                                    description: 标签名称
+                              description: 模板绑定标签信息
+                            templateName:
+                              type: string
+                              description: 模板名称
+                            videoDuration:
+                              type: string
+                              description: 时长
+                        description: mxj模板详情返回实体
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - generateModel: ''
+                    imgCount: 0
+                    remark: ''
+                    sourceImgUrl: ''
+                    resolution: ''
+                    promptModel: ''
+                    modifyTime: ''
+                    resultUrl: ''
+                    sortNum: 0
+                    id: 0
+                    author: ''
+                    fileUrls: []
+                    generateAudio: false
+                    coverUrl: ''
+                    tagList:
+                    - name: ''
+                      id: 0
+                    referenceImgUrl: ''
+                    videoDuration: ''
+                    copywriting: ''
+                    createTime: ''
+                    templateName: ''
+                    botType: 0
+                    prompt: ''
+                    promptDocument: ''
+                    ratio: ''
+                    status: 0
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/oldHouseBeautifyGenerate:
+    post:
+      operationId: apiV1BuildImageOldHouseBeautifyGenerate
+      summary: 旧房美化
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=868147695729135673
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                sourceImgUrl:
+                  type: string
+                  description: 旧房图片地址
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                  default: '1'
+              required:
+              - inputPrompt
+              - sourceImgUrl
+              - imgCount
+            example:
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/oldHouseEmpty:
+    post:
+      operationId: apiV1BuildImageOldHouseEmpty
+      summary: 旧房图清空
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860538053792514100
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sourceImgUrl:
+                  type: string
+                  description: 待清空的旧房原图地址
+              required:
+              - sourceImgUrl
+            example:
+              sourceImgUrl: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/platformCategory:
+    post:
+      operationId: apiV1BuildImagePlatformCategory
+      summary: 平台库分类
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860537802272686115
+      x-documentation-category: 三维家AI / 其他
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      categoryId:
+                        type: integer
+                        format: int64
+                        description: 主键id
+                      categoryName:
+                        type: string
+                        description: 目录名
+                      leftValue:
+                        type: integer
+                        format: int32
+                        description: 是否有子集
+                      parentId:
+                        type: integer
+                        format: int64
+                        description: 父级id
+                      sortNum:
+                        type: integer
+                        format: int32
+                        description: 排序值
+                      subList:
+                        type: array
+                        items: {}
+                        description: 平台库单个分类结果
+                      tenantId:
+                        type: string
+                        description: 租户
+              example:
+                msg: ''
+                code: 0
+                data:
+                - subList: []
+                  leftValue: 0
+                  categoryName: ''
+                  parentId: 0
+                  tenantId: ''
+                  sortNum: 0
+                  categoryId: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/platformCategoryPage:
+    post:
+      operationId: apiV1BuildImagePlatformCategoryPage
+      summary: 平台库分页
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860538053792514118
+      x-documentation-category: 三维家AI / 其他
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: integer
+                  format: int64
+                  description: 分类id
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                likeName:
+                  type: string
+                  description: 名称模糊匹配关键字
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                sort:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      ascending:
+                        type: boolean
+                        description: 字段排序规则
+                      normalized:
+                        type: boolean
+                        description: 是否已经规范化，即字段名与数据库字段已经一致，false的时候会将驼峰转下划线
+                      property:
+                        type: string
+                        description: 根据哪个字段进行排序
+                  description: 排序定义
+              required:
+              - current
+              - size
+            example:
+              sort:
+              - normalized: false
+                ascending: false
+                property: ''
+              current: 0
+              size: 0
+              likeName: ''
+              categoryId: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            assetItemType:
+                              type: integer
+                              format: int32
+                              description: 资产类型
+                            createTime:
+                              type: string
+                              format: date-time
+                              description: 创建时间
+                            creatorName:
+                              type: string
+                              description: 创建者
+                            data:
+                              type: string
+                              description: 数据
+                            dataUrl:
+                              type: string
+                              description: dataUrl
+                            id:
+                              type: integer
+                              format: int64
+                              description: 资产id
+                            imagePath:
+                              type: string
+                              description: 图片路径
+                            name:
+                              type: string
+                              description: 名称
+                        description: 平台库分页单条记录
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - dataUrl: ''
+                    data: ''
+                    imagePath: ''
+                    assetItemType: 0
+                    creatorName: ''
+                    createTime: ''
+                    name: ''
+                    id: 0
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/productCleanGenerate:
+    post:
+      operationId: apiV1BuildImageProductCleanGenerate
+      summary: 物品清除
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=874663726098301023
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                generateModel:
+                  type: string
+                  description: '模型: SEEDREAM40(i_d_4)（按实际对接场景传，不传会有默认模型，传括号里面的值）'
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                resolution:
+                  type: string
+                  description: 分辨率 1K（默认） 、......
+                sourceImgUrl:
+                  type: string
+                  description: 原效果图地址，不能为空
+              required:
+              - generateModel
+              - imgCount
+              - inputPrompt
+              - sourceImgUrl
+            example:
+              generateModel: ''
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+              resolution: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/roomStyleExpand:
+    post:
+      operationId: apiV1BuildImageRoomStyleExpand
+      summary: 房间类型/风格描述扩写
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860539060593250374
+      x-documentation-category: 三维家AI / 其他
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: 待扩写文本
+                type:
+                  type: string
+                  description: 扩写类型，仅支持style或space
+              required:
+              - text
+              - type
+            example:
+              type: ''
+              text: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+              example:
+                msg: ''
+                code: 0
+                data: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/buildImage/roughGenerate:
+    post:
+      operationId: apiV1BuildImageRoughGenerate
+      summary: 毛坯图生图
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=860539060593250376
+      x-documentation-category: 三维家AI / 图片生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imgCount:
+                  type: integer
+                  format: int32
+                  description: 出图数量
+                inputPrompt:
+                  type: string
+                  description: 用户输入的提示词
+                multiTypeProductList:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: 产品名称
+                      type:
+                        type: string
+                        description: 产品状态类型，placeholder：文本标签、normal：正常、disable:禁止
+                      url:
+                        type: string
+                        description: 产品图片地址
+                    required:
+                    - name
+                    - type
+                  description: 生图-多品类产品项
+                resolution:
+                  type: string
+                  description: 分辨率 1K（默认） 、......
+                roomType:
+                  type: string
+                  description: 房间类型:客厅，卧室，餐厅，卫生间，书房，儿童房，阳台，自定义
+                sourceImgUrl:
+                  type: string
+                  description: 合成图地址
+                styleType:
+                  type: string
+                  description: 风格类型：轻奢，现代，奶油风，轻法式，中古风，新中式，自定义
+              required:
+              - imgCount
+              - inputPrompt
+              - multiTypeProductList
+              - roomType
+              - sourceImgUrl
+              - styleType
+            example:
+              multiTypeProductList:
+              - type: ''
+                url: ''
+                name: ''
+              imgCount: 0
+              inputPrompt: ''
+              sourceImgUrl: ''
+              resolution: ''
+              styleType: ''
+              roomType: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消费数量
+                      recordTransactionId:
+                        type: string
+                        description: 流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余额度
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余额度
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余额度
+                      taskStatus:
+                        type: integer
+                        format: int32
+                        description: 任务状态
+              example:
+                msg: ''
+                code: 0
+                data:
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  taskId: ''
+                  taskStatus: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/video/doubaoVideo:
+    post:
+      operationId: apiV1VideoDoubaoVideo
+      summary: 创建视频生成任务
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=832636727683354682
+      x-documentation-category: 三维家AI / 视频生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                audioUrls:
+                  type: array
+                  items: {}
+                  description: 参考音频url列表，仅 seedance-2 / seedance-2-fast 支持。1. 该字段用于多模态参考生视频，提交后会按 reference_audio 发送给上游。2. 不可单独传入，至少需要配合 1 张参考图片或 1 个参考视频。3. 不可与首帧/首尾帧场景混用。格式：wav、mp3。单个音频时长：[2, 15] s，最多传入 3 段参考音频，所有音频总时长不超过 15 s。大小：单个音频不超过 15 MB，请求体大小不超过 64 MB。
+                camerafixed:
+                  type: boolean
+                  description: '是否固定摄像头, 为true时， 平台会在用户提示词中追加固定摄像头，实际效果不保证。有参考视频的时候不可支持固定摄像头。 默认值: false'
+                durationSecs:
+                  type: integer
+                  format: int32
+                  description: 视频时长，单位秒。当前接口透传给豆包视频生成接口，常用可选值 2~15 秒；不同模型的实际上限以下游模型能力为准。
+                executionExpiresAfter:
+                  type: integer
+                  format: int32
+                  description: '执行过期时间，单位秒，仅当offline为true时生效。 默认值: 28800'
+                fps:
+                  type: integer
+                  format: int32
+                  description: 帧率, 默认值:24
+                generateAudio:
+                  type: boolean
+                  description: 是否生成有声视频，默认值:false。该参数表示是否让模型产出带音轨视频；与 audioUrls 作为参考音频输入不是同一个概念。
+                imageUrl:
+                  type: string
+                  description: '首图url。1. 文生视频场景可不传。2. 首帧生视频/首尾帧生视频场景下，表示首帧图片。3. 当reference=true，或同时传入videoUrls/audioUrls时，表示参考图之一。4. 多模态参考生视频、首帧生视频、首尾帧生视频是互斥场景，不可混用。支持格式: JPEG(JPG)、PNG、WEBP、BMP、TIFF、GIF；宽高比: (0.4,2.5)；边长: [300,6000] px；大小: 小于30MB。'
+                keyFrames:
+                  type: array
+                  items: {}
+                  description: '关键帧/参考图url列表。1. reference=false 且传入时，当前仅取第1张作为尾帧，用于首尾帧生视频。2. reference=true 时，全部作为参考图使用；配合imageUrl时，imageUrl也会作为参考图一并提交。3. seedance-2/seedance-2-fast 多模态参考生视频下，也可作为参考图输入，最多 9 张。4. 多模态参考生视频、首帧生视频、首尾帧生视频互斥，不可混用。支持格式: JPEG(JPG)、PNG、WEBP、BMP、TIFF、GIF；宽高比: (0.4,2.5)；边长: [300,6000] px；大小: 小于30MB。'
+                modelCode:
+                  type: string
+                  description: 模型,目前支持：v_d_t_1=seedance-lite-t2v；v_d_i_1=seedance-lite-i2v；v_d_1=seedance-pro；v_d_15=seedance-1.5-pro；v_d_2=seedance-2；v_d_2_fast=seedance-2-fast
+                offline:
+                  type: boolean
+                  description: '是否离线模式, 当业务允许小时级别的延迟的话，建议使用离线模式， 价格打5折。 默认值: false'
+                promptText:
+                  type: string
+                  description: 提示语，可选。中文不超 500 字，英文不超 1000 字。多张参考图场景建议使用“[图1]... [图2]...”方式描述，便于模型对齐具体参考素材。
+                ratio:
+                  type: string
+                  description: 视频比例，请传字符串枚举名称，可选值：DEFAULT=adaptive、R_21_9=21:9、R_16_9=16:9、R_4_3=4:3、R_1_1=1:1、R_3_4=3:4、R_9_16=9:16、R_9_21=9:21。
+                reference:
+                  type: boolean
+                  description: 是否使用参考图，默认值:false。1. false：imageUrl 视为首帧，keyFrames 第1张视为尾帧。2. true：imageUrl 与 keyFrames 全部按参考图处理。3. 当传入 videoUrls 或 audioUrls 时，会进入多模态参考生视频场景，此时图片也会按参考图处理。
+                resolution:
+                  type: string
+                  description: 视频分辨率，请传字符串枚举名称，可选值：P480=480p、P720=720p、P1080=1080p；默认值P720。
+                seed:
+                  type: integer
+                  format: int64
+                  description: 随机种子
+                videoUrls:
+                  type: array
+                  items: {}
+                  description: 参考视频url列表，仅 seedance-2 / seedance-2-fast 支持。1. 该字段用于多模态参考生视频，提交后会按 reference_video 发送给上游。2. 可与参考图、提示词、参考音频组合使用。3. 不可与首帧/首尾帧场景混用。4. 最多传入 3 个参考视频，所有视频总时长不超过 15s。视频格式：mp4、mov。分辨率：480p、720p。单个视频时长：[2, 15] s。宽高比（宽/高）：[0.4, 2.5]。宽高长度（px）：[300, 6000]。总像素数：[409600, 927408]。大小：单个视频不超过 50 MB。帧率(FPS)：[24, 60]。
+              required:
+              - modelCode
+              - ratio
+            example:
+              audioUrls: []
+              seed: 0
+              fps: 0
+              videoUrls: []
+              resolution: ''
+              executionExpiresAfter: 0
+              generateAudio: false
+              keyFrames: []
+              reference: false
+              offline: false
+              durationSecs: 0
+              camerafixed: false
+              modelCode: ''
+              imageUrl: ''
+              promptText: ''
+              ratio: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      failure:
+                        type: string
+                        description: 失败原因
+                      failureCode:
+                        type: string
+                        description: 错误码
+                      lastFrameUrl:
+                        type: string
+                        description: 最后一帧图片地址
+                      msg:
+                        type: string
+                        description: 任务状态描述
+                      progress:
+                        type: number
+                        format: float
+                        description: 进度, 当状态为RUNNING时有值, 取值范围[0, 1]之间
+                      seed:
+                        type: integer
+                        format: int64
+                        description: seed, 此次生成视频所用的Seed
+                      status:
+                        type: string
+                        description: 任务状态. -1:未知或者任务不存在, 1:排队中, 2:生成中, 3:生成成功, 4:生成失败, 5:已取消
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      videoUrl:
+                        type: string
+                        description: 视频地址
+                      consumeQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 消耗创点数量
+                      recordTransactionId:
+                        type: string
+                        description: 创点消费流水号
+                      remainingPersonQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 个人剩余数量
+                      remainingShopQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 门店剩余数量（共享情况下会返回）
+                      remainingTenantQuantity:
+                        type: number
+                        format: bigdecimal
+                        description: 租户剩余数量（共享情况下会返回）
+              example:
+                msg: ''
+                code: 0
+                data:
+                  msg: ''
+                  failureCode: ''
+                  seed: 0
+                  recordTransactionId: ''
+                  remainingShopQuantity: 0
+                  consumeQuantity: 0
+                  remainingTenantQuantity: 0
+                  remainingPersonQuantity: 0
+                  videoUrl: ''
+                  failure: ''
+                  progress: 0
+                  taskId: ''
+                  lastFrameUrl: ''
+                  status: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/video/getTaskStatus:
+    post:
+      operationId: apiV1VideoGetTaskStatus
+      summary: 获取视频任务状态
+      tags:
+      - 3vjia AI
+      x-source-documentation: https://dev.3vjia.com/document?apiId=697518375739478144
+      x-documentation-category: 三维家AI / 视频生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: 任务ID
+              required:
+              - taskId
+            example:
+              taskId: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      failure:
+                        type: string
+                        description: 失败原因
+                      failureCode:
+                        type: string
+                        description: 错误码
+                      msg:
+                        type: string
+                        description: 任务状态描述
+                      progress:
+                        type: number
+                        format: float
+                        description: 进度, 当状态为RUNNING时有值, 取值范围[0, 1]之间
+                      status:
+                        type: string
+                        description: 任务状态. -1:未知或者任务不存在, 1:排队中, 2:生成中, 3:生成成功, 4:生成失败, 5:已取消
+                      taskId:
+                        type: string
+                        description: 任务ID
+                      videoUrl:
+                        type: string
+                        description: 视频地址
+              example:
+                msg: ''
+                code: 0
+                data:
+                  msg: ''
+                  failureCode: ''
+                  videoUrl: ''
+                  failure: ''
+                  progress: 0
+                  taskId: ''
+                  status: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

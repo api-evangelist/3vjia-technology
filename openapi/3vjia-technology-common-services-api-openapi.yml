@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Common Services API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Common Services
+  description: 通用服务
+paths:
+  /api/v1/open/common/getBySharedKey:
+    post:
+      operationId: apiV1OpenCommonGetBySharedKey
+      summary: 通过Key获取全景图数据接口
+      tags:
+      - Common Services
+      x-source-documentation: https://dev.3vjia.com/document?apiId=479031281410191408
+      x-documentation-category: 通用服务
+      description: 其中，key是3D云设计的图册功能，通过请求 /sunvega-open-biz/scheme/panorama/sharePanorama 接口获取。
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: key
+            example:
+              key: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      contentData:
+                        type: object
+                        description: 分享内容
+              example:
+                msg: ''
+                code: 0
+                data:
+                  contentData: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/queueok/get:
+    post:
+      operationId: apiV1QueueokGet
+      summary: 根据id获取全景图
+      tags:
+      - Common Services
+      x-source-documentation: https://dev.3vjia.com/document?apiId=726736904120324142
+      x-documentation-category: 通用服务
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 主键id
+            example:
+              id: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      fileFullPath:
+                        type: string
+                        description: 全景图路径，此路径为相对路径，需要拼上域名，域名为：https://3vj-render.3vjia.com
+                      fileName:
+                        type: string
+                        description: 名称
+              example:
+                msg: ''
+                code: 0
+                data:
+                  fileName: ''
+                  fileFullPath: ''
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/scheme/panorama/listPanoramaPageByOpenId:
+    post:
+      operationId: apiV1SchemePanoramaListPanoramaPageByOpenId
+      summary: 根据openId分页获取全景图
+      tags:
+      - Common Services
+      x-source-documentation: https://dev.3vjia.com/document?apiId=576064334350905392
+      x-documentation-category: 通用服务
+      description: 根据openId分页获取全景图，openId通过请求头传递，请求头参数使用：Open-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  default: '1'
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  default: '10'
+                flag:
+                  type: integer
+                  format: int32
+                  description: 方案图类型：0=效果图，1=全景图，2=鸟瞰图，11=AI绘图，12=美化图，不传默认为1
+              required:
+              - current
+              - size
+            example:
+              flag: 0
+              current: 0
+              size: 0
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            imgUrl:
+                              type: string
+                              description: 全景图地址
+                            panoramaName:
+                              type: string
+                              description: 全景图名称
+                            showPath:
+                              type: string
+                              description: 全景封面图
+                        description: 分页记录
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - showPath: ''
+                    imgUrl: ''
+                    panoramaName: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/user/pageRoleByCondition:
+    post:
+      operationId: apiV1UserPageRoleByCondition
+      summary: 查询企业类服务到期详情接口
+      tags:
+      - Common Services
+      x-source-documentation: https://dev.3vjia.com/document?apiId=852149073124429870
+      x-documentation-category: 通用服务
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                beginExpiration:
+                  type: string
+                  format: date-time
+                  description: 开始过期时间
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  examples:
+                  - '1'
+                  default: '1'
+                endExpiration:
+                  type: string
+                  format: date-time
+                  description: 结束过期时间
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  examples:
+                  - '10'
+                  default: '10'
+              required:
+              - current
+              - size
+            example:
+              beginExpiration: ''
+              endExpiration: ''
+              current: 1
+              size: 10
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            mobile:
+                              type: string
+                              description: 联系方式
+                            name:
+                              type: string
+                              description: 账号/对象（用户账号/门店id/租户id）
+                            roleExpirationRespList:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  expiration:
+                                    type: string
+                                    format: date-time
+                                    description: 角色到期时间
+                                  remainDay:
+                                    type: integer
+                                    format: int64
+                                    description: 剩余天数
+                                  roleId:
+                                    type: string
+                                    description: 角色ID
+                                  roleName:
+                                    type: string
+                                    description: 角色名称
+                              description: 角色到期时间返参
+                            shopName:
+                              type: string
+                              description: 门店名称
+                            tenantName:
+                              type: string
+                              description: 企业名称
+                        description: 列表返参
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - roleExpirationRespList:
+                    - roleId: ''
+                      remainDay: 0
+                      roleName: ''
+                      expiration: ''
+                    mobile: ''
+                    shopName: ''
+                    tenantName: ''
+                    name: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.

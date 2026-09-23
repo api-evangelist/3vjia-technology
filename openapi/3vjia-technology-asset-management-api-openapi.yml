@@ -1,0 +1,332 @@
+openapi: 3.2.0
+info:
+  title: 3vjia Open Platform Asset Management API
+  version: '2026-09-05'
+  summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
+  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  contact:
+    name: 3vjia Open Platform
+    url: https://dev.3vjia.com/
+servers:
+- url: https://open-gateway.3vjia.com
+  description: 3vjia Open Platform gateway (current)
+- url: https://open.3vjia.com
+  description: Legacy open gateway — takes ?sysCode=external&access_token=
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Asset Management
+  description: 资产管理
+paths:
+  /api/v1/userLimit/batchAllocateUserLimit:
+    post:
+      operationId: apiV1UserLimitBatchAllocateUserLimit
+      summary: 批量分配额度
+      tags:
+      - Asset Management
+      x-source-documentation: https://dev.3vjia.com/document?apiId=875783510055624770
+      x-documentation-category: 资产管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                salesTarget:
+                  type: integer
+                  format: int32
+                  description: 资产属性（可售卖对象:1:个人，2:门店），分配给个人时，填1，分配给门店填2
+                shopIds:
+                  type: array
+                  items: {}
+                  description: 门店ids（分配给门店时，必填）
+                source:
+                  type: string
+                  description: 操作来源
+                userIds:
+                  type: array
+                  items: {}
+                  description: 用户ids（分配给个人时，必填）
+                userLimitId:
+                  type: string
+                  description: 额度ID
+              required:
+              - salesTarget
+              - userLimitId
+            example:
+              salesTarget: 0
+              userLimitId: ''
+              source: ''
+              shopIds: []
+              userIds: []
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      failList:
+                        type: array
+                        items: {}
+                        description: 失败分配列表（salesTarget为1存的是userId,2存的是shopId）
+                      salesTarget:
+                        type: integer
+                        format: int32
+                        description: 资产属性（可售卖对象:1:PERSONAL-个人，2:STORE-门店，3:ENTERPRISE-企业）
+                      successList:
+                        type: array
+                        items: {}
+                        description: 成功分配列表（salesTarget为1存的是userId,2存的是shopId）
+                      userLimitId:
+                        type: string
+                        description: 额度ID
+              example:
+                msg: ''
+                code: 0
+                data:
+                  successList: []
+                  salesTarget: 0
+                  userLimitId: ''
+                  failList: []
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+  /api/v1/userLimit/pageBaseUserLimitByCondition:
+    post:
+      operationId: apiV1UserLimitPageBaseUserLimitByCondition
+      summary: 分页查询未过期服务包
+      tags:
+      - Asset Management
+      x-source-documentation: https://dev.3vjia.com/document?apiId=875780238448148587
+      x-documentation-category: 资产管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current:
+                  type: integer
+                  format: int64
+                  description: 当前查询第几页
+                  default: '1'
+                salesTarget:
+                  type: integer
+                  format: int32
+                  description: 资产属性（可售卖对象:1:PERSONAL-个人，2:STORE-门店，3:ENTERPRISE-企业）
+                serialNumber:
+                  type: string
+                  description: 订单编号
+                size:
+                  type: integer
+                  format: int64
+                  description: 当前查询页记录数
+                  default: '10'
+                userLimitName:
+                  type: string
+                  description: 服务包名称
+                userLimitState:
+                  type: integer
+                  format: int32
+                  description: 服务包状态（额度状态：0:UnAllocation-未分配，1:HasAllocation-已分配）
+              required:
+              - current
+              - salesTarget
+              - size
+            example:
+              serialNumber: ''
+              salesTarget: 0
+              userLimitState: 0
+              current: 0
+              size: 0
+              userLimitName: ''
+      responses:
+        '200':
+          description: 成功 / OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 请求是否成功 / whether the call succeeded
+                  code:
+                    type: integer
+                    description: 结果码 / result code (0 = success)
+                  msg:
+                    type: string
+                    description: 提示信息 / message
+                  data:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                        format: int64
+                        description: 当前查询第几页
+                      records:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            activateState:
+                              type: integer
+                              format: int32
+                              description: 是否激活 0:未激活 1：已激活
+                            canReallocate:
+                              type: boolean
+                              description: 是否允许重新分配
+                            endTime:
+                              type: string
+                              description: 结束时间
+                            firstReallocateTime:
+                              type: string
+                              description: 新规则首次分配或重新分配时间
+                            hasOperation:
+                              type: integer
+                              format: int32
+                              description: 是否有撤回/重新分配/分配操作，1是，0否
+                            isDelete:
+                              type: boolean
+                              description: 是否刪除
+                            limitValue:
+                              type: integer
+                              format: int32
+                              description: 额度值
+                            orderName:
+                              type: string
+                              description: 订单名称
+                            orderOwnerId:
+                              type: string
+                              description: 订单归属ID(门店ID,企业ID)
+                            orderOwnerType:
+                              type: integer
+                              format: int32
+                              description: 订单归属类型 0:门店 1：企业
+                            ownerNickname:
+                              type: string
+                              description: 被分配人昵称
+                            ownerUserId:
+                              type: string
+                              description: 被分配用户ID
+                            ownerUserName:
+                              type: string
+                              description: 被分配人对象
+                            ownerUserTenantId:
+                              type: string
+                              description: 被分配用户租户ID
+                            reallocateDeadline:
+                              type: string
+                              description: 重新分配截止时间
+                            relationId:
+                              type: string
+                              description: 商品ID，新商品为skuId，旧商品为套餐ID
+                            remainTime:
+                              type: integer
+                              format: int64
+                              description: 剩余时长，单位-毫秒（剩余使用额度）
+                            salesTarget:
+                              type: integer
+                              format: int32
+                              description: 资产属性（可售卖对象:1:PERSONAL-个人，2:STORE-门店，3:ENTERPRISE-企业）
+                            serialNumber:
+                              type: string
+                              description: 订单编号
+                            skuTitle:
+                              type: string
+                              description: 商品名称，新商品为skuTitle,旧商品为订单名称
+                            startTime:
+                              type: string
+                              description: 开始时间
+                            userLimitId:
+                              type: string
+                              description: 额度ID
+                            userLimitName:
+                              type: string
+                              description: 服务包名称
+                            userLimitState:
+                              type: integer
+                              format: int32
+                              description: 服务包状态（额度状态：0:UnAllocation-未分配，1:HasAllocation-已分配）
+                        description: 基础额度信息返参
+                      size:
+                        type: integer
+                        format: int64
+                        description: 当前查询页记录数
+                      total:
+                        type: integer
+                        format: int64
+                        description: 总数
+                    required:
+                    - current
+                    - size
+                    - total
+              example:
+                msg: ''
+                code: 0
+                data:
+                  records:
+                  - limitValue: 0
+                    skuTitle: ''
+                    serialNumber: ''
+                    isDelete: false
+                    salesTarget: 0
+                    orderOwnerType: 0
+                    relationId: ''
+                    remainTime: 0
+                    userLimitId: ''
+                    ownerNickname: ''
+                    orderOwnerId: ''
+                    canReallocate: false
+                    userLimitState: 0
+                    hasOperation: 0
+                    activateState: 0
+                    firstReallocateTime: ''
+                    ownerUserId: ''
+                    ownerUserName: ''
+                    ownerUserTenantId: ''
+                    startTime: ''
+                    endTime: ''
+                    reallocateDeadline: ''
+                    userLimitName: ''
+                    orderName: ''
+                  current: 0
+                  total: 0
+                  size: 0
+                success: false
+        '401':
+          description: access_token 缺失或已过期 / missing or expired access_token
+components:
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 client credentials. appId/appKey are issued after developer + application approval at https://dev.3vjia.com/manage/my-app/developer. Token TTL 7200s; re-requesting invalidates the previous token.
+      flows:
+        clientCredentials:
+          tokenUrl: https://graph.3vjia.com/oauth/token
+          scopes: {}
+externalDocs:
+  description: 3vjia Open Platform documentation (三维家开放平台)
+  url: https://dev.3vjia.com/v1/document
+x-generated-from: https://devapi.3vjia.com/document/getNewApiDocumentCategoryList + /document/getNewApiDocument (first-party documentation API)
+x-generated-on: '2026-09-05'
+x-generated-by: API Evangelist enrichment pipeline (local-v3) — mechanical transform of provider documentation records; no operation invented
+x-operation-count: 429
+x-documented-record-count: 430
+x-note: 430 documentation records were harvested; two describe the same POST /api/v1/dms/order/createProduceOrder, so 429 unique operations are emitted.
