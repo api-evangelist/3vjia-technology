@@ -586,6 +586,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/3vjia-technology-capability-edges.yml
+  name: 3vjia Technology Business Capability Map
 - type: Overlay
   url: overlays/3vjia-technology-open-platform-overlay.yaml
 - type: AgentSkill
