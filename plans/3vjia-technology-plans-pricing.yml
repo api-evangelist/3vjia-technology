@@ -70,3 +70,39 @@ enterprise:
     https://mall.3vjia.com/ presents these as solutions rather than priced SKUs; the Open Platform
     developer application at https://dev.3vjia.com/manage/my-app/developer requires an enterprise
     administrator account and manual approval.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: 免费版 (Free)
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: 标准版 (Standard)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: 增强版 (Enhanced)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: 专业版 (Professional)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - year
