@@ -1,0 +1,110 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/3vjia-technology-3d-show-api-openapi.yml
+- openapi/3vjia-technology-3vjia-ai-api-openapi.yml
+- openapi/3vjia-technology-accounts-api-openapi.yml
+- openapi/3vjia-technology-aimes-api-openapi.yml
+- openapi/3vjia-technology-asset-management-api-openapi.yml
+vocabulary:
+  name: 3vjia Technology Domain Vocabulary
+  description: 'Terms declared by 3vjia Technology''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: 3D Show
+    definition: 3D秀
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-3d-show-api-openapi.yml
+  - term: 3vjia AI
+    definition: 三维家AI
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-3vjia-ai-api-openapi.yml
+  - term: Accounts
+    definition: 账号模块
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-accounts-api-openapi.yml
+  - term: AIMES
+    definition: AIMES系统
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-aimes-api-openapi.yml
+  - term: Asset Management
+    definition: 资产管理
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-asset-management-api-openapi.yml
+  - term: Authorization
+    definition: 登录授权
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-authorization-api-openapi.yml
+  - term: CAD
+    definition: CAD模块
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-cad-api-openapi.yml
+  - term: Chuangdian
+    definition: 创点系统
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-chuangdian-api-openapi.yml
+  - term: Common Services
+    definition: 通用服务
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-common-services-api-openapi.yml
+  - term: Dedicated Services
+    definition: 专属服务
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-dedicated-services-api-openapi.yml
+  - term: Design Schemes
+    definition: 方案模块
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-design-schemes-api-openapi.yml
+  - term: DMS
+    definition: DMS系统
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-dms-api-openapi.yml
+  - term: Dreamer
+    definition: 梦想家
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-dreamer-api-openapi.yml
+  - term: Floor Plans
+    definition: 楼盘户型
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-floor-plans-api-openapi.yml
+  - term: Light Design
+    definition: 轻设计
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-light-design-api-openapi.yml
+  - term: MOS
+    definition: MOS系统
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-mos-api-openapi.yml
+  - term: Products
+    definition: 产品模块
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-products-api-openapi.yml
+  - term: Quotation
+    definition: 报价模块
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-quotation-api-openapi.yml
+  - term: Xuanchi AI
+    definition: 玄尺AI
+    tags:
+    - Resource Group
+    source: openapi/3vjia-technology-xuanchi-ai-api-openapi.yml

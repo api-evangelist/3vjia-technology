@@ -1,168 +1,517 @@
-generated: '2026-09-05'
+generated: '2026-10-20'
 method: probed
-source: live HTTP probes, 2026-09-05
-note: >-
-  Every named /.well-known/ path was probed on all eight hosts this record knows. NOTHING was
-  served. The 200s recorded below are NOT documents: www.3vjia.com, dev.3vjia.com and
-  help.3vjia.com are SPA catch-alls that answer 200 with an HTML shell for any path;
-  open-gateway.3vjia.com and graph.3vjia.com answer 200 with a JSON error envelope
-  ({"code":100001012,"msg":"请求资源不存在"} / {"code":1700200026,...}) for any unrouted path.
-  Per the pipeline rule, no WellKnown and no SecurityTxt pointer is emitted — this file records
-  a verified ABSENCE.
+generator: harvest-well-known.py
+source: Live GET of the named /.well-known/ path list on every host the record knows; every row is a request that
+  was issued.
+summary:
+  hosts_probed: 12
+  paths_probed: 132
+  documents_served: 1
 hosts:
-- host: www.3vjia.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 302
-    note: redirects to the marketing site; not a document
-  - path: /.well-known/oauth-authorization-server
-    status: 302
-    note: redirects to the marketing site; not a document
-  - path: /.well-known/api-catalog
-    status: 302
-    note: redirects to the marketing site; not a document
-  - path: /.well-known/ai-plugin.json
-    status: 404
-  - path: /.well-known/agent-card.json
-    status: 404
-  - path: /.well-known/agent.json
-    status: 404
-  - path: /llms.txt
-    status: 404
-- host: 3vjia.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 301
-  - path: /.well-known/openid-configuration
-    status: 301
-  - path: /.well-known/oauth-authorization-server
-    status: 301
-  - path: /.well-known/api-catalog
-    status: 301
-  - path: /.well-known/ai-plugin.json
-    status: 301
-  - path: /.well-known/agent-card.json
-    status: 301
-  - path: /.well-known/agent.json
-    status: 301
-  - path: /llms.txt
-    status: 301
-- host: dev.3vjia.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 200
-    note: SPA HTML shell, not a document
-  - path: /.well-known/oauth-authorization-server
-    status: 200
-    note: body is the literal string "Not found"
-  - path: /.well-known/api-catalog
-    status: 200
-    note: SPA HTML shell, not a document
-  - path: /.well-known/ai-plugin.json
-    status: 404
-  - path: /.well-known/agent-card.json
-    status: 404
-  - path: /.well-known/agent.json
-    status: 404
-  - path: /llms.txt
-    status: 404
-- host: devapi.3vjia.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/agent-card.json
-    status: 404
-  - path: /.well-known/agent.json
-    status: 404
 - host: open-gateway.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: null
+    bytes: 0
   documents:
   - path: /.well-known/security.txt
+    status: null
+    standard: RFC 9116
+    note: 'unreachable: URLError'
+  - path: /.well-known/openid-configuration
+    status: null
+    standard: OpenID Connect Discovery 1.0
+    note: 'unreachable: URLError'
+  - path: /.well-known/oauth-authorization-server
+    status: null
+    standard: RFC 8414
+    note: 'unreachable: URLError'
+  - path: /.well-known/oauth-protected-resource
     status: 200
-    note: 'JSON error envelope {"code":100001012,"msg":"请求资源不存在"} — not a document'
+    standard: RFC 9728
+    note: 200 but the body is not the document this path names
   - path: /.well-known/api-catalog
     status: 200
-    note: JSON error envelope — not a document
+    standard: RFC 9727
+    note: 200 but the body is not the document this path names
+  - path: /.well-known/apis.json
+    status: 200
+    standard: APIs.json
+    note: 200 but the body is not the document this path names
   - path: /.well-known/ai-plugin.json
     status: 200
-    note: JSON error envelope — not a document
-  - path: /.well-known/agent-card.json
+    standard: OpenAI plugin manifest
+    note: 200 but the body is not the document this path names
+  - path: /.well-known/aauth-resource.json
     status: 200
-    note: JSON error envelope — not a document
-  - path: /.well-known/agent.json
+    standard: AAuth
+    note: 200 but the body is not the document this path names
+  - path: /.well-known/ucp.json
+    status: null
+    standard: UCP
+    note: 'unreachable: URLError'
+  - path: /.well-known/acp.json
     status: 200
-    note: JSON error envelope — not a document
-  - path: /.well-known/oauth-authorization-server
+    standard: ACP
+    content_type: application/json
+    file: 3vjia-technology-open-gateway-acp.json
+  - path: /.well-known/mcp/server-card.json
+    status: 200
+    standard: MCP server card
+    note: 200 but the body is not the document this path names
+- host: dev.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
     status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-- host: graph.3vjia.com
-  documents:
-  - path: /.well-known/oauth-authorization-server
-    status: 200
-    note: >-
-      JSON error envelope {"code":1700200026,"msg":"凭证已过期，请重新授权"} — not RFC 8414 metadata.
-      graph.3vjia.com IS the OAuth 2.0 token endpoint host (POST /oauth/token) but publishes no
-      authorization-server metadata document.
-  - path: /.well-known/openid-configuration
-    status: 200
-    note: JSON error envelope — not OIDC discovery metadata
-  - path: /.well-known/security.txt
-    status: 200
-    note: JSON error envelope — not a document
-  - path: /.well-known/agent-card.json
-    status: 200
-    note: JSON error envelope — not a document
-  - path: /.well-known/agent.json
-    status: 200
-    note: JSON error envelope — not a document
-- host: help.3vjia.com
+    bytes: 0
   documents:
   - path: /.well-known/security.txt
     status: 404
+    standard: RFC 9116
   - path: /.well-known/openid-configuration
     status: 200
-    note: SPA HTML shell, not a document
+    standard: OpenID Connect Discovery 1.0
+    note: '200 carrying an HTML/SPA shell: not a document'
   - path: /.well-known/oauth-authorization-server
     status: 200
-    note: SPA HTML shell, not a document
+    standard: RFC 8414
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    standard: RFC 9728
+    note: '200 carrying an HTML/SPA shell: not a document'
   - path: /.well-known/api-catalog
     status: 200
-    note: SPA HTML shell, not a document
-  - path: /.well-known/agent-card.json
+    standard: RFC 9727
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/apis.json
     status: 404
-  - path: /.well-known/agent.json
-    status: 404
-- host: www.aihouse.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 307
-    note: locale redirect to /global/... which returns a Next.js error page
-  - path: /.well-known/openid-configuration
-    status: 307
-  - path: /.well-known/oauth-authorization-server
-    status: 307
-  - path: /.well-known/api-catalog
-    status: 307
+    standard: APIs.json
   - path: /.well-known/ai-plugin.json
-    status: 307
-  - path: /.well-known/agent-card.json
-    status: 307
-  - path: /.well-known/agent.json
-    status: 307
-  - path: /llms.txt
-    status: 307
-  - path: /robots.txt
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: www.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
     status: 200
-    note: >-
-      served, but robots.txt is not one of the scored well-known documents. Declares
-      Sitemap https://www.aihouse.com/sitemap.xml and disallows /api/ and /graph/.
+    standard: OpenID Connect Discovery 1.0
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    standard: RFC 8414
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    standard: RFC 9728
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/api-catalog
+    status: 200
+    standard: RFC 9727
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: admin.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: mall.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 200
+    standard: OpenID Connect Discovery 1.0
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    standard: RFC 8414
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    standard: RFC 9728
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/api-catalog
+    status: 200
+    standard: RFC 9727
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: 3vj-fcontent.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: 720.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 200
+    standard: OpenID Connect Discovery 1.0
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    standard: RFC 8414
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    standard: RFC 9728
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/api-catalog
+    status: 200
+    standard: RFC 9727
+    note: '200 carrying an HTML/SPA shell: not a document'
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: activity.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: api.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: null
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: null
+    standard: RFC 9116
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/openid-configuration
+    status: null
+    standard: OpenID Connect Discovery 1.0
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/oauth-authorization-server
+    status: null
+    standard: RFC 8414
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/oauth-protected-resource
+    status: null
+    standard: RFC 9728
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/api-catalog
+    status: null
+    standard: RFC 9727
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/apis.json
+    status: null
+    standard: APIs.json
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/ai-plugin.json
+    status: null
+    standard: OpenAI plugin manifest
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/aauth-resource.json
+    status: null
+    standard: AAuth
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/ucp.json
+    status: null
+    standard: UCP
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/acp.json
+    status: null
+    standard: ACP
+    note: 'unreachable: TimeoutError'
+  - path: /.well-known/mcp/server-card.json
+    status: null
+    standard: MCP server card
+    note: 'unreachable: TimeoutError'
+- host: circle.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: mx.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: open.3vjia.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card

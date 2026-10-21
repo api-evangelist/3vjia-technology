@@ -3,19 +3,12 @@ method: searched
 source: https://www.3vjia.com/helpcenter (更新通知 / 更新公告 sections), read 2026-09-05
 scheme: dated product release notes, per product line, published as help-center articles
 api_changelog: false
-note: >-
-  3vjia publishes NO API changelog. The Open Platform (dev.3vjia.com) carries no release notes, no
-  dated entries and no version history for its 429 operations. What IS published is a set of dated
-  PRODUCT release notes in the help center — one "更新通知" (update notice) category per product line
-  (3D Cloud Design, DMS, AI Dream Home, AI Light Design, MCS). They describe end-user features, not
-  contract changes, so an integrator cannot learn from them whether an operation changed.
-current_version:
-  note: no single platform version is published; each product line versions independently
-  observed:
-  - product: DMS 2.0
-    version: V2.3.6
-  - product: MCS 3.0
-    version: V2.6.0627.0
+note: 3vjia publishes NO API changelog. The Open Platform (dev.3vjia.com) carries
+  no release notes, no dated entries and no version history for its 429 operations.
+  What IS published is a set of dated PRODUCT release notes in the help center — one
+  "更新通知" (update notice) category per product line (3D Cloud Design, DMS, AI Dream
+  Home, AI Light Design, MCS). They describe end-user features, not contract changes,
+  so an integrator cannot learn from them whether an operation changed.
 entries:
 - date: '2026-07-30'
   product: AI 轻设计 (AI Light Design)
@@ -39,9 +32,11 @@ entries:
   source: https://www.3vjia.com/helpcenter
 - date: null
   date_text: 7月 (July)
-  product: 全屋定制 / 硬装 / 铝门窗 (whole-house customisation, hard decoration, aluminium doors and windows)
+  product: 全屋定制 / 硬装 / 铝门窗 (whole-house customisation, hard decoration, aluminium
+    doors and windows)
   title: 7月新功能 | 全屋定制&硬装&铝门窗，前后端设计智造再升级
-  highlights: front-to-back design and manufacturing upgrade across the three product lines
+  highlights: front-to-back design and manufacturing upgrade across the three product
+    lines
 - date: null
   date_text: 7月 (July)
   product: 3D Cloud Design
@@ -71,3 +66,11 @@ gaps:
 - No changelog, release notes or version history for the Open Platform API itself.
 - Entries carry no machine-readable date on the page and no RSS/Atom feed.
 - No breaking-change flagging of any kind.
+product_versions:
+  note: no single platform version is published; each product line versions independently
+  observed:
+  - product: DMS 2.0
+    version: V2.3.6
+  - product: MCS 3.0
+    version: V2.6.0627.0
+current_version: null

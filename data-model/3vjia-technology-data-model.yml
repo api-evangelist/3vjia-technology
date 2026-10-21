@@ -1,26 +1,27 @@
 generated: '2026-09-05'
 method: derived
-source: >-
-  openapi/3vjia-technology-open-platform-openapi.yml (429 operations), plus the object structure
-  tables (SimpleOrganBO, SimpleDeptBO, SimpleUserBO, OrderInfoBO, QuoteResultBO, QuoteInfoBO,
-  QuoteItemBO) published in the 3vjia interface specifications at https://dev.3vjia.com/v1/document
-note: >-
-  3vjia publishes no components.schemas — schemas are per-operation parameter tables. This graph was
-  derived from id-reference field names counted across every request and response schema and from the
-  named *BO structures the specification documents repeat verbatim across operations.
+source: openapi/3vjia-technology-open-platform-openapi.yml (429 operations), plus
+  the object structure tables (SimpleOrganBO, SimpleDeptBO, SimpleUserBO, OrderInfoBO,
+  QuoteResultBO, QuoteInfoBO, QuoteItemBO) published in the 3vjia interface specifications
+  at https://dev.3vjia.com/v1/document
+note: 3vjia publishes no components.schemas — schemas are per-operation parameter
+  tables. This graph was derived from id-reference field names counted across every
+  request and response schema and from the named *BO structures the specification
+  documents repeat verbatim across operations.
 tenancy:
   root: organ (企业 / enterprise)
   identifier: organId (e.g. C00000022), also seen as tenantId
-  note: >-
-    Every surface is scoped to an enterprise. The "专属服务" (dedicated services) category in the
-    documentation is literally organised BY enterprise id — C00000022, C00000868, C00002170,
-    C11876880 and 13 others each get their own bespoke operation set, so a meaningful part of the
-    published API is single-customer.
+  note: Every surface is scoped to an enterprise. The "专属服务" (dedicated services)
+    category in the documentation is literally organised BY enterprise id — C00000022,
+    C00000868, C00002170, C11876880 and 13 others each get their own bespoke operation
+    set, so a meaningful part of the published API is single-customer.
 entities:
 - name: organ
   chinese: 企业 / 机构
   id: organId
-  fields: [organId, organName]
+  fields:
+  - organId
+  - organName
   documented_as: SimpleOrganBO
   relationships:
   - has_many: dept
@@ -30,7 +31,10 @@ entities:
 - name: dept
   chinese: 部门 / 门店 (department / store)
   id: deptId
-  fields: [deptId, outDeptId, deptName]
+  fields:
+  - deptId
+  - outDeptId
+  - deptName
   documented_as: SimpleDeptBO
   relationships:
   - belongs_to: organ
@@ -39,7 +43,8 @@ entities:
     via: deptId
   - has_one: external_dept
     via: outDeptId
-    note: outDeptId is the integrator's own department/store id, set once the two are bound
+    note: outDeptId is the integrator's own department/store id, set once the two
+      are bound
 - name: shop
   chinese: 门店
   id: shopId
@@ -52,7 +57,14 @@ entities:
 - name: user
   chinese: 账号 / 用户
   id: userId
-  fields: [userId, outUserId, userName, name, nickName, mobile, avatar]
+  fields:
+  - userId
+  - outUserId
+  - userName
+  - name
+  - nickName
+  - mobile
+  - avatar
   documented_as: SimpleUserBO
   relationships:
   - belongs_to: organ
@@ -132,14 +144,21 @@ entities:
   - belongs_to: factory_order
     via: orderRecordId
   - has_many: quote_item
-    note: 'grouped by Hardware, Garnish, Functor, doorBoard, Sliding, Part — the configurable QuoteInfoBO'
-  lifecycle: 发起报价计算 -> key -> poll 获取报价计算结果 (609006 = still calculating) -> webhook QUOTE_ORDER_CALCULATE
+    note: grouped by Hardware, Garnish, Functor, doorBoard, Sliding, Part — the configurable
+      QuoteInfoBO
+  lifecycle: 发起报价计算 -> key -> poll 获取报价计算结果 (609006 = still calculating) -> webhook
+    QUOTE_ORDER_CALCULATE
 - name: order
   chinese: 订单
   id: orderRecordId
-  also: [orderNo, diyOrderNo, customOrderNo, orderCode]
+  also:
+  - orderNo
+  - diyOrderNo
+  - customOrderNo
+  - orderCode
   documented_as: OrderInfoBO
-  note: orderRecordId is the common id shared by the shop order and the factory order for one purchase
+  note: orderRecordId is the common id shared by the shop order and the factory order
+    for one purchase
   relationships:
   - has_one: shop_order
     via: shopOrderId
@@ -178,7 +197,11 @@ entities:
 - name: part
   chinese: 板件 (panel / part)
   id: partBarCode
-  also: [cncBarCode, cabinetNo, groupCabinetNo, panelId]
+  also:
+  - cncBarCode
+  - cabinetNo
+  - groupCabinetNo
+  - panelId
   relationships:
   - belongs_to: factory_order_product
     via: factoryOrderProductId
@@ -220,16 +243,19 @@ entities:
   relationships:
   - belongs_to: organ
     via: organId
-  lifecycle: >-
-    submit (image generation, video generation, image-to-model, spatial AI) -> data.taskId ->
-    poll the 任务查询 operations. 66 operations across the surface hand back a taskId.
+  lifecycle: submit (image generation, video generation, image-to-model, spatial AI)
+    -> data.taskId -> poll the 任务查询 operations. 66 operations across the surface hand
+    back a taskId.
 id_conventions:
-- pattern: 'organId — "C" + 8 digits (C00005842, C12684110)'
-- pattern: 'userId — 10-digit numeric string (1000123456)'
-- pattern: 'userName — "3vj" + mobile number (3vj13800000000)'
-- pattern: 'batchNo — <shop>-<yymmdd>-<seq> (3838-210330-01)'
-- pattern: 'taskId — UUID v4 (0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416)'
-- pattern: 'factory order key — 32-char uppercase hex (F053521B72F34613BEAD2CC8B6279E75)'
+- pattern: organId — "C" + 8 digits (C00005842, C12684110)
+- pattern: userId — 10-digit numeric string (1000123456)
+- pattern: userName — "3vj" + mobile number (3vj13800000000)
+- pattern: batchNo — <shop>-<yymmdd>-<seq> (3838-210330-01)
+- pattern: taskId — UUID v4 (0bc2b9b6-3b4e-4c5b-a490-4aaaf4e81416)
+- pattern: factory order key — 32-char uppercase hex (F053521B72F34613BEAD2CC8B6279E75)
 gaps:
-- No components.schemas and no shared $ref: the same SimpleUserBO is retyped in dozens of operations.
-- No published entity reference or ERD; this graph is inferred from field names and repeated BO tables.
+- No components.schemas and no shared $ref: the same SimpleUserBO is retyped in dozens
+    of operations.
+- No published entity reference or ERD; this graph is inferred from field names and
+  repeated BO tables.
+relationships: []

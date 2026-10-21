@@ -3,7 +3,16 @@ info:
   title: 3vjia Open Platform DMS API
   version: '2026-09-05'
   summary: Home-furnishing 3D cloud design, quotation, order, manufacturing (AIMES/MOS/DMS) and AI operations exposed by the 3vjia (三维家) Open Platform.
-  description: Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+  description: 'Machine-readable description of the 3vjia (三维家 / AiHouse) Open Platform, DERIVED — not published by the provider in this form.
+
+
+    Every path, HTTP method, parameter name, type, required flag, description and example in this document was read verbatim from 3vjia''s own public documentation API (https://devapi.3vjia.com/document/getNewApiDocument?apiId=..., the JSON service that renders https://dev.3vjia.com/v1/document). Nothing here was invented: no operation, host or field was added that the provider does not document. Operations carry x-source-documentation pointing at the provider page each was read from.
+
+
+    Authentication is OAuth 2.0 client_credentials against https://graph.3vjia.com/oauth/token (grant_type=client_credentials, client_id=appId, client_secret=appKey), returning an access_token valid for 7200 seconds. The legacy gateway (https://open.3vjia.com) takes the token as ?sysCode=external&access_token=; the current gateway is https://open-gateway.3vjia.com. Every documented operation is POST with Content-Type application/json;charset=utf-8 and returns the envelope {success, code, msg, data}.
+
+
+    Source of truth remains the provider documentation at https://dev.3vjia.com/ — file corrections at https://github.com/api-evangelist/3vjia-technology.'
   contact:
     name: 3vjia Open Platform
     url: https://dev.3vjia.com/

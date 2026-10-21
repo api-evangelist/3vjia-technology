@@ -1,0 +1,173 @@
+generated: '2026-10-20'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 14
+  own: 14
+  other_domain: 0
+  platform: 0
+  roles:
+  - api
+  - identity
+  - legal
+  - marketing
+  - other
+  - portal
+  - website
+hosts:
+- host: 3vj-fcontent.3vjia.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - PrivacyPolicy
+  serves: []
+  registrable_domain: 3vjia.com
+  role: legal
+  relation: own
+- host: 720.3vjia.com
+  found_by:
+  - probed
+  - site-links
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: activity.3vjia.com
+  found_by:
+  - probed
+  - site-links
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: admin.3vjia.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: 3vjia.com
+  role: identity
+  relation: own
+- host: api.3vjia.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: api
+  relation: own
+- host: circle.3vjia.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: dev.3vjia.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - GettingStarted
+  - SignUp
+  serves:
+  - docs
+  registrable_domain: 3vjia.com
+  role: portal
+  relation: own
+- host: mall.3vjia.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Pricing
+  serves: []
+  registrable_domain: 3vjia.com
+  role: marketing
+  relation: own
+- host: mx.3vjia.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: open-gateway.3vjia.com
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: open.3vjia.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: work.3vjia.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
+- host: www.3vjia.com
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  types:
+  - Security
+  - Website
+  - Support
+  - HelpCenter
+  - Blog
+  serves: []
+  registrable_domain: 3vjia.com
+  role: website
+  relation: own
+- host: zhitou.3vjia.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: 3vjia.com
+  role: other
+  relation: own
