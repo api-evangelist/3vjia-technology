@@ -64,50 +64,161 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-## 3vjia Technology (三维家 / AiHouse)
+3vjia Technology (Guangdong Sanweijia Information Technology Co., Ltd. / 三维家, international brand AiHouse) is a Guangzhou-based home-furnishing industrial-software company founded in 2013 that runs a cloud 3D design and manufacturing platform for the interior-decoration and custom-furniture industry. Its products span 3D cloud design, AI Dream Home (AI梦想家), AI Light Design (AI轻设计), CAD and rendering engines, the DMS order-splitting system, the MOS/MCS manufacturing execution systems and the AIMES manufacturing platform, joining design, quotation, order placement, splitting and factory production into one chain. It operates a public Open Platform (dev.3vjia.com) whose gateway open-gateway.3vjia.com exposes 429 documented POST operations covering accounts and SSO, design schemes, product/material libraries, quotation, orders, production batches, floor plans and generative AI, authenticated with OAuth 2.0 client credentials issued against graph.3vjia.com.
 
-3vjia Technology — Guangdong Sanweijia Information Technology Co., Ltd., international brand
-**AiHouse** — is a Guangzhou home-furnishing industrial-software company founded in 2013. It runs a
-cloud 3D design and manufacturing platform for the interior-decoration and custom-furniture industry:
-3D cloud design, AI Dream Home, AI Light Design, CAD and rendering engines, the DMS order-splitting
-system, the MOS/MCS manufacturing execution systems and the AIMES manufacturing platform, joining
-design, quotation, order placement, splitting and factory production into one chain.
+**Areas:** Company · 3D Design · Home Furnishings · Interior Design · Manufacturing · Custom Furniture · CAD · Rendering · Artificial Intelligence · Software-as-a-Service · China · Open Platform
 
-### What we found
+## 3vjia Technology on APIs.io
 
-3vjia runs a public **Open Platform** at <https://dev.3vjia.com/> whose gateway
-`open-gateway.3vjia.com` exposes **429 documented operations**. It publishes **no OpenAPI, Swagger,
-GraphQL SDL, AsyncAPI, Protobuf, WSDL or Postman collection** — but it does publish a complete,
-anonymously readable, machine-readable documentation service at `devapi.3vjia.com`, which returns per
-operation the HTTP method, absolute URL, every parameter with type and required flag, every response
-field, and request/response examples.
+Everything profiled for 3vjia Technology is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/3vjia-technology/](https://apis.io/providers/3vjia-technology/)** — or go straight to one of the APIs or properties below.
 
-`openapi/3vjia-technology-open-platform-openapi.yml` is a **mechanical transform of those records**
-(`method: derived`), and the verbatim catalogs it was built from are kept in
-`openapi/_source-documentation/`. Nothing was invented: every path, method, parameter and example is
-the provider's own, and each operation carries an `x-source-documentation` link back to the page it
-was read from. A live probe on 2026-09-05 confirmed the paths are real — documented paths return
-`code 100100002` (missing credential), invented paths return `code 100001012` (resource does not exist).
+### APIs (19)
 
-### Things an integrator should know
+- [3vjia Technology 3D Show API](https://apis.io/apis/3vjia-technology/3vjia-technology-3d-show-api/) — 3D秀
+- [3vjia Technology 3vjia AI API](https://apis.io/apis/3vjia-technology/3vjia-technology-3vjia-ai-api/) — 三维家AI
+- [3vjia Technology Accounts API](https://apis.io/apis/3vjia-technology/3vjia-technology-accounts-api/) — 账号模块
+- [3vjia Technology AIMES API](https://apis.io/apis/3vjia-technology/3vjia-technology-aimes-api/) — AIMES系统
+- [3vjia Technology Asset Management API](https://apis.io/apis/3vjia-technology/3vjia-technology-asset-management-api/) — 资产管理
+- [3vjia Technology Authorization API](https://apis.io/apis/3vjia-technology/3vjia-technology-authorization-api/) — 登录授权
+- [3vjia Technology CAD API](https://apis.io/apis/3vjia-technology/3vjia-technology-cad-api/) — CAD模块
+- [3vjia Technology Chuangdian API](https://apis.io/apis/3vjia-technology/3vjia-technology-chuangdian-api/) — 创点系统
+- [3vjia Technology Common Services API](https://apis.io/apis/3vjia-technology/3vjia-technology-common-services-api/) — 通用服务
+- [3vjia Technology Dedicated Services API](https://apis.io/apis/3vjia-technology/3vjia-technology-dedicated-services-api/) — 专属服务
+- [3vjia Technology Design Schemes API](https://apis.io/apis/3vjia-technology/3vjia-technology-design-schemes-api/) — 方案模块
+- [3vjia Technology DMS API](https://apis.io/apis/3vjia-technology/3vjia-technology-dms-api/) — DMS系统
+- [3vjia Technology Dreamer API](https://apis.io/apis/3vjia-technology/3vjia-technology-dreamer-api/) — 梦想家
+- [3vjia Technology Floor Plans API](https://apis.io/apis/3vjia-technology/3vjia-technology-floor-plans-api/) — 楼盘户型
+- [3vjia Technology Light Design API](https://apis.io/apis/3vjia-technology/3vjia-technology-light-design-api/) — 轻设计
+- [3vjia Technology MOS API](https://apis.io/apis/3vjia-technology/3vjia-technology-mos-api/) — MOS系统
+- [3vjia Technology Products API](https://apis.io/apis/3vjia-technology/3vjia-technology-products-api/) — 产品模块
+- [3vjia Technology Quotation API](https://apis.io/apis/3vjia-technology/3vjia-technology-quotation-api/) — 报价模块
+- [3vjia Technology Xuanchi AI API](https://apis.io/apis/3vjia-technology/3vjia-technology-xuanchi-ai-api/) — 玄尺AI
 
-- **Failures come back as HTTP 200.** Success, missing credential and unrouted path all return `200`;
-  the outcome is in the body's `success` field.
-- **There is no idempotency** on any of the 429 operations, and no dry-run mode.
-- **Only one `access_token` is valid per application** — a new one invalidates the previous one, so
-  the provider requires an enterprise-wide central token service.
-- **No published rate limits, no API changelog, no status page, no deprecation policy, no SLA.**
-- **No SDK** in any public registry; the two 3vjia GitHub organizations hold zero public repositories.
-- **No MCP server, no agent card, no `llms.txt`, no `/.well-known/` documents** on any of eight hosts.
-- Documentation is Chinese-only.
+### Published properties
 
-### Links
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- Website — <https://www.3vjia.com/>
-- Open Platform — <https://dev.3vjia.com/>
-- API documentation — <https://dev.3vjia.com/v1/document>
-- Help center — <https://www.3vjia.com/helpcenter>
-- Pricing (design software; API access is contact-sales) — <https://mall.3vjia.com/>
-- International brand — <https://www.aihouse.com/>
+#### AsyncAPI (1)
 
-_Surfaced via the API Evangelist harvest backlog (source: secondary-market)._
+Event-driven and webhook contracts.
+
+- [3Vjia Technology Webhooks](https://apis.io/asyncapis/3vjia-technology/3vjia-technology-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [3vjia-technology-mcp.yml](https://apis.io/servers/3vjia-technology/3vjia-technology-mcp-yml/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [3Vjia Technology Agentic Access](https://apis.io/agentic-access/3vjia-technology/3vjia-technology-agentic-access/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [3Vjia Technology Open Platform Overlay](https://apis.io/overlays/3vjia-technology/3vjia-technology-open-platform-overlay/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [3vjia Technology API Rules](https://apis.io/rules/3vjia-technology/3vjia-technology-rules/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [3Vjia Technology Authentication](https://apis.io/security/3vjia-technology/3vjia-technology-authentication/)
+- [3Vjia Technology Domain Security](https://apis.io/security/3vjia-technology/3vjia-technology-domain-security/)
+- [3Vjia Technology Trust Center](https://apis.io/security/3vjia-technology/3vjia-technology-trust-center/)
+- [3Vjia Technology Vulnerability Disclosure](https://apis.io/security/3vjia-technology/3vjia-technology-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [3Vjia Technology Scopes](https://apis.io/scopes/3vjia-technology/3vjia-technology-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [3Vjia Technology Plans Pricing](https://apis.io/plans/3vjia-technology/3vjia-technology-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [3Vjia Technology Rate Limits](https://apis.io/rate-limits/3vjia-technology/3vjia-technology-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.3vjia.com/)
+- [Documentation](https://dev.3vjia.com/v1/document)
+- [Getting started](https://dev.3vjia.com/v1/document?apiId=d39aed16895f4f4bb88df99d38f93fb3)
+- [API reference](https://dev.3vjia.com/v1/document)
+- [Pricing](https://mall.3vjia.com/)
+- [Sign up](https://dev.3vjia.com/manage/my-app/developer)
+- [Support](https://www.3vjia.com/helpcenter)
+- [Blog](https://www.3vjia.com/tag)
+- [Security](https://www.3vjia.com/.well-known/security.txt)
+- [Privacy policy](https://3vj-fcontent.3vjia.com/agreement/2e6ef94b22b34d9db98e4ac9c28965eb.html)
+
+## API Evangelist rating
+
+**Kin Score 63.8** — strong · rubric 0.24.0 · scored 2026-10-20
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 55.4 |
+| Contract governance | 67.3 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 49.4 |
+| Access clarity | 73.7 |
+
+**Agent readiness 38.3** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | unknown |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 38.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/3vjia-technology/](https://apis.io/providers/3vjia-technology/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for 3vjia Technology: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/3vjia-technology/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
