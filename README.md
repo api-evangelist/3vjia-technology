@@ -167,38 +167,37 @@ Links to the company's own pages. This repository publishes no copy of their spe
 - [Sign up](https://dev.3vjia.com/manage/my-app/developer)
 - [Support](https://www.3vjia.com/helpcenter)
 - [Blog](https://www.3vjia.com/tag)
-- [Security](https://www.3vjia.com/.well-known/security.txt)
 - [Privacy policy](https://3vj-fcontent.3vjia.com/agreement/2e6ef94b22b34d9db98e4ac9c28965eb.html)
 
 ## API Evangelist rating
 
-**Kin Score 63.8** — strong · rubric 0.24.0 · scored 2026-10-20
+**Kin Score 51.3** — developing · rubric 0.25.0 · scored 2026-10-23
 
 | Facet | Score |
 |---|---|
-| Discoverability | 78.6 |
+| Discoverability | 73.2 |
 | Contract quality | 55.4 |
-| Contract governance | 67.3 |
-| Operational transparency | 34.2 |
+| Contract governance | 4.5 |
+| Operational transparency | 23.7 |
 | Developer ergonomics | 49.4 |
-| Access clarity | 73.7 |
+| Access clarity | 65.8 |
 
-**Agent readiness 38.3** — agent-ready
+**Agent readiness 36.1** — agent-ready
 
 | Agent-readiness dimension | Result |
 |---|---|
 | Spec Presence | yes |
-| Agentic Access | unknown |
+| Agentic Access | — |
 | Reversibility Documented | — |
 | MCP Server | — |
 | Auth Clarity | negotiable (partial credit) |
 | Idempotency | — |
-| Error Semantics | derived (partial credit) |
+| Error Semantics | documented (partial credit) |
 | OpenAPI Examples | verified |
 | Rate Limit Signal | documented (partial credit) |
 | Event Surface Described | yes |
 | Agent Skills | derived (partial credit) |
-| Well Known Catalog | — |
+| Well Known Catalog | yes |
 | Consent Identity | — |
 | Agent Card | — |
 | Dry Run Mode | — |
@@ -206,8 +205,10 @@ Links to the company's own pages. This repository publishes no copy of their spe
 | Protected Resource Metadata | — |
 | Dynamic Client Registration | — |
 | Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | — |
 
-**Regulatory alignment 38.2** — Horizontal (data, software, accessibility, platform)
+**Regulatory alignment 28.2** — Horizontal (data, software, accessibility, platform)
 
 The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/3vjia-technology/](https://apis.io/providers/3vjia-technology/).
 
